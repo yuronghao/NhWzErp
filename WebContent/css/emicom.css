@@ -1,0 +1,775 @@
+*{
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	text-decoration: none;
+}
+body,html{
+	height: 100%;
+	margin: 0px;
+	font-size: 12px;
+	font-family: 微软雅黑;
+	
+}
+select{
+	width:100%;
+	height:25px;
+	line-height: 25px;
+	border:1px #ccc solid;
+}
+.fl{float: left;}
+.fr{float: right;}
+.cl{clear:both;}
+/*按钮部分*/
+/*删除按钮*/
+.delBtn {
+  padding: 0 8px 0px 36px;
+  height: 30px;
+  background-color: #f5faff;
+  margin-left: 15px;
+  border-radius: 5px;
+  border: 1px solid #E1E1E1;
+  cursor: pointer;
+  background-image: url(../img/delete.png);
+  background-size: 23px 23px;
+  background-repeat: no-repeat;
+  background-position: 8px 2px;
+  text-align: right;
+  line-height: 30px;
+  
+}
+/*编辑按钮*/
+.editBtn {
+  padding: 0 8px 0px 36px;
+  height: 30px;
+  background-color: #f5faff;
+  margin-left: 15px;
+  border-radius: 5px;
+  border: 1px solid #E1E1E1;
+  cursor: pointer;
+  background-image: url(../img/edit.png);
+  background-size: 23px 23px;
+  background-repeat: no-repeat;
+  background-position: 8px 2px;
+  text-align: right;
+  line-height: 30px;
+  
+}
+
+/*审核按钮*/
+.checkBtn {
+  padding: 0 8px 0px 36px;
+  height: 30px;
+  background-color: #f5faff;
+  margin-left: 15px;
+  border-radius: 5px;
+  border: 1px solid #E1E1E1;
+  cursor: pointer;
+  background-image: url(../img/check.png);
+  background-size: 23px 23px;
+  background-repeat: no-repeat;
+  background-position: 8px 2px;
+  text-align: right;
+  line-height: 30px;
+  
+}
+
+/*放弃按钮*/
+.cancelBtn {
+  padding: 0 8px 0px 36px;
+  height: 30px;
+  background-color: #f5faff;
+  margin-left: 15px;
+  border-radius: 5px;
+  border: 1px solid #E1E1E1;
+  cursor: pointer;
+  background-image: url(../img/cancel.png);
+  background-size: 23px 23px;
+  background-repeat: no-repeat;
+  background-position: 8px 2px;
+  text-align: right;
+  line-height: 30px;
+  
+}
+/*查询按钮*/
+.searchBtn {
+  padding: 0 8px 0px 36px;
+  height: 30px;
+  background-color: #f5faff;
+  margin-left: 15px;
+  border-radius: 5px;
+  border: 1px solid #E1E1E1;
+  cursor: pointer;
+  background-image: url(../img/search.png);
+  background-size: 23px 23px;
+  background-repeat: no-repeat;
+  background-position: 8px 2px;
+  text-align: right;
+  line-height: 30px;
+  
+}
+/*导入按钮*/
+.importBtn {
+  padding: 0 8px 0px 36px;
+  height: 30px;
+  background-color: #f5faff;
+  margin-left: 15px;
+  border-radius: 5px;
+  border: 1px solid #E1E1E1;
+  cursor: pointer;
+  background-image: url(../img/import.png);
+  background-size: 23px 23px;
+  background-repeat: no-repeat;
+  background-position: 8px 2px;
+  text-align: right;
+  line-height: 30px;
+  
+}
+
+/*导出按钮*/
+.exportBtn {
+  padding: 0 8px 0px 36px;
+  height: 30px;
+  background-color: #f5faff;
+  margin-left: 15px;
+  border-radius: 5px;
+  border: 1px solid #E1E1E1;
+  cursor: pointer;
+  background-image: url(../img/export.png);
+  background-size: 23px 23px;
+  background-repeat: no-repeat;
+  background-position: 8px 2px;
+  text-align: right;
+  line-height: 30px;
+  
+}
+/*设计按钮*/
+.designBtn {
+  padding: 0 8px 0px 36px;
+  height: 30px;
+  background-color: #f5faff;
+  margin-left: 15px;
+  border-radius: 5px;
+  border: 1px solid #E1E1E1;
+  cursor: pointer;
+  background-image: url(../img/design.png);
+  background-size: 23px 23px;
+  background-repeat: no-repeat;
+  background-position: 8px 2px;
+  text-align: right;
+  line-height: 30px;
+  
+}
+
+/*设计按钮*/
+.copyBtn {
+  padding: 0 8px 0px 36px;
+  height: 30px;
+  background-color: #f5faff;
+  margin-left: 15px;
+  border-radius: 5px;
+  border: 1px solid #E1E1E1;
+  cursor: pointer;
+  background-image: url(../img/copy.png);
+  background-size: 23px 23px;
+  background-repeat: no-repeat;
+  background-position: 8px 2px;
+  text-align: right;
+  line-height: 30px;
+  
+}
+/*看按钮*/
+.chakanBtn {
+  padding: 0 8px 0px 36px;
+  height: 30px;
+  background-color: #f5faff;
+  margin-left: 15px;
+  border-radius: 5px;
+  border: 1px solid #E1E1E1;
+  cursor: pointer;
+  background-image: url(../img/ck.png);
+  background-size: 23px 23px;
+  background-repeat: no-repeat;
+  background-position: 8px 2px;
+  text-align: right;
+  line-height: 30px;
+  
+}
+/*返回按钮*/
+.backBtn {
+  padding: 0 8px 0px 36px;
+  height: 30px;
+  background-color: #f5faff;
+  margin-left: 15px;
+  border-radius: 5px;
+  border: 1px solid #E1E1E1;
+  cursor: pointer;
+  background-image: url(../img/back.png);
+  background-size: 23px 23px;
+  background-repeat: no-repeat;
+  background-position: 8px 2px;
+  text-align: right;
+  line-height: 30px;
+  
+}
+/*保存按钮*/
+.saveBtn {
+  padding: 0 8px 0px 36px;
+  height: 30px;
+  background-color: #f5faff;
+  margin-left: 15px;
+  border-radius: 5px;
+  border: 1px solid #E1E1E1;
+  cursor: pointer;
+  background-image: url(../img/save.png);
+  background-size: 23px 23px;
+  background-repeat: no-repeat;
+  background-position: 8px 2px;
+  text-align: right;
+  line-height: 30px;
+  
+}
+/*分组按钮*/
+.fenzBtn {
+  padding: 0 8px 0px 36px;
+  height: 30px;
+  background-color: #f5faff;
+  margin-left: 15px;
+  border-radius: 5px;
+  border: 1px solid #E1E1E1;
+  cursor: pointer;
+  background-image: url(../img/fz.png);
+  background-size: 23px 23px;
+  background-repeat: no-repeat;
+  background-position: 8px 2px;
+  text-align: right;
+  line-height: 30px;
+  
+}
+/*单位按钮*/
+.danwBtn {
+  padding: 0 8px 0px 36px;
+  height: 30px;
+  background-color: #f5faff;
+  margin-left: 15px;
+  border-radius: 5px;
+  border: 1px solid #E1E1E1;
+  cursor: pointer;
+  background-image: url(../img/dw.png);
+  background-size: 23px 23px;
+  background-repeat: no-repeat;
+  background-position: 8px 2px;
+  text-align: right;
+  line-height: 30px;
+  
+}
+/*放弃*/
+.giveupBtn {
+  padding: 0 8px 0px 36px;
+  height: 30px;
+  background-color: #f5faff;
+  margin-left: 15px;
+  border-radius: 5px;
+  border: 1px solid #E1E1E1;
+  cursor: pointer;
+  background-image: url(../img/giveup.png);
+  background-size: 23px 23px;
+  background-repeat: no-repeat;
+  background-position: 8px 2px;
+  text-align: right;
+  line-height: 30px;
+  
+}
+/*列表按钮*/
+.listBtn {
+  padding: 0 8px 0px 36px;
+  height: 30px;
+  background-color: #f5faff;
+  margin-left: 15px;
+  border-radius: 5px;
+  border: 1px solid #E1E1E1;
+  cursor: pointer;
+  background-image: url(../img/listpng.png);
+  background-size: 23px 23px;
+  background-repeat: no-repeat;
+  background-position: 8px 2px;
+  text-align: right;
+  line-height: 30px;
+  
+}
+/*打印按钮*/
+.printBtn {
+  padding: 0 8px 0px 36px;
+  height: 30px;
+  background-color: #f5faff;
+  margin-left: 15px;
+  border-radius: 5px;
+  border: 1px solid #E1E1E1;
+  cursor: pointer;
+  background-image: url(../img/print.png);
+  background-size: 23px 23px;
+  background-repeat: no-repeat;
+  background-position: 8px 2px;
+  text-align: right;
+  line-height: 30px;
+  
+}
+/*审核按钮*/
+.shenheBtn {
+  padding: 0 8px 0px 36px;
+  height: 30px;
+  background-color: #f5faff;
+  margin-left: 15px;
+  border-radius: 5px;
+  border: 1px solid #E1E1E1;
+  cursor: pointer;
+  background-image: url(../img/shenhe.png);
+  background-size: 23px 23px;
+  background-repeat: no-repeat;
+  background-position: 8px 2px;
+  text-align: right;
+  line-height: 30px;
+  
+}
+/*弃审按钮*/
+.qishenBtn {
+  padding: 0 8px 0px 36px;
+  height: 30px;
+  background-color: #f5faff;
+  margin-left: 15px;
+  border-radius: 5px;
+  border: 1px solid #E1E1E1;
+  cursor: pointer;
+  background-image: url(../img/qishen.png);
+  background-size: 21px 21px;
+  background-repeat: no-repeat;
+  background-position: 8px 2px;
+  text-align: right;
+  line-height: 30px;
+  
+}
+/*停用按钮*/
+.stopBtn {
+  padding: 0 8px 0px 36px;
+  height: 30px;
+  background-color: #f5faff;
+  margin-left: 15px;
+  border-radius: 5px;
+  border: 1px solid #E1E1E1;
+  cursor: pointer;
+  background-image: url(../img/stop.png);
+  background-size: 23px 23px;
+  background-repeat: no-repeat;
+  background-position: 8px 2px;
+  text-align: right;
+  line-height: 30px;
+  
+}
+/*上张按钮*/
+.upBtn {
+  padding: 0 8px 0px 36px;
+  height: 30px;
+  background-color: #f5faff;
+  margin-left: 15px;
+  border-radius: 5px;
+  border: 1px solid #E1E1E1;
+  cursor: pointer;
+  background-image: url(../img/up.png);
+  background-size: 23px 23px;
+  background-repeat: no-repeat;
+  background-position: 8px 2px;
+  text-align: right;
+  line-height: 30px;
+  
+}
+/*下张按钮*/
+.nextBtn {
+  padding: 0 8px 0px 36px;
+  height: 30px;
+  background-color: #f5faff;
+  margin-left: 15px;
+  border-radius: 5px;
+  border: 1px solid #E1E1E1;
+  cursor: pointer;
+  background-image: url(../img/next.png);
+  background-size: 23px 23px;
+  background-repeat: no-repeat;
+  background-position: 8px 2px;
+  text-align: right;
+  line-height: 30px;
+  
+}
+/*首张按钮*/
+.firstBtn {
+  padding: 0 8px 0px 36px;
+  height: 30px;
+  background-color: #f5faff;
+  margin-left: 15px;
+  border-radius: 5px;
+  border: 1px solid #E1E1E1;
+  cursor: pointer;
+  background-image: url(../img/first.png);
+  background-size: 23px 23px;
+  background-repeat: no-repeat;
+  background-position: 8px 2px;
+  text-align: right;
+  line-height: 30px;
+  
+}
+/*末张按钮*/
+.endBtn {
+  padding: 0 8px 0px 36px;
+  height: 30px;
+  background-color: #f5faff;
+  margin-left: 15px;
+  border-radius: 5px;
+  border: 1px solid #E1E1E1;
+  cursor: pointer;
+  background-image: url(../img/last.png);
+  background-size: 23px 23px;
+  background-repeat: no-repeat;
+  background-position: 8px 2px;
+  text-align: right;
+  line-height: 30px;
+  
+}
+/*定位按钮*/
+.dwBtn {
+  padding: 0 8px 0px 36px;
+  height: 30px;
+  background-color: #f5faff;
+  margin-left: 15px;
+  border-radius: 5px;
+  border: 1px solid #E1E1E1;
+  cursor: pointer;
+  background-image: url(../img/positions.png);
+  background-size: 23px 23px;
+  background-repeat: no-repeat;
+  background-position: 8px 2px;
+  text-align: right;
+  line-height: 30px;
+  
+}
+.xz_attribute{
+	border-bottom:0px #CDCDCD solid;
+	border-radius: 5px;
+}
+.xz_attribute ul li{
+	line-height:30px;
+}
+.xz_attribute input{
+	border:none;
+	border-bottom:1px #ccc solid;
+	text-align: left;
+}
+/*基本属性查询页面*/
+.search_ipt{
+	margin-top: 30px;
+	width:50%;
+	text-align: left;
+}
+.search_ipt input{
+	border:none;
+	border-bottom: 1px #ccc solid;
+	height: 25px;
+	line-height: 25px;
+}
+
+
+.px_ipt{
+	width:40px;
+	height:20px; 
+	border:1px solid #e2dedf;
+	text-align:center;
+	}
+
+.EMattr{
+	margin-top: 20px;
+	margin-left: 15px;
+	margin-right: 15px;
+}
+.divAttr{
+	border:1px #CDCDCD solid;
+	border-radius: 5px;
+}
+.divAttr ul li{
+	float:left;
+	margin:10px 80px 10px 20px;
+}
+
+.autoattribute{
+	color:#e64239;
+	cursor: pointer;
+}
+
+/*物料档案增加*/
+.divtext{
+	margin-bottom:10px;
+	height:30px;
+	width:99%;
+}
+.writeselect{
+	width:170px;
+	height:25px;
+	line-height:25px;
+}
+.textbt{
+	height: 25px;
+	line-height:25px;
+	width:120px;
+	text-align:right;
+}
+.textipt{
+	height:25px;
+	line-height:25px;
+	width:190px;
+	
+}
+.writeipt{
+	height:25px;
+	width:100%;
+	line-height:25px;
+	border:none;
+	border-bottom:1px #ccc solid;
+}
+
+/*操作弹出层*/
+.toolTd{
+	position: relative;
+	cursor: pointer;	
+}
+.tools{
+	position: absolute;
+	z-index: 99;
+	width:120px;
+	height:30px;
+	line-height:30px;;
+	text-align: center;
+	background:#34d2ed;
+	display:none;
+	margin-top:7px;
+}
+.toolsword{
+	color:#fff;
+}
+
+/*login*/
+.login_bg{
+	width:100%;
+	height:100%;
+	background-image: url(../img/bg.png);
+	background-repeat: no-repeat;
+	position: relative;
+}
+.login_div{
+	position: absolute;
+	top:340px;
+	left:510px;
+	width:400px;
+	height:180px;
+}
+.login_div ul li{height:40px;line-height:42px;}
+.login_dis{width:100%;height:42px;margin-top:12px;}
+.li_text{
+	width:23%;
+	text-align: right;
+	font-size:20px;
+	color:#fff;
+}
+.login_dis ul li input[type="text"]{
+	width:276px;
+	height:35px;
+	line-height: 35px;
+}
+.login_btn{
+	height:35px;
+	line-height:35px;
+	font-size:16px;
+	margin-top:20px;
+	width:100px;
+	border:1px #ccc solid;
+	border-radius:3px;
+	margin-right:20px;
+	background-color:#fff;
+	text-align: center;
+}
+
+.xz_attribute ul li{height:40px;line-height:40px;}
+
+.tree_div{
+
+	width:20%;
+	border:none;
+	border-right:1px #CDCDCD solid;
+	margin-top:20px;
+	
+}
+
+
+.div_text{
+	width:45%;
+	text-align:right;
+}
+.div_ipt{
+	width:50%;
+	text-align:left;
+}
+.div_ipt input[type="text"]{
+	width:220px;
+	height:25px;
+	line-height: 25px;
+}
+
+.div_img{
+	z-index:999;
+	position:absolute;
+	margin-left:260px; 
+	top:10px;
+	cursor: pointer;
+}
+.xing{
+	color:red;
+	margin-left:5px;
+	height:25px;
+	line-height: 30px;
+}
+/*增加行*/
+.addrow{
+	width:16px;
+	height: 16px;
+	background-image: url(../img/tj.png);
+	margin-left:15px;
+	cursor: pointer;
+}
+.delrow{
+	/* width:16px;
+	height: 16px;
+	background-image: url(../img/reduce1.png);
+	margin-left:15px;
+	cursor: pointer; */
+	width: 16px;
+	height: 16px;
+	background-image: url(../img/reduce1.png);
+	background-size: 100% 100%;
+	border: none;
+	cursor: pointer;
+}
+
+.dwrow{
+	/* width:16px;
+	height: 16px;
+	background-image: url(../img/reduce1.png);
+	margin-left:15px;
+	cursor: pointer; */
+	width: 16px;
+	height: 16px;
+	background-image: url(../img/dw.png);
+	background-size: 100% 100%;
+	border: none;
+	cursor: pointer;
+}
+
+.change{
+	width: 16px;
+	height: 16px;
+	background-image: url(../img/change.jpg);
+	background-size: 100% 100%;
+	border: none;
+	cursor: pointer;
+}
+
+#menu{
+	width:100%; 
+	overflow:hidden;
+}
+#menu #nav {
+	display:block;
+	width:100%;
+	padding:0;
+	margin:0;
+	list-style:none; 
+	border-bottom: 1px solid #ccc;
+	line-height: 40px;
+	height: 40px;
+}
+#menu #nav li {
+	float:left;
+	width:140px;
+	margin-right: 3px;
+}
+#menu #nav li a {
+	display:block;
+	line-height:33px;
+	text-decoration:none;
+	text-align:center;
+}
+.tag{
+	 padding:10px; 
+	 overflow:hidden;
+}
+.gf_tag_a{
+	color:#333;
+	height: 30px;
+	margin-top: 10px;
+	background-image: url("../img/EMgray.png");
+	padding: 0px 5px 0px 5px;
+	background-repeat: no-repeat;
+}
+.selected1{
+	font-weight: bold;
+ 	border-bottom: 2px solid #1882b6;
+	color: red;
+	/*background-image: url("../img/EMblue.png");*/
+}
+.listword{
+	width: 100%;
+	border: none;
+	height: 25px;
+	text-align: center;
+	line-height: 25px;
+}
+
+.localWitdh
+{
+
+	width:100px;
+}
+
+.slocalWitdh
+{
+
+	width:60px;
+}
+
+.hideClass
+{
+
+	display:none;
+}
+
+.btns {
+  padding: 0 10px 0px 10px;
+  height: 25px;
+  background-color: #f5faff;
+  margin-left: 6px;
+  border-radius: 3px;
+  border: 1px solid #afc6e7;
+  cursor: pointer;
+  background-image: url(../img/btns.png);
+  text-align: center;
+  line-height: 25px; 
+}
+.write_input{
+	height: 28px;
+	width: 180px;
+	border: 1px solid #ccc;
+	line-height: 28px;
+}
+
+.write_input:hover{
+	border: 1px solid #319ce5;
+}
+.write_input:active{
+	border: 1px solid #319ce5;
+}
+

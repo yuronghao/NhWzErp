@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"
+    "http://struts.apache.org/dtds/struts-2.1.dtd">
+
+<struts>
+	<package name="processdesign" namespace="/wms" extends="globalR">
+		<action name="basepd_*" class="com.emi.wms.processDesign.action.BasePDAction" method="{1}">
+	        <result name="basepd_attribute">/WEB-INF/jsp/processDesign/basepd_attribute.jsp</result>
+	        <result name="basepd_design">/WEB-INF/jsp/processDesign/basepd_design.jsp</result>
+	        <result name="basepd_list">/WEB-INF/jsp/processDesign/basepd_list.jsp</result>
+	        <result name="basepd_info">/WEB-INF/jsp/processDesign/basepd_info.jsp</result>
+	        <result name="basepd_setRoute">/WEB-INF/jsp/processDesign/basepd_setRoute.jsp</result>
+	        <result name="standardProcess_list">/WEB-INF/jsp/processDesign/standardProcess_list.jsp</result>
+	        <result name="standardProcess_info">/WEB-INF/jsp/processDesign/standardProcess_info.jsp</result>
+	        <result name="workcenterlist">/WEB-INF/jsp/processDesign/workcenterlist.jsp</result>
+	        <result name="standardProcessadd">/WEB-INF/jsp/processDesign/standardProcessadd.jsp</result>
+	        <result name="standardProcessedit">/WEB-INF/jsp/processDesign/standardProcessedit.jsp</result>
+	        <result name="workcenteradd">/WEB-INF/jsp/processDesign/workcenteradd.jsp</result>
+	        <result name="workcenteredit">/WEB-INF/jsp/processDesign/workcenteredit.jsp</result>
+	        <result name="selectdepTree">/WEB-INF/jsp/processDesign/selectdepTree.jsp</result>
+	        <result name="basepd_importRoute">/WEB-INF/jsp/processDesign/basepd_importRoute.jsp</result>
+		</action>
+		
+		<action name="orderpd_*" class="com.emi.wms.processDesign.action.OrderPDAction" method="{1}">
+	        <result name="orderpd_attribute">/WEB-INF/jsp/processDesign/orderpd_attribute.jsp</result>
+	        <result name="orderpd_design">/WEB-INF/jsp/processDesign/orderpd_design.jsp</result>
+	        <result name="orderpd_list">/WEB-INF/jsp/processDesign/orderpd_list.jsp</result>
+	        <result name="orderpd_info">/WEB-INF/jsp/processDesign/orderpd_info.jsp</result>
+	        <result name="basepd_attribute">/WEB-INF/jsp/processDesign/basepd_attribute.jsp</result>
+	        <result name="basepd_design">/WEB-INF/jsp/processDesign/basepd_design.jsp</result>
+	        <result name="basepd_setRoute">/WEB-INF/jsp/processDesign/basepd_setRoute.jsp</result>
+	        <result name="orderpd_show">/WEB-INF/jsp/processDesign/orderpd_show.jsp</result>
+	        <result name="changeOrderSrc">/WEB-INF/jsp/processDesign/changeOrderSrc.jsp</result>
+	        <result name="changeProcessSrc">/WEB-INF/jsp/processDesign/changeProcessSrc.jsp</result>
+	        <result name="orderpd_changeSrc">/WEB-INF/jsp/processDesign/orderpd_changeSrc.jsp</result>
+		</action>
+	</package>
+</struts>

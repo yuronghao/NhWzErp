@@ -1,0 +1,190 @@
+var routecId = '${routecId}';
+
+
+"process_objs":
+{
+    "7C04CFF9-6E91-42BF-AB05-16E2BBA43B90": {
+        "base": {
+            "processName": "工序1",
+            "processCode": "000001",
+            "processIndex": "0102",
+            "routeCid": "子表id",
+            "standardProcessId": "标准工序id",
+		    "isCheck":"1",
+		    "isOut":"0",
+		    "isStock":"0",
+		    "isSemi":"是否是半成品",
+		    "passRate":"0.8",
+		    "number":"100(保存时后台计算)",
+		    "workCenterId":"",
+		    "workCenterName":"",
+		    "disObjType":"派工对象类型",
+		    "stockGoodsId":"入库物品id",
+		    "stockGoodsCode":"",
+		    "stockGoodsName":"入库物品name",
+		    "semiGoodsId":"半成品id",
+		    "semiGoodsCode":"",
+		    "semiGoodsName":"半成品名称",
+		    "productId":"成品id",
+		    "productCode":"成品编码",
+		    "standardPrice":"标准工价",
+		    "realPrice":"实际工价",
+		    "standardHours":"标准工时"
+		    "barcode":"条码（订单工艺路线用）"
+
+        },
+        "attrPreProc": [
+            {
+                "routeCid": "",
+                "baseUse": "3",
+                "baseQuantity": "2",
+                "standardUse": "1.5(暂时不用)"
+            }
+        ],
+        "attrGoods": [
+            {
+                "goodsId": "",
+                "goodscode": "",
+                "goodsname": "",
+                "goodsstandard": "",
+                "unitName": "",
+                "baseUse": "2",
+                "baseQuantity": "1",
+		"number":"应领数量",
+		"free1":"自由项1"
+            }
+        ],
+	"attrEquipment": [
+            {
+                "equipmentId": "",
+                "equipmentCode": "",
+                "equipmentName": "设备名称",
+            }
+        ]，
+	"attrMould": [
+            {
+                "mouldId": "",
+                "mouldCode": "",
+                "mouldName": "模具名称",
+            }
+        ]，
+        "attrDispatching": [
+            {
+                "objId": "",
+                "objCode": "",
+                "objName": "",
+		"objType": "1",
+            }
+        ]
+    }
+}
+
+
+_canvas.getProcessInfo():
+{
+    "C6763BCF-5B02-4CC4-AD8D-942CDB43E6AB": {
+        "top": 352,
+        "left": 789,
+        "process_to": [
+            "33DACB87-F7AF-47A1-AA06-86D9EA5BE994"
+        ]
+    },
+    "33DACB87-F7AF-47A1-AA06-86D9EA5BE994": {
+        "top": 355,
+        "left": 1156,
+        "process_to": [
+            "3278AB56-DCE5-4328-8134-11F030F56F96"
+        ]
+    },
+    "F3A7A068-6FB2-4021-8FD7-26DD871C592A": {
+        "top": 454,
+        "left": 793,
+        "process_to": [
+            "33DACB87-F7AF-47A1-AA06-86D9EA5BE994"
+        ]
+    },
+    "3278AB56-DCE5-4328-8134-11F030F56F96": {
+        "top": 355,
+        "left": 1411,
+        "process_to": []
+    }
+}
+
+
+"processData":
+{
+    "total": 6,
+    "list": [
+        {
+            "id": "515",
+            "flow_id": "119",
+            "process_name": "俺的沙发",
+            "process_code": "01",
+            "process_to": "516",
+            "icon": "icon-star",
+            "style": "width:120px;height:30px;line-height:30px;color:#0e76a8;left:305px;top:91px;"
+        },
+        {
+            "id": "516",
+            "flow_id": "119",
+            "process_name": "asd",
+            "process_to": "520",
+            "icon": "icon-star",
+            "style": "width:120px;height:30px;line-height:30px;color:#0e76a8;left:1024px;top:181px;"
+        },
+        {
+            "id": "517",
+            "flow_id": "119",
+            "process_name": "65b05efa6b659aa4",
+            "process_to": "520,521",
+            "icon": "icon-star",
+            "style": "width:120px;height:30px;line-height:30px;color:#0e76a8;left:178px;top:442px;"
+        },
+        {
+            "id": "519",
+            "flow_id": "119",
+            "process_name": "65b05efa6b659aa4",
+            "process_to": "521",
+            "icon": "icon-star",
+            "style": "width:120px;height:30px;line-height:30px;color:#0e76a8;left:781px;top:409px;"
+        },
+        {
+            "id": "520",
+            "flow_id": "119",
+            "process_name": "65b05efa6b659aa4",
+            "process_to": "519",
+            "icon": "icon-star",
+            "style": "width:120px;height:30px;line-height:30px;color:#0e76a8;left:459px;top:314px;"
+        },
+        {
+            "id": "521",
+            "flow_id": "119",
+            "process_name": "65b05efa6b659aa4",
+            "process_to": "",
+            "icon": "icon-star",
+            "style": "width:120px;height:30px;line-height:30px;color:#0e76a8;left:520px;top:523px;"
+        }
+    ]
+}
+
+
+
+
+var routecId = '${routecId}';
+
+var arr_updProcess = new Array();//更新的工序，存id
+var arr_addProcess = new Array();//新增的工序，存节点id
+var arr_delProcess = new Array();//删除的工序，存id
+
+//{'xxxxx':{'base':{'processName':'工序1','processCode':'01','semiProdId':'','productId':'','processId':'','standardProcessId':''},'attrPreProc':[{'preId':'','baseUse':'3','baseQuantity':'2','standardUse':'1.5'}]}}
+var process_objs = {};//工序属性详情 对象
+var process_codeJson = {};//存放工序编码，在自动生成或手动修改时发生变化
+
+var the_flow_id = '${route.gid}';
+var the_flow_pk = '${route.pk}';
+
+var the_productId="";//产品id
+var the_productCode="" ;//产品编码
+var the_productName="";//产品名称
+var the_productStandard="";//产品规格
+var the_productUnit="";//产品单位

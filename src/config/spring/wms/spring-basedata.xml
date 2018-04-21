@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+            http://www.springframework.org/schema/beans 
+            http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+            http://www.springframework.org/schema/context
+			http://www.springframework.org/schema/context/spring-context-3.0.xsd
+			http://www.springframework.org/schema/tx 
+			http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+	
+
+	<!--属性方案-->
+	<bean id="attributeAction" class="com.emi.wms.basedata.action.AttributeAction"
+		scope="prototype">
+		<property name="attributeService" ref="attributeService"></property>
+	</bean>
+	<bean id="attributeService" class="com.emi.wms.basedata.service.AttributeService">
+		<property name="attributeDao" ref="attributeDao"></property>
+	</bean>
+	<bean id="attributeDao" class="com.emi.wms.basedata.dao.AttributeDao" scope="prototype">
+		<property name="jdbcTemplate" ref="jdbcTemplate"></property>
+	</bean>
+
+	<!--客商档案 -->
+	<bean id="cusproAction" class="com.emi.wms.basedata.action.CusproAction"
+		scope="prototype">
+		<property name="cusproService" ref="cusproService"></property>
+	</bean>
+	<bean id="cusproService" class="com.emi.wms.basedata.service.CusproService">
+		<property name="cusproDao" ref="cusproDao"></property>
+	</bean>
+	<bean id="cusproDao" class="com.emi.wms.basedata.dao.CusproDao" scope="prototype">
+		<property name="jdbcTemplate" ref="jdbcTemplate"></property>
+	</bean>
+	<!--基础模块 -->
+    <bean id="baseAction" class="com.emi.common.action.BaseAction" scope="prototype">
+			<property name="baseDao" ref="baseDao"></property>
+		</bean>
+		<bean id="baseDao" class="com.emi.common.dao.BaseDao" scope="prototype">
+			<property name="jdbcTemplate" ref="jdbcTemplate"></property>
+		</bean>
+		
+	<!--帐套模块 -->
+	<bean id="sobAction" class="com.emi.wms.basedata.action.SobAction"
+		scope="prototype">
+		<property name="sobService" ref="sobService"></property>
+	</bean>
+	<bean id="sobService" class="com.emi.wms.basedata.service.SobService">
+		<property name="sobDao" ref="sobDao"></property>
+	</bean>
+	<bean id="sobDao" class="com.emi.wms.basedata.dao.SobDao" scope="prototype">
+		<property name="jdbcTemplate" ref="jdbcTemplate"></property>
+	</bean>
+		
+		<!--类别统一管理-->
+	<bean id="classifyAction" class="com.emi.wms.basedata.action.ClassifyAction"
+		scope="prototype">
+		<property name="classifyService" ref="classifyService"></property>
+	</bean>
+	<bean id="classifyService" class="com.emi.wms.basedata.service.ClassifyService">
+		<property name="classifyDao" ref="classifyDao"></property>
+	</bean>
+	<bean id="classifyDao" class="com.emi.wms.basedata.dao.ClassifyDao" scope="prototype">
+		<property name="jdbcTemplate" ref="jdbcTemplate"></property>
+	</bean>
+	
+	<!--账期设置-->
+	<bean id="accountPeriodAction" class="com.emi.wms.basedata.action.AccountPeriodAction" scope="prototype">
+	    <property name="cacheCtrlService" ref="cacheCtrlService"></property>
+		<property name="basicSettingService" ref="basicSettingService"></property>
+	</bean>
+	
+	<bean id="unitAction" class="com.emi.wms.basedata.action.UnitAction" scope="prototype">
+	    <property name="cacheCtrlService" ref="cacheCtrlService"></property>
+		<property name="basicSettingService" ref="basicSettingService"></property>
+	</bean>
+	
+	<bean id="goodsAction" class="com.emi.wms.basedata.action.GoodsAction" scope="prototype">
+	    <property name="cacheCtrlService" ref="cacheCtrlService"></property>
+		<property name="basicSettingService" ref="basicSettingService"></property>
+	</bean>
+	
+	<bean id="basicSettingService" class="com.emi.wms.basedata.service.BasicSettingService" scope="prototype">
+	    <property name="cacheCtrlService" ref="cacheCtrlService"></property>
+		<property name="basicSettingDao" ref="basicSettingDao"></property>
+		<property name="wareHouseDao" ref="wareHouseDao"></property>
+	</bean>
+	<bean id="basicSettingDao" class="com.emi.wms.basedata.dao.BasicSettingDao" scope="prototype">
+		<property name="jdbcTemplate" ref="jdbcTemplate"></property>
+	</bean>
+	
+	<!--组 -->
+	<bean id="groupAction" class="com.emi.wms.basedata.action.GroupAction"
+		scope="prototype">
+		<property name="groupService" ref="groupService"></property>
+	</bean>
+	<bean id="groupService" class="com.emi.wms.basedata.service.GroupService">
+		<property name="groupDao" ref="groupDao"></property>
+	</bean>
+	<bean id="groupDao" class="com.emi.wms.basedata.dao.GroupDao" scope="prototype">
+		<property name="jdbcTemplate" ref="jdbcTemplate"></property>
+	</bean>
+	
+	<!--设备 -->
+	<bean id="equipmentAction" class="com.emi.wms.basedata.action.EquipmentAction"
+		scope="prototype">
+		<property name="equipmentService" ref="equipmentService"></property>
+	</bean>
+	<bean id="equipmentService" class="com.emi.wms.basedata.service.EquipmentService">
+		<property name="equipmentDao" ref="equipmentDao"></property>
+	</bean>
+	<bean id="equipmentDao" class="com.emi.wms.basedata.dao.EquipmentDao" scope="prototype">
+		<property name="jdbcTemplate" ref="jdbcTemplate"></property>
+	</bean>
+	
+	<!--模具 -->
+	<bean id="mouldAction" class="com.emi.wms.basedata.action.MouldAction"
+		scope="prototype">
+		<property name="mouldService" ref="mouldService"></property>
+	</bean>
+	<bean id="mouldService" class="com.emi.wms.basedata.service.MouldService">
+		<property name="mouldDao" ref="mouldDao"></property>
+	</bean>
+	<bean id="mouldDao" class="com.emi.wms.basedata.dao.MouldDao" scope="prototype">
+		<property name="jdbcTemplate" ref="jdbcTemplate"></property>
+	</bean>
+	
+	<!--原因 -->
+	<bean id="reasonAction" class="com.emi.wms.basedata.action.ReasonAction"
+		scope="prototype">
+		<property name="reasonService" ref="reasonService"></property>
+	</bean>
+	<bean id="reasonService" class="com.emi.wms.basedata.service.ReasonService">
+		<property name="reasonDao" ref="reasonDao"></property>
+	</bean>
+	<bean id="reasonDao" class="com.emi.wms.basedata.dao.ReasonDao" scope="prototype">
+		<property name="jdbcTemplate" ref="jdbcTemplate"></property>
+	</bean>
+	
+	<!--成本项目 -->
+	<bean id="costItemAction" class="com.emi.wms.basedata.action.CostItemAction"
+		scope="prototype">
+		<property name="costItemService" ref="costItemService"></property>
+	</bean>
+	<bean id="costItemService" class="com.emi.wms.basedata.service.CostItemService">
+		<property name="costItemDao" ref="costItemDao"></property>
+		<property name="cacheCtrlService" ref="cacheCtrlService"></property>
+		
+	</bean>
+	<bean id="costItemDao" class="com.emi.wms.basedata.dao.CostItemDao" scope="prototype">
+		<property name="jdbcTemplate" ref="jdbcTemplate"></property>
+	</bean>
+</beans>

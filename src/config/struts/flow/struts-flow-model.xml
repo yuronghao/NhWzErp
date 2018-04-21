@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"
+    "http://struts.apache.org/dtds/struts-2.1.dtd">
+
+<struts>
+	<package name="flowmodel" namespace="/flow" extends="globalR">
+		<action name="table_*" class="com.emi.flow.model.action.TableAction" method="{1}">
+			<result name="notice_list">/WEB-INF/jsp/ms/notice/notice_list.jsp</result>
+		</action>
+		
+		<action name="enum_*" class="com.emi.flow.model.action.EnumAction" method="{1}">
+			
+		</action>
+		
+	</package>
+</struts>

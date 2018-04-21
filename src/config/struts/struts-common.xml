@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"
+    "http://struts.apache.org/dtds/struts-2.1.dtd">
+
+<struts>
+	<package name="common" namespace="/" extends="globalR">
+	<!-- <global-exception-mappings>
+            <exception-mapping exception="java.lang.Exception" result="error" />
+     </global-exception-mappings> -->
+		<action name="commonfile_*" class="com.emi.common.action.CommonFileUploadAction" method="{1}">
+			<result name="uploadFile">/WEB-INF/jsp/common/fileUpload.jsp</result>
+		</action>
+		
+		<action name="plugin_*" class="com.emi.common.action.EmiPluginAction" method="{1}">
+			<result name="selectMain">/WEB-INF/jsp/common/select/selectMain.jsp</result>
+			<result name="selectTree">/WEB-INF/jsp/common/select/selectTree.jsp</result>
+			<result name="selectList">/WEB-INF/jsp/common/select/selectList.jsp</result>
+			
+			<!--查询货位现存量-->
+			<result name="selectAllocationStockList">/WEB-INF/jsp/common/allocationStockListHelp.jsp</result>
+			
+		</action>
+	</package>
+</struts>

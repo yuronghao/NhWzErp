@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"
+    "http://struts.apache.org/dtds/struts-2.1.dtd">
+
+<struts>
+	<package name="lfmember" namespace="/" extends="globalR">
+		<action name="lfmember_*" class="com.emi.lfmember.action.LfMemberAction" method="{1}">
+			<result name="lfindex">/WEB-INF/jsp/lfmember/lfindex.jsp</result>
+			<result name="memberlist">/WEB-INF/jsp/lfmember/memberlist.jsp</result>
+			<result name="addmodifymember">/WEB-INF/jsp/lfmember/addmodifymember.jsp</result>
+			<result name="showRecharge">/WEB-INF/jsp/lfmember/showrecharge.jsp</result>
+			<result name="showConsumption">/WEB-INF/jsp/lfmember/spend.jsp</result>
+			<result name="rechargeList">/WEB-INF/jsp/lfmember/rechargeList.jsp</result>
+			<result name="consumptionList">/WEB-INF/jsp/lfmember/consumptionList.jsp</result>
+		</action>
+	</package>
+</struts>

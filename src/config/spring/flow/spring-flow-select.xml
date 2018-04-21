@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+            http://www.springframework.org/schema/beans 
+            http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+            http://www.springframework.org/schema/context
+			http://www.springframework.org/schema/context/spring-context-3.0.xsd
+			http://www.springframework.org/schema/tx 
+			http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+
+	<!-- 提供各种界面选择功能 如：角色、人员等 -->
+	<bean id="selectAction" class="com.emi.flow.select.action.SelectAction" scope="prototype">
+		<property name="selectService" ref="selectService"></property>
+	</bean>
+	<bean id="selectService" class="com.emi.flow.select.service.impl.SelectServiceImpl">
+		<property name="selectDao" ref="selectDao"/>
+	</bean>
+	<bean id="selectDao" class="com.emi.flow.select.dao.impl.SelectDaoImpl" scope="prototype">
+		<property name="jdbcTemplate" ref="jdbcTemplate"></property>
+	</bean>
+	
+
+</beans>

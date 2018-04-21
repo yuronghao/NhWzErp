@@ -1,0 +1,643 @@
+/*EMmain部分的样式*/
+*{
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	text-decoration: none;
+}
+body,html{
+	height: 100%;
+	margin: 0px;
+	font-size: 12px;
+	font-family: 微软雅黑;
+	background-color: #FFFFFF;
+	
+}
+.EMshoucang{
+	width: 25px;
+	height: 25px;
+	background-image: url(../img/souc.png);
+	background-repeat: no-repeat;
+ 	display: none;
+
+}
+.QXshoucang{
+	width: 25px;
+	height: 25px;
+	background-image: url(../img/ysouc.png);
+	background-repeat: no-repeat;
+}
+.dowmbtn1{
+	  width: 33px;
+	  margin-top: 3px;
+	  height: 33px;
+	  background-color: #f5faff;
+	  margin-left: 15px;
+	  border-radius: 5px;
+	  border: none;
+	  cursor: pointer;
+	  background-image: url(../img/downbtn.png);
+	  background-size: 33px 33px;
+	  background-repeat: no-repeat;	 
+}
+.fl{
+	float: left;
+}
+.fr{
+	float: right;
+}
+.cf{
+	clear: both;
+}
+#mainbody{
+	background-image: url(../img/ERPdemo1.jpg);
+	background-size: 100% 100%;
+}
+ /*导航部分*/
+.navbar{
+ 	height: 55px;
+ 	line-height: 55px;
+ 	font-size: 14px;
+ 	color: #FFFFFF;
+ /*	background-color: #4895dd;*/
+ 	padding-left: 10px;
+}
+/*整体部分部分*/
+.mainContainer{
+	height: 100%;
+}
+/*菜单栏部分*/
+.leftmenu{
+	width: 14%;
+	height: 100%;
+	/*background-image: url(../img/bj1.jpg);*/
+ 
+}
+/*可关闭tab*/
+.EMclosetab{
+	height: 50px;
+	background-color: #cdcdcd;
+}
+ 
+ 
+.changeimg{
+	/* background-image: url(../img/souc.png);
+	background-repeat: no-repeat; */
+	position: relative;
+	z-index: 9999;
+	top: 3px;
+	margin-right: 2px;
+	cursor: pointer;
+}
+ 
+
+/*右边主题*/
+#rightFrame {
+	/* width: 86%; */
+	position: relative;
+}
+
+
+
+
+/*EMleft左边部分样式*/
+.leftcontent{
+	width: 100%;
+	height: 100%;
+}
+.EMlogo img{
+	width: 50%;
+	margin-left: 25%;
+	margin-top: 5%;
+}
+.EMinfor{
+	width: 74%;
+	background-color: #22519d;
+	height: 150px;
+	margin-left: 7%;
+	margin-top: 5%;
+	border-radius: 10px;
+	padding: 6% 6% 6% 6%;
+	margin-bottom: 15px;
+}
+.EMinfor ul{	 
+	height: 100%;
+	width: 100%;
+}
+.EMinfor_lione{
+	width: 47%;
+	height: 47%;
+	background-color: #ed6051;
+}
+.EMinfor_litwo{
+	width: 47%;
+	height: 47%;
+	margin-left: 6%;
+	background-color: #ffa004;
+}
+.EMinfor_lithree{
+	height: 47%;
+	width: 47%;
+	margin-top: 6%;
+	margin-right: 6%;
+	background-color: #4c9af0;
+}
+.EMinfor_lifour{
+	height: 47%;
+	width: 47%;
+	margin-top: 6%;
+	background-color: #73c024;
+}
+/*导航*/
+#menu {
+	width: 100%;
+	/*margin-top: 8%;*/
+	 
+}		 
+#nav {
+	padding: 0;
+	margin: 0;
+	list-style: none;	
+	position: fixed;
+	z-index: 99;
+	bottom: 0;
+ 
+ 
+}
+#menu #nav li {
+	 
+	width: 100%;
+	height: 74px;
+	margin-bottom: 10px;
+	 
+}
+#menu #nav li a {
+	display: block;
+	text-decoration: none;
+	height: 30px;
+	text-align: center;
+	color: #FFFFFF;
+	line-height: 30px;
+	width: 100%;
+}
+.selected1 {
+	font-weight: bold;						 
+	height: 30px;
+	border-bottom: 2px solid #1882b6;
+	/* background: #fff;
+	opacity: 0.5; */
+}
+.gf_tag{
+	/*background-color: yellow;*/
+	color: #fff;
+}
+.gf_tag_one{
+	background-image: url(../img/Eall.png);
+	background-repeat: no-repeat;
+}
+.gf_tag_two{
+	background-image: url(../img/shoucang.png);
+	background-repeat: no-repeat;
+}
+.gf_tag_three{
+	width: 25px;
+	height: 74px;
+	cursor: pointer;
+}
+.gf_tag_three img{
+	 
+	width: 100%;
+	height: 100%;
+}
+
+/*信息数字显示*/
+.EMinfor_word{
+	width: 100%;
+	color: #FFFFFF;
+	text-align: center;
+	margin-top: 9px;
+	font-size: 16px;
+	
+}
+/*全部菜单*/
+#menuul { width:100%; margin:auto;color: #FFFFFF;line-height: 45px;}
+#menuul a{color: #FFFFFF;}
+#menuul h1 { font-size:14px;text-indent: 20px;font-weight: normal;}
+ #menuul h2 { font-size:14px; background-color: #22529E;padding-left: 15%;font-weight: normal;}
+ #menuul ul { background-color: #22529E; padding-left: 25%;font-size: 14px;}
+ #menuul ul li{line-height: 30px;}
+ #menuul a { display:block; text-decoration:none; }
+ #menuul a:hover{ color:#FFFFFF; font-weight: bold;}
+ #menuul .no {display:none;}
+ #menuul .h1 a{color:#FFFFFF;}
+ #menuul .h2 a{color:#FFFFFF;}
+ #menuul  h1 a{color:#FFFFFF;}
+ #menuul h1 img{
+ 	width: 30px;
+ 	height: 30px;
+ 	border: none;
+ 	position: relative;
+ 	top: 10px;
+ }
+ .scmenu {
+ 	padding-left: 15%;
+ }
+  .scmenu  li{
+  	line-height: 40px;
+  	
+  }
+.scmenu  li a{
+	color: #FFFFFF;
+	font-size: 14px;
+}
+.scmenu  li a:hover{
+	font-weight: bold;
+}
+/*时间*/
+.EMtime li img{
+	width: 26px;
+	height: 26px;
+	position: relative;
+	top: 8px;
+	border: none;
+}
+ 
+.EMtimeli{
+	margin-right: 20px;
+}
+.EMtime a{
+	color: #FFFFFF;
+}
+.EMmessage{
+	display: none;
+	position: absolute;
+	right: 20px;
+	height: 80px;
+	width: 140px;
+	top: 45px;
+}
+.downimg{
+	width: 40px;
+	height: 10px;
+	background-image: url(../img/ji.png);
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+	right: -60px;
+	position: relative;
+	bottom: -1px;
+}
+.EMmessage li ul{
+	border: 1px solid #ccc;
+	background-color: #FFFFFF;
+	box-shadow: 0 2px 5px #ccc;
+	color: #000000;
+
+}
+.EMmessage li ul li{
+	height: 45px;
+	width: 100%;text-align: center;
+	line-height: 45px;
+}
+.EMmessage li ul a{
+	color: #333333;
+	
+	
+}
+.messgb{
+	background-color: #22529E;
+}
+.EMmessagedown{
+	cursor: pointer;
+}
+.EMmessage li ul li a img{
+	width: 18px;
+	height: 18px;
+	position: relative;
+	top: 5px;
+}
+ 	
+
+
+
+/*EMonecontent主体部分样式*/
+.EMonecontent{
+	background: white;
+/*	min-height: 100%;*/ 
+	margin: 0 5px 0px 5px;
+/*	border: 1px solid green;*/
+}
+
+/*按钮部分*/
+.toolbar{
+	height: 30px;
+	font-size: 12px;
+	/*border: 1px solid red;*/
+/*	margin-top: 20px;*/
+}
+
+.addBtn {
+  padding: 0 8px 0px 36px;
+  height: 30px;
+  background-color: #f5faff;
+  margin-left: 15px;
+  border-radius: 5px;
+  border: 1px solid #E1E1E1;
+  cursor: pointer;
+  background-image: url(../img/add.png);
+  background-size: 23px 23px;
+  background-repeat: no-repeat;
+  background-position: 8px 2px;
+  text-align: right;
+  line-height: 30px;
+  
+}
+
+/*表格部分*/
+.tabletitle{
+	line-height: 60px;
+	text-align: center;
+	font-size: 24px;
+/*	font-weight: bold;*/
+	color: #333333;
+	margin-top: 10px;
+}
+.creattable table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  border: none;
+}
+.createdList {
+  margin-left: 15px;
+  margin-right: 15px;
+  height: 100%;
+}
+.creattable tr {
+  height: 30px;
+}
+.creattable th {
+  border: 1px solid #dddddd;
+  background-color: #e2eaf0;
+  color: #333333;
+}
+.creattable td {
+  border: 1px solid #dddddd;
+  text-align: center;
+}
+.oddbg{
+	background-color: #f3f6f8;
+}
+.EMpage{
+	height: 50px;
+	margin-top: 20px;
+	margin-left: 15px;
+	margin-right: 15px;
+}
+.mainword{
+	margin-left: 15px;
+	margin-right: 15px;
+}
+.tcdiv{
+	margin-left: 10px;
+}
+.tcdiv_word{
+	width: 80px;
+	height: 30px;
+	line-height: 30px;
+	text-align: right;
+}
+.tcdiv_input input{
+	height: 25px;
+	width: 180px;
+	border-bottom: 1px solid #CDCDCD;
+	border-top: none;
+	border-left: none;
+	border-right: none;
+}
+/*填写部分*/
+.mainaddword{
+
+	border: 1px solid #CDCDCD;
+	border-radius: 5px;
+	
+}
+.mainaddword ul{
+	padding-top: 20px;
+	margin-bottom: 20px;
+}
+ 
+.mainaddword ul li{
+	line-height: 30px;
+	margin-top: 10px;
+}
+.mainaddword_name{
+	width: 44%;
+	text-align: right;
+	margin-right: 10px;
+}
+.mainaddword_word{
+	width: 50%;
+}
+/*.mainaddword_word input{
+	height: 25px;
+	border-left: none;
+	border-bottom: 1px solid #CDCDCD;
+	border-right: none;
+	border-top: none;
+	width: 260px;
+}*/
+.addwordinput{
+	height: 25px;
+	border-left: none;
+	border-bottom: 1px solid #CDCDCD;
+	border-right: none;
+	border-top: none;
+	width: 90%;
+}
+.addwordselect{
+	height: 25px;
+	 
+	border: 1px solid #CDCDCD;
+	 
+	width: 90%;
+}
+.EMtree{
+	width: 20%;
+	min-width: 180px;
+	border-right: 1px solid #CDCDCD;
+	min-height: 300px;
+	margin-top: 20px;
+}
+.upclass{
+	width: 20px;
+	height: 20px;
+	background-image: url(../img/wsearch.png);
+	background-repeat: no-repeat;
+	background-color: white;
+	border: none;
+	cursor: pointer;
+
+}
+.areadiv{
+	width: 260px;
+	height: 100px;
+	border: 1px solid #CDCDCD;
+	margin-top: 10px;
+}
+
+#emtab {
+	width: 100%;
+	overflow: hidden;
+}
+ 
+#emtab #EMnav {
+	display: block;
+/*	width: 100%;*/
+	margin: 10px 15px 0 15px;
+
+	padding: 0;
+ 
+	list-style: none;
+	border-bottom: 1px solid #ccc;
+	line-height: 40px;
+	height: 40px;
+}
+#emtab #EMnav li {
+	float: left;
+	width: 120px;
+	margin: 0;
+}
+.EMgf_tag{
+	margin: 30px 15px 0 15px;
+}
+.EMgf_tag_chose{
+	line-height: 40px;
+	margin-right: 40px;
+}
+#emtab #EMnav li a {
+	display: block;
+	line-height: 38px;
+	text-decoration: none;
+	padding: 0 0 0 5px;
+	text-align: center;
+	color: #333;
+}
+.emselected1 {
+	font-weight: bold;
+	/*border-bottom: 2px solid #1882b6;*/
+	color: #393939;
+}
+
+/*添加子模块*/
+.addmodule {
+  padding: 0 8px 0px 36px;
+  height: 30px;
+  background-color: #f5faff;
+  margin-left: 15px;
+  border-radius: 5px;
+  border: 1px solid #E1E1E1;
+  cursor: pointer;
+  background-image: url(../img/module.png);
+  background-size: 23px 23px;
+  background-repeat: no-repeat;
+  background-position: 8px 2px;
+  text-align: right;
+  line-height: 30px;
+  
+}
+/*添加功能*/
+.addfunction {
+  padding: 0 8px 0px 36px;
+  height: 30px;
+  background-color: #f5faff;
+  margin-left: 15px;
+  border-radius: 5px;
+  border: 1px solid #E1E1E1;
+  cursor: pointer;
+  background-image: url(../img/function.png);
+  background-size: 23px 23px;
+  background-repeat: no-repeat;
+  background-position: 8px 2px;
+  text-align: right;
+  line-height: 30px;
+  
+}
+/*授权*/
+.AuthorizedBtn{
+  padding: 0 8px 0px 36px;
+  height: 30px;
+  background-color: #f5faff;
+  margin-left: 15px;
+  border-radius: 5px;
+  border: 1px solid #E1E1E1;
+  cursor: pointer;
+  background-image: url(../img/sq.png);
+  background-size: 23px 23px;
+  background-repeat: no-repeat;
+  background-position: 8px 2px;
+  text-align: right;
+  line-height: 30px;
+}
+
+/*表单填写部分*/
+.wordul{
+	padding: 20px 0px 0px 0px;	
+}
+
+.wordulList{
+	margin: 20px 0px 20px 0px;	
+}
+
+.wordli{
+	width: 24%;
+}
+
+.wordliNoWidth{
+	
+}
+
+.wordname{
+	width: 30%;
+	text-align: right;
+	padding-right: 5px;
+	line-height: 22px;
+}
+
+.wordfoot{
+	width: 35%;
+}
+
+.wordnameinput{
+	width: 60%;
+}
+.wordnameinput input[type=text]{
+	/* width: 100%; */
+	height: 22px;
+	border-bottom: 1px solid #CDCDCD;
+	border-top: 0px;
+	border-left: 0px;
+	border-right: 0px;
+}
+.wordnameinput select{
+	width: 100%;
+	height: 24px;
+}
+.shoucang{
+	background: #FFFFFF;
+	background-image: url(../img/star.png);
+	background-size: 100% 100%;
+	width: 20px;
+	height: 20px;
+	border: none;	
+}
+.quxiaoshoucang{
+	background: #FFFFFF;
+	background-image: url(../img/star2.png);
+	background-size: 100% 100%;
+	width: 20px;
+	height: 20px;
+	border: none;	
+}
+
+
+

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"
+    "http://struts.apache.org/dtds/struts-2.1.dtd">
+
+<struts>
+	<package name="right" namespace="/" extends="globalR">
+		<action name="right_*" class="com.emi.rm.action.RightAction" method="{1}">
+	        <result name="right">/WEB-INF/jsp/rm/right/right.jsp</result>
+	        <result name="rightForm">/WEB-INF/jsp/rm/right/rightForm.jsp</result>
+	        <result name="rightFormButton">/WEB-INF/jsp/rm/right/rightFormButton.jsp</result>
+	        <result name="rightTree">/WEB-INF/jsp/rm/right/rightTree.jsp</result>
+	        <result name="rightAdd">/WEB-INF/jsp/rm/right/rightAdd.jsp</result>
+	        <result name="rightAddButton">/WEB-INF/jsp/rm/right/rightAddButton.jsp</result>
+	        <result name="updateUpRight">/WEB-INF/jsp/rm/right/upRighTree.jsp</result>
+	        <result name="rightAuth">/WEB-INF/jsp/rm/right/rightAuth.jsp</result>
+	        <result name="rightTree4Auth">/WEB-INF/jsp/rm/right/rightTree4Auth.jsp</result>
+			<result name="buttonAdd">/WEB-INF/jsp/rm/right/buttonAdd.jsp</result>	        
+			<result name="buttonForm">/WEB-INF/jsp/rm/right/buttonForm.jsp</result>
+			<result name="pageJump">/WEB-INF/jsp/rm/right/pageJump.jsp</result>
+
+		</action>
+		
+		<action name="role_*" class="com.emi.rm.action.RoleAction" method="{1}">
+	        <result name="roleList">/WEB-INF/jsp/rm/role/roleList.jsp</result>
+	        <result name="roleAdd">/WEB-INF/jsp/rm/role/roleAdd.jsp</result>
+	        <result name="roleEdit">/WEB-INF/jsp/rm/role/roleEdit.jsp</result>
+	        <result name="roleAuth">/WEB-INF/jsp/rm/role/roleAuth.jsp</result>
+	        <result name="selectUser">/WEB-INF/jsp/rm/role/selectUser.jsp</result>
+	        <result name="selectWareHouse">/WEB-INF/jsp/rm/role/selectWareHouse.jsp</result>
+		</action>
+		
+		<action name="userright_*" class="com.emi.rm.action.UserRightAction" method="{1}">
+	        
+		</action>
+		
+		<action name="login_*" class="com.emi.rm.action.LoginAction" method="{1}">
+			<result name="top">/top.jsp</result>
+			<result name="left">/left.jsp</result>
+			<result name="index">/index.jsp</result>
+			<result name="login">/login.jsp</result>
+			<result name="password">/WEB-INF/jsp/rm/user/password.jsp</result>
+		</action>
+	</package>
+</struts>

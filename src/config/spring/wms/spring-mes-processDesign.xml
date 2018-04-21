@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+            http://www.springframework.org/schema/beans 
+            http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+            http://www.springframework.org/schema/context
+			http://www.springframework.org/schema/context/spring-context-3.0.xsd
+			http://www.springframework.org/schema/tx 
+			http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+
+
+
+	<bean id="basepdAction" class="com.emi.wms.processDesign.action.BasePDAction"
+		scope="prototype">
+		<property name="basePDService" ref="basePDService"></property>
+	</bean>
+	<bean id="basePDService"
+		class="com.emi.wms.processDesign.service.impl.BasePDServiceImpl"
+		scope="prototype">
+		<property name="basePDDao" ref="basePDDao"></property>
+		<property name="cacheCtrlService" ref="cacheCtrlService"></property>
+	</bean>
+	<bean id="basePDDao" class="com.emi.wms.processDesign.dao.impl.BasePDDaoImpl">
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+
+	<bean id="orderpdAction" class="com.emi.wms.processDesign.action.OrderPDAction"
+		scope="prototype">
+		<property name="orderPDService" ref="orderPDService"></property>
+		<property name="produceOrderService" ref="produceOrderService"></property>
+		
+	</bean>
+	<bean id="orderPDService"
+		class="com.emi.wms.processDesign.service.impl.OrderPDServiceImpl"
+		scope="prototype">
+		<property name="orderPDDao" ref="orderPDDao"></property>
+		<property name="basePDService" ref="basePDService"></property>
+		<property name="cacheCtrlService" ref="cacheCtrlService"></property>
+		<property name="emiPluginService" ref="emiPluginService"></property>
+		<property name="emiPluginDao" ref="emiPluginDao"></property>
+		<property name="taskService" ref="taskService"></property>
+		<property name="produceOrderService" ref="produceOrderService"></property>
+	</bean>
+	<bean id="orderPDDao" class="com.emi.wms.processDesign.dao.impl.OrderPDDaoImpl">
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+
+</beans>

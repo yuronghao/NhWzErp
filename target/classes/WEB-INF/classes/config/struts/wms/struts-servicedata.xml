@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"
+    "http://struts.apache.org/dtds/struts-2.1.dtd">
+
+<struts>
+<package name="service" namespace="/wms" extends="globalR">
+<!-- 销售 订单-->
+	<action name="saleOrder_*" class="com.emi.wms.servicedata.action.SaleOrderAction" method="{1}">
+	             <result name="saleOrderAdd">/WEB-INF/jsp/servicedata/saleManager/saleOrderAdd.jsp</result>
+	             <result name="saleOrderList">/WEB-INF/jsp/servicedata/saleManager/saleOrderList.jsp</result>
+	</action>
+    <!-- 销售发货单 -->
+	<action name="salesend_*" class="com.emi.wms.servicedata.action.SaleSendAction" method="{1}">
+	<!-- 销售发货单-->
+	             <result name="saleSendList">/WEB-INF/jsp/servicedata/saleManager/salesSendList.jsp</result>
+	             <result name="saleSendAdd">/WEB-INF/jsp/servicedata/saleManager/salesSendAdd.jsp</result>
+	</action>
+	<action name="test_*" class="com.emi.cache.action.TestAction" method="{1}">
+	
+	</action>
+	
+	<!-- 请购单 -->
+	<action name="requisition_*" class="com.emi.wms.servicedata.action.RequisitionAction" method="{1}">
+	             <result name="requisitionAdd">/WEB-INF/jsp/servicedata/purchaseManager/requisitionAdd.jsp</result>
+	</action>
+	
+	<!-- 采购订单 -->
+	<action name="purchase_*" class="com.emi.wms.servicedata.action.PurchaseAction" method="{1}">
+	             <result name="purchaseAdd">/WEB-INF/jsp/servicedata/purchaseManager/purchaseAdd.jsp</result>
+				<result name="purchaseAddList">/WEB-INF/jsp/servicedata/purchaseManager/purchaseAddList.jsp</result>
+				<result name="openprintpage">/WEB-INF/jsp/servicedata/purchaseManager/openprintpagetc.jsp</result>
+	</action>
+	<!-- 采购到货单 -->
+	<action name="purchaseArrival_*" class="com.emi.wms.servicedata.action.PurchaseArrivalAction" method="{1}">
+	             <result name="purchaseArrivalAdd">/WEB-INF/jsp/servicedata/purchaseManager/purchaseArrivalAdd.jsp</result>
+	             <result name="purchaseArrivalList">/WEB-INF/jsp/servicedata/purchaseManager/purchaseArrivalList.jsp</result>
+	             <result name="openprintpage">/WEB-INF/jsp/servicedata/purchaseManager/openprintpage.jsp</result>
+	</action>
+	<!-- 生产订单 -->
+	<action name="produceOrder_*" class="com.emi.wms.servicedata.action.ProduceOrderAction" method="{1}">
+	             <result name="produceOrderAdd">/WEB-INF/jsp/servicedata/produceManager/produceOrderAdd.jsp</result>
+	             <result name="produceOrderList">/WEB-INF/jsp/servicedata/produceManager/produceOrderList.jsp</result>
+	             <result name="toChangeOrderNum">/WEB-INF/jsp/servicedata/produceManager/toChangeOrderNum.jsp</result>
+	</action>
+	<!-- 质检单 -->
+	<action name="checkbill_*" class="com.emi.wms.servicedata.action.CheckBillAction" method="{1}">
+	<result name="checkbilllist">/WEB-INF/jsp/servicedata/checkbillManager/checkbillList.jsp</result>
+	             <result name="checkbillAdd">/WEB-INF/jsp/servicedata/checkbillManager/checkbillAdd.jsp</result>
+	             <result name="lookcheckbillreason">/WEB-INF/jsp/servicedata/checkbillManager/lookcheckbillreason.jsp</result>
+	             <result name="addcheckbillreason">/WEB-INF/jsp/servicedata/checkbillManager/addcheckbillreason.jsp</result>
+	</action>
+	<!-- 派工单 -->
+	<action name="produceprocess_*" class="com.emi.wms.servicedata.action.ProduceProcessAction" method="{1}">
+	<result name="produceprocesslist">/WEB-INF/jsp/servicedata/produceprocessManager/produceprocessList.jsp</result>
+    <result name="produceprocessAdd">/WEB-INF/jsp/servicedata/produceprocessManager/produceprocessAdd.jsp</result>
+    <result name="dispatchingorderlist">/WEB-INF/jsp/servicedata/produceprocessManager/dispatchingorderList.jsp</result>
+    <result name="dispatchingorderList">/WEB-INF/jsp/servicedata/produceprocessManager/dispatchingorder.jsp</result>
+    <result name="dispatchingorderAdd">/WEB-INF/jsp/servicedata/produceprocessManager/dispatchingorderAdd.jsp</result>
+    
+    <result name="toStartWork">/WEB-INF/jsp/servicedata/produceprocessManager/toStartWork.jsp</result>
+    <result name="toReportWork">/WEB-INF/jsp/servicedata/produceprocessManager/toReportWork.jsp</result>
+    
+     <result name="dispatchingStartList">/WEB-INF/jsp/servicedata/produceprocessManager/dispatchingStartList.jsp</result>
+     <result name="dispatchingReportList">/WEB-INF/jsp/servicedata/produceprocessManager/dispatchingReportList.jsp</result>
+	</action>
+	<!-- 调拨单 -->
+	<action name="allocation_*" class="com.emi.wms.servicedata.action.AllocationAction" method="{1}">
+	<result name="allocationlist">/WEB-INF/jsp/servicedata/allocationManager/allocationList.jsp</result>
+	</action>
+	
+	<!-- 报表中心 -->
+	<action name="reportForm_*" class="com.emi.wms.servicedata.action.ReportFormAction" method="{1}">
+	    <result name="pieceworkSumList">/WEB-INF/jsp/servicedata/reportForm/pieceworkSumList.jsp</result>
+	    <result name="pieceworkDetailList">/WEB-INF/jsp/servicedata/reportForm/pieceworkDetailList.jsp</result>
+	    <result name="getOrderStatusList">/WEB-INF/jsp/servicedata/reportForm/getOrderStatusList.jsp</result>
+	    <result name="orderDetailList">/WEB-INF/jsp/servicedata/reportForm/getOrderDetailList.jsp</result>
+	</action>
+	
+    <!-- 库存相关单据 -->
+	<action name="wareHouse_*" class="com.emi.wms.servicedata.action.WareHouseAction" method="{1}">
+	<!-- 其他入库单 -->
+	    <result name="toAddOtherWarehouse">/WEB-INF/jsp/servicedata/wareHouse/otherWarehouseAdd.jsp</result>
+	    <result name="otherWarehouseList">/WEB-INF/jsp/servicedata/wareHouse/otherWarehouseList.jsp</result>
+	    <result name="getGoodsAllocationHelp">/WEB-INF/jsp/servicedata/wareHouse/selectByWHList.jsp</result>
+
+	<!-- 其他出库单 -->
+		<result name="toAddOthersOut">/WEB-INF/jsp/servicedata/wareHouse/othersOutAdd.jsp</result>
+		<result name="othersOutList">/WEB-INF/jsp/servicedata/wareHouse/othersOutList.jsp</result>
+
+
+	<!-- 生产入库单 -->
+	    <result name="addProduceWarehouse">/WEB-INF/jsp/servicedata/wareHouse/produceWarehouseAdd.jsp</result>
+	    <result name="produceWarehouseList">/WEB-INF/jsp/servicedata/wareHouse/produceWarehouseList.jsp</result>
+ 	<!-- 销售出库单 -->
+	    <result name="addSaleOutWarehouse">/WEB-INF/jsp/servicedata/wareHouse/saleOutWarehouseAdd.jsp</result>
+	    <result name="saleOutWarehouseList">/WEB-INF/jsp/servicedata/wareHouse/saleOutWarehouseList.jsp</result>
+	 <!-- 库存 -->
+	    <result name="allocationStockList">/WEB-INF/jsp/servicedata/wareHouse/allocationStockList.jsp</result>    
+	 
+	 <!-- 采购入库单 -->
+	    <result name="poWarehouseAdd">/WEB-INF/jsp/servicedata/wareHouse/poWarehouseAdd.jsp</result>
+	    <result name="poWarehouseList">/WEB-INF/jsp/servicedata/wareHouse/poWarehouseList.jsp</result>
+	    
+     <!-- 材料出库单 -->
+	    <result name="materialOutAdd">/WEB-INF/jsp/servicedata/wareHouse/materialOutAdd.jsp</result>
+	    <result name="materialOutList">/WEB-INF/jsp/servicedata/wareHouse/materialOutList.jsp</result>
+	    
+	</action>
+	
+	<!-- 打印功能 -->
+	<action name="print_*" class="com.emi.wms.servicedata.action.PrintAction" method="{1}">
+		<result name="openprintpagePrintAction">/WEB-INF/jsp/servicedata/print/openprintpage.jsp</result>
+	</action>
+	
+	<!--成本相关-->
+	<action name="cost_*" class="com.emi.wms.servicedata.action.CostAction" method="{1}">
+		<result name="reportProductInList">/WEB-INF/jsp/servicedata/costManager/reportProductInList.jsp</result>
+		<result name="costFeeMainList">/WEB-INF/jsp/servicedata/costManager/costFeeMainList.jsp</result>
+		<result name="costRdRecordsOutMain">/WEB-INF/jsp/servicedata/costManager/costRdRecordsOutMain.jsp</result>
+		<result name="costReportInInforMain">/WEB-INF/jsp/servicedata/costManager/costReportInInforMain.jsp</result>
+		<result name="costFeeList">/WEB-INF/jsp/servicedata/costManager/costFeeList.jsp</result>
+		<result name="rdRecordsOutList">/WEB-INF/jsp/servicedata/costManager/rdRecordsOutList.jsp</result>
+		
+		<result name="costProcessInWorkMain">/WEB-INF/jsp/servicedata/costManager/costProcessInWorkMain.jsp</result>
+		<result name="costMaterialWorkMain">/WEB-INF/jsp/servicedata/costManager/costMaterialWorkMain.jsp</result>
+		<result name="costDirectMaterialWorkMain2">/WEB-INF/jsp/servicedata/costManager/costDirectMaterialWorkMain2.jsp</result>
+		<result name="costGoodsBalanceMain">/WEB-INF/jsp/servicedata/costManager/costGoodsBalanceMain.jsp</result>
+		
+		
+		<result name="costProcessInWorkList">/WEB-INF/jsp/servicedata/costManager/costProcessInWorkList.jsp</result>
+		<result name="costMaterialWorkList">/WEB-INF/jsp/servicedata/costManager/costMaterialWorkList.jsp</result>
+		<result name="costDirectMaterialWorkList2">/WEB-INF/jsp/servicedata/costManager/costDirectMaterialWorkList2.jsp</result>
+		<result name="costGoodsBalanceList">/WEB-INF/jsp/servicedata/costManager/costGoodsBalanceList.jsp</result>
+		
+	</action>
+	
+</package>
+</struts>

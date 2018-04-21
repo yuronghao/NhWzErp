@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"
+    "http://struts.apache.org/dtds/struts-2.1.dtd">
+
+<struts>
+	<package name="flowmain" namespace="/flow" extends="globalR">
+		<action name="flow_*" class="com.emi.flow.main.action.FlowAction" method="{1}">
+			<result name="flow_design">/WEB-INF/jsp/flow/main/flow_design.jsp</result>
+			<result name="flow_list">/WEB-INF/jsp/flow/main/flow_list.jsp</result>
+			<result name="attribute">/WEB-INF/jsp/flow/main/design/attribute.jsp</result>
+		</action>
+		
+		<action name="instance_*" class="com.emi.flow.main.action.InstanceAction" method="{1}">
+			<result name="instance_runList">/WEB-INF/jsp/flow/main/instance_runList.jsp</result>
+			<result name="instance_form">/WEB-INF/jsp/flow/main/instance_form.jsp</result>
+			<result name="instance_todoList">/WEB-INF/jsp/flow/main/instance_todoList.jsp</result>
+			<result name="instance_doneList">/WEB-INF/jsp/flow/main/instance_doneList.jsp</result>
+			<result name="instance_history">/WEB-INF/jsp/flow/main/instance_history.jsp</result>
+			<result name="comment">/WEB-INF/jsp/flow/main/comment.jsp</result>
+			<result name="instance_print">/WEB-INF/jsp/flow/main/instance_print.jsp</result>
+			
+		</action>
+		
+		<action name="coderule_*" class="com.emi.flow.main.action.CodeRuleAction" method="{1}">
+			
+		</action>
+	</package>
+</struts>

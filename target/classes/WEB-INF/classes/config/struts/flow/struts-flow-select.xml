@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"
+    "http://struts.apache.org/dtds/struts-2.1.dtd">
+
+<struts>
+	<package name="flowselect" namespace="/flow" extends="globalR">
+		<action name="select_*" class="com.emi.flow.select.action.SelectAction" method="{1}">
+			<result name="role_select">/WEB-INF/jsp/flow/select/role_select.jsp</result>
+			<result name="person_select">/WEB-INF/jsp/flow/select/person_select.jsp</result>
+		</action>
+		
+	</package>
+</struts>

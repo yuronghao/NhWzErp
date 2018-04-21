@@ -1,0 +1,177 @@
+	body {
+	font-size: 14px;
+}
+ol li{
+	margin: 0px;
+}
+#createName {
+	padding: 0px;
+	margin: 0px;
+	height: 40px;
+	width: 280px;
+	line-height: 40px;
+}
+#createbody {
+	margin-left: 5px;
+	margin-right: 5px;
+	margin-top: 7px;
+	border: 1px solid white;
+}
+#createName li {
+	float: left;
+	list-style: none;
+	height: 40px;
+	width: 140px;
+	text-align: center;
+
+}
+#createName li a {
+	 
+	float: left;
+	width: 140px;
+	text-align: center;
+	color: #999;
+	line-height: 37px;
+	height: 37px;
+	text-decoration: none;
+}
+#createName li.emptyTag {
+	width: 4px;
+}
+#createName li.selectTag {
+	background-position: left top;
+	position: relative;
+	height: 40px;
+	
+}
+#createName li.selectTag a {
+	background-position: right top; 
+	border-top: 4px solid #64c6f5;
+	color: #2b6c94;
+	line-height: 37px; 
+	height: 37px;
+	width:140px;
+	background-color:#dcf5fc; 
+	border-right:2px solid #b7d5df;
+	border-left:2px solid #b7d5df;
+}
+#tagcreatebodytent {
+	background-color: #fff;
+}
+.tagcreatebodytent {
+	display: none; 
+	width: 98%; 	
+	border: 1px solid #cdcdcd;
+}
+#tagcreatebodytent div.selectTag {
+	display: block;
+}
+
+#table_1{
+	width: 100%;
+	height: 35px;
+	text-align: center;
+	left: 0;
+	line-height: 30px;
+}
+
+#table_2{
+	color: red;
+}
+
+table {
+	border-collapse: collapse;
+	border: none;
+}
+
+th{
+	background-color:#def5fb;
+	border: 1px solid #c0d2e0;
+	color: #2b6c94;
+}
+
+td {
+	border: 1px solid #c0d2e0;
+	text-align: center;
+}
+
+	body,html{
+	height: 100%;
+	margin: 0px;
+	font-size: 16px;
+	font-family: 微软雅黑;
+}
+.fl{
+	float: left;
+}
+.fr{
+	float: right;
+}
+.cf
+{
+	clear: both;
+}
+ 
+.ui_inner {
+	width: 80%;
+	height: 326px;
+	background: #ffffff;
+	/*border: 6px solid  rgba(102,102,102,.3);*/
+	border-radius: 5px;
+	margin: 0 auto;
+}
+ .ui_a{
+ 	width: 100%;
+ 	height: 40px;
+ 	background-color: #246a9d;
+ 	border-radius: 2px 2px 0px 0px;
+ }
+ .ui_b{
+	background: #ffffff;
+	border: 3px solid  #246a9d;
+	border-radius: 2px;
+ }
+ .ui_word{
+ 	width: 330px;
+ 	color: #ffffff;
+ 	height: 40px;
+ 	line-height: 40px;
+ 	margin-left: 10px;
+ }
+ .ui_chose{
+ 	width:100%;
+ 	margin-left: 10%;
+ 	margin-top: 20px;
+ }
+ .ui_submit{
+ 	margin-left: 30%;
+ 	margin-top: 15px;
+ }
+ .ui_table{
+ 	border-collapse: 0px;
+ }
+ .ui_table tr,td{
+ 	font-size: 14px;
+ 	line-height: 35px;
+ }
+.ui_dep{
+	width: 220px;
+}
+.ui_btn{
+	width: 220px;
+	height: 30px;
+	margin-right: 10px;
+	margin-top: 15px;
+}
+  
+.ui_sure{
+	width: 60px;
+	height: 25px;
+	border: none;
+	background-color: #246a9d;
+	cursor: pointer;
+	color: white;
+	border-radius: 2px;
+	line-height: 25px;
+}
+ 

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+            http://www.springframework.org/schema/beans 
+            http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+            http://www.springframework.org/schema/context
+			http://www.springframework.org/schema/context/spring-context-3.0.xsd
+			http://www.springframework.org/schema/tx 
+			http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+
+	<!-- 流程定义 -->
+	<bean id="flowAction" class="com.emi.flow.main.action.FlowAction" scope="prototype">
+		<property name="flowService" ref="flowService"></property>
+		<property name="roleService" ref="roleService"></property>
+	</bean>
+	<bean id="flowService" class="com.emi.flow.main.service.impl.FlowServiceImpl">
+		<property name="flowDao" ref="flowDao"/>
+	</bean>
+	<bean id="flowDao" class="com.emi.flow.main.dao.impl.FlowDaoImpl" scope="prototype">
+		<property name="jdbcTemplate" ref="jdbcTemplate"></property>
+	</bean>
+	
+	<!-- 流程实例 -->
+	<bean id="instanceAction" class="com.emi.flow.main.action.InstanceAction" scope="prototype">
+		<property name="instanceService" ref="instanceService"></property>
+		<property name="flowService" ref="flowService"></property>
+		<property name="formService" ref="formService"></property>
+		<property name="tableService" ref="tableService"></property>
+		<property name="enumService" ref="enumService"></property>
+	</bean>
+	<bean id="instanceService" class="com.emi.flow.main.service.impl.InstanceServiceImpl">
+		<property name="instanceDao" ref="instanceDao"/>
+		<property name="formDao" ref="formDao"/>
+		<property name="tableDao" ref="tableDao"/>
+		<property name="roleDao" ref="roleDao"/>
+		<!-- <property name="projectDao" ref="projectDao"/> -->
+		<property name="flowDao" ref="flowDao"/>
+	</bean>
+	<bean id="instanceDao" class="com.emi.flow.main.dao.impl.InstanceDaoImpl" scope="prototype">
+		<property name="tableDao" ref="tableDao"/>
+		<property name="jdbcTemplate" ref="jdbcTemplate"></property>
+	</bean>
+	
+	<!-- 编码生成策略 -->
+	<bean id="codeRuleAction" class="com.emi.flow.main.action.CodeRuleAction" scope="prototype">
+		<property name="codeRuleService" ref="codeRuleService"></property>
+	</bean>
+	<bean id="codeRuleService" class="com.emi.flow.main.service.impl.CodeRuleServiceImpl">
+		<property name="codeRuleDao" ref="codeRuleDao"/>
+	</bean>
+	<bean id="codeRuleDao" class="com.emi.flow.main.dao.impl.CodeRuleDaoImpl" scope="prototype">
+		<property name="jdbcTemplate" ref="jdbcTemplate"></property>
+	</bean>
+
+</beans>

@@ -1,0 +1,107 @@
+*{
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	text-decoration: none;
+}
+body,html{
+	height: 100%;
+	margin: 0px;
+	font-size: 12px;
+	font-family: 微软雅黑;
+	
+}
+/*按钮部分*/
+/*删除按钮*/
+.delBtn {
+  padding: 0 8px 0px 36px;
+  height: 30px;
+  background-color: #f5faff;
+  margin-left: 15px;
+  border-radius: 5px;
+  border: 1px solid #E1E1E1;
+  cursor: pointer;
+  background-image: url(../img/delete.png);
+  background-size: 23px 23px;
+  background-repeat: no-repeat;
+  background-position: 8px 2px;
+  text-align: right;
+  line-height: 30px;
+  
+}
+/*编辑按钮*/
+.editBtn {
+  padding: 0 8px 0px 36px;
+  height: 30px;
+  background-color: #f5faff;
+  margin-left: 15px;
+  border-radius: 5px;
+  border: 1px solid #E1E1E1;
+  cursor: pointer;
+  background-image: url(../img/edit.png);
+  background-size: 23px 23px;
+  background-repeat: no-repeat;
+  background-position: 8px 2px;
+  text-align: right;
+  line-height: 30px;
+  
+}
+/*查询按钮*/
+.searchBtn {
+  padding: 0 8px 0px 36px;
+  height: 30px;
+  background-color: #f5faff;
+  margin-left: 15px;
+  border-radius: 5px;
+  border: 1px solid #E1E1E1;
+  cursor: pointer;
+  background-image: url(../img/search.png);
+  background-size: 23px 23px;
+  background-repeat: no-repeat;
+  background-position: 8px 2px;
+  text-align: right;
+  line-height: 30px;
+  
+}
+/*返回按钮*/
+.backBtn {
+  padding: 0 8px 0px 36px;
+  height: 30px;
+  background-color: #f5faff;
+  margin-left: 15px;
+  border-radius: 5px;
+  border: 1px solid #E1E1E1;
+  cursor: pointer;
+  background-image: url(../img/back.png);
+  background-size: 23px 23px;
+  background-repeat: no-repeat;
+  background-position: 8px 2px;
+  text-align: right;
+  line-height: 30px;
+  
+}
+/*保存按钮*/
+.saveBtn {
+  padding: 0 8px 0px 36px;
+  height: 30px;
+  background-color: #f5faff;
+  margin-left: 15px;
+  border-radius: 5px;
+  border: 1px solid #E1E1E1;
+  cursor: pointer;
+  background-image: url(../img/save.png);
+  background-size: 23px 23px;
+  background-repeat: no-repeat;
+  background-position: 8px 2px;
+  text-align: right;
+  line-height: 30px;
+  
+}
+.xz_attribute ul li{
+	line-height:30px;
+}
+.xz_attribute input{
+	border:none;
+	border-bottom:1px #ccc solid;
+	text-align: center;
+}

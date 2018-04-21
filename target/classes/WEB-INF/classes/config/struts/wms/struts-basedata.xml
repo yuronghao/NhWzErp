@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"
+    "http://struts.apache.org/dtds/struts-2.1.dtd">
+
+<struts>
+<package name="property" namespace="/wms" extends="globalR">
+
+	<action name="prty_*" class="com.emi.wms.basedata.action.AttributeAction" method="{1}">
+	<!-- 属性方案 -->
+	             <result name="soulationList">/WEB-INF/jsp/basedata/categoryManager/soulationList.jsp</result>
+	             <result name="soulationAdd">/WEB-INF/jsp/basedata/categoryManager/soulationAdd.jsp</result>
+	<!-- 属性值-->            
+ 				 <result name="baseAttrList">/WEB-INF/jsp/basedata/categoryManager/basicAttributeList.jsp</result>
+ 				 <result name="baseAttrAdd">/WEB-INF/jsp/basedata/categoryManager/basicAttributeAdd.jsp</result>
+ 				 <result name="baseAttrValList">/WEB-INF/jsp/basedata/categoryManager/basicAttributeValList.jsp</result>   
+ 				 <result name="baseValAttrAdd">/WEB-INF/jsp/basedata/categoryManager/basicAttributeValAdd.jsp</result>           
+	<!-- 属性类别-->            
+ 				 <result name="categoryList">/WEB-INF/jsp/basedata/categoryManager/categoryList.jsp</result>
+ 				 <result name="categoryAdd">/WEB-INF/jsp/basedata/categoryManager/categoryAdd.jsp</result>
+ 				 <result name="serchAACategory">/WEB-INF/jsp/basedata/categoryManager/categorySearch.jsp</result>
+	</action>
+	
+    <!-- 客商档案 -->
+    <action name="cuspro_*" class="com.emi.wms.basedata.action.CusproAction" method="{1}">
+    <result name="treeandlist">/WEB-INF/jsp/basedata/cuspro/treeandlist.jsp</result>
+	<result name="classifyList">/WEB-INF/jsp/basedata/cuspro/classifyList.jsp</result>
+	<result name="cusproList">/WEB-INF/jsp/basedata/cuspro/cusproList.jsp</result>
+	<result name="cusproAdd">/WEB-INF/jsp/basedata/cuspro/cusproAdd.jsp</result>
+	<result name="ProCusSelect">/WEB-INF/jsp/basedata/cuspro/proCusAddTree.jsp</result>
+	<result name="cusproEdit">/WEB-INF/jsp/basedata/cuspro/cusproEdit.jsp</result>
+	<result name="getGoodsTree">/WEB-INF/jsp/basedata/goods/goodsTree.jsp</result>
+	<result name="mouldTree">/WEB-INF/jsp/basedata/mould/mouldTree.jsp</result>
+	</action>
+	
+	<!-- 帐套 -->
+    <action name="sob_*" class="com.emi.wms.basedata.action.SobAction" method="{1}">
+    <result name="treeandorg">/WEB-INF/jsp/basedata/sob/treeandorg.jsp</result>
+	<result name="orgclassify">/WEB-INF/jsp/basedata/sob/orgclassify.jsp</result>
+	<result name="organizeInfo">/WEB-INF/jsp/basedata/sob/organizeInfo.jsp</result>
+	<result name="orgAdd">/WEB-INF/jsp/basedata/sob/orgAdd.jsp</result>
+	<result name="orgEdit">/WEB-INF/jsp/basedata/sob/orgEdit.jsp</result>
+	<result name="sobAdd">/WEB-INF/jsp/basedata/sob/sobAdd.jsp</result>
+	<result name="orgSelect">/WEB-INF/jsp/basedata/sob/orgAddTree.jsp</result>
+	<result name="soblist">/WEB-INF/jsp/basedata/sob/soblist.jsp</result>
+	<result name="systemsetting">/WEB-INF/jsp/basedata/sob/systemsetting.jsp</result>
+	</action>
+	<!-- 类别统一管理 -->
+    <action name="classify_*" class="com.emi.wms.basedata.action.ClassifyAction" method="{1}">
+		<result name="classifyFrame">/WEB-INF/jsp/basedata/classify/classifyFrame.jsp</result>
+		<result name="classifyTree">/WEB-INF/jsp/basedata/classify/classifyTree.jsp</result>
+		<result name="classifyForm">/WEB-INF/jsp/basedata/classify/classifyForm.jsp</result>
+		<result name="classifyAdd">/WEB-INF/jsp/basedata/classify/classifyAdd.jsp</result>
+	</action>
+	
+    
+    <!--帐期设置-->
+    <action name="accountPeriod_*" class="com.emi.wms.basedata.action.AccountPeriodAction" method="{1}">
+		<result name="getAccountPeriod">/WEB-INF/jsp/basedata/accountPeriod/accountPeriod.jsp</result>
+		<result name="getRightPeriod">/WEB-INF/jsp/basedata/accountPeriod/accountPeriodRight.jsp</result>
+		<result name="getAccountPeriodTree">/WEB-INF/jsp/basedata/accountPeriod/accountPeriodTree.jsp</result>
+	</action>
+    
+    <!--物料设置-->
+    <action name="goods_*" class="com.emi.wms.basedata.action.GoodsAction" method="{1}">
+		<result name="getGoods">/WEB-INF/jsp/basedata/goods/goods.jsp</result>
+		<result name="getRightGoods">/WEB-INF/jsp/basedata/goods/goodsRight.jsp</result>
+		<result name="getGoodsTree">/WEB-INF/jsp/basedata/goods/goodsTree.jsp</result>
+		
+		<result name="getGoodsHelp">/WEB-INF/jsp/basedata/goods/help/goodsHelp.jsp</result>
+		<result name="getRightGoodsHelp">/WEB-INF/jsp/basedata/goods/help/goodsRightHelp.jsp</result>
+		<result name="getGoodsTreeHelp">/WEB-INF/jsp/basedata/goods/help/goodsTreeHelp.jsp</result>
+		
+		<result name="toAddGoods">/WEB-INF/jsp/basedata/goods/goodsAdd.jsp</result>
+		<result name="toUptGoods">/WEB-INF/jsp/basedata/goods/goodsUpt.jsp</result>
+	</action>
+	
+    <!--计量单位设置-->
+	<action name="unit_*" class="com.emi.wms.basedata.action.UnitAction" method="{1}">
+		<result name="getUnit">/WEB-INF/jsp/basedata/unit/unitList.jsp</result>
+		<result name="getUnitHelp">/WEB-INF/jsp/basedata/unit/unitListHelp.jsp</result>
+		<result name="toAddUnit">/WEB-INF/jsp/basedata/unit/toAddUnit.jsp</result>
+		<result name="toUptUnit">/WEB-INF/jsp/basedata/unit/toUptUnit.jsp</result>
+		
+		<result name="getUnitConversion">/WEB-INF/jsp/basedata/unit/getUnitConversion.jsp</result>
+		<result name="getUnitConversionHelp">/WEB-INF/jsp/basedata/unit/getUnitConversionHelp.jsp</result>
+		<result name="toAddUnitConversion">/WEB-INF/jsp/basedata/unit/toAddUnitConversion.jsp</result>
+		<result name="toUptUnitConversion">/WEB-INF/jsp/basedata/unit/toUptUnitConversion.jsp</result>
+	</action>
+	
+	
+	<!--仓库设置-->
+	<action name="warehouse_*" class="com.emi.wms.basedata.action.WarehouseAction" method="{1}">
+		<result name="getWarehouseList">/WEB-INF/jsp/basedata/wareHouse/wareHouseList.jsp</result>
+		<result name="getWarehouseHelp">/WEB-INF/jsp/basedata/wareHouse/wareHouseListHelp.jsp</result>
+		<result name="toAddWarehouse">/WEB-INF/jsp/basedata/wareHouse/toAddWareHouse.jsp</result>
+		<result name="toUptWarehouse">/WEB-INF/jsp/basedata/wareHouse/toEditWareHouse.jsp</result>
+		
+		<result name="getGoodsAllocationList">/WEB-INF/jsp/basedata/wareHouse/goodsAllocationList.jsp</result>
+		<result name="getWarehouseTree">/WEB-INF/jsp/basedata/wareHouse/goodsAllocationTree.jsp</result>
+		<result name="getRightGoodsAllocation">/WEB-INF/jsp/basedata/wareHouse/goodsAllocationRight.jsp</result>
+	</action>
+	
+	<!--组织  部门和人员 -->
+	<action name="org_*" class="com.emi.wms.basedata.action.OrgAction" method="{1}">
+		<result name="getDepartment">/WEB-INF/jsp/basedata/org/department.jsp</result>
+		<result name="getDepartmentTree">/WEB-INF/jsp/basedata/org/departmentTree.jsp</result>
+		<result name="getDepartmentDetail">/WEB-INF/jsp/basedata/org/departmentRight.jsp</result>
+		<result name="toAddDepartment">/WEB-INF/jsp/basedata/org/departmentAdd.jsp</result>
+		<result name="toEditDepartment">/WEB-INF/jsp/basedata/org/departmentEdit.jsp</result>
+		<result name="getDepartmentTreeHelp">/WEB-INF/jsp/basedata/org/departmentTreeHelp.jsp</result>
+		
+		<result name="getPerson">/WEB-INF/jsp/basedata/org/person.jsp</result>
+		<result name="getPersonList">/WEB-INF/jsp/basedata/org/personList.jsp</result>
+		<result name="toAddPerson">/WEB-INF/jsp/basedata/org/personAdd.jsp</result>
+		<result name="toEditPerson">/WEB-INF/jsp/basedata/org/personEdit.jsp</result>
+		
+	</action>
+	
+	<!--用户设置-->
+	<action name="user_*" class="com.emi.wms.basedata.action.UserAction" method="{1}">
+	    <result name="getUser">/WEB-INF/jsp/basedata/org/userList.jsp</result>
+	    <result name="toAddUser">/WEB-INF/jsp/basedata/org/userAdd.jsp</result>
+	</action>
+	
+	<!-- 组 -->
+    <action name="group_*" class="com.emi.wms.basedata.action.GroupAction" method="{1}">
+	<result name="groupList">/WEB-INF/jsp/basedata/group/groupList.jsp</result>
+	<result name="groupAdd">/WEB-INF/jsp/basedata/group/groupAdd.jsp</result>
+	<result name="groupEdit">/WEB-INF/jsp/basedata/group/groupEdit.jsp</result>
+	<result name="selectUser">/WEB-INF/jsp/basedata/group/selectUser.jsp</result>
+	</action>
+    
+	<!-- 设备 -->
+    <action name="equipment_*" class="com.emi.wms.basedata.action.EquipmentAction" method="{1}">
+	<result name="equipmentList">/WEB-INF/jsp/basedata/equipment/equipmentList.jsp</result>
+	<result name="equipmentAdd">/WEB-INF/jsp/basedata/equipment/equipmentAdd.jsp</result>
+	<result name="equipmentEdit">/WEB-INF/jsp/basedata/equipment/equipmentEdit.jsp</result>
+	</action>
+	<!-- 模具 -->
+    <action name="mould_*" class="com.emi.wms.basedata.action.MouldAction" method="{1}">
+	<result name="mouldList">/WEB-INF/jsp/basedata/mould/mouldList.jsp</result>
+	<result name="mouldAdd">/WEB-INF/jsp/basedata/mould/mouldAdd.jsp</result>
+	<result name="mouldEdit">/WEB-INF/jsp/basedata/mould/mouldEdit.jsp</result>
+	<result name="mouldDetails">/WEB-INF/jsp/basedata/mould/mouldDetails.jsp</result>
+	<result name="mouldTree">/WEB-INF/jsp/basedata/mould/mouldTree.jsp</result>
+	</action>
+	<!-- 原因 -->
+    <action name="reason_*" class="com.emi.wms.basedata.action.ReasonAction" method="{1}">
+	<result name="reasonList">/WEB-INF/jsp/basedata/reason/reasonList.jsp</result>
+	<result name="reasonAdd">/WEB-INF/jsp/basedata/reason/reasonAdd.jsp</result>
+	<result name="reasonEdit">/WEB-INF/jsp/basedata/reason/reasonEdit.jsp</result>
+	</action>
+	
+    <!-- 成本项目 -->
+    <action name="costItem_*" class="com.emi.wms.basedata.action.CostItemAction" method="{1}">
+	<result name="costItemList">/WEB-INF/jsp/basedata/costItem/costItemList.jsp</result>
+	<result name="costItemAdd">/WEB-INF/jsp/basedata/costItem/costItemAdd.jsp</result>
+	<result name="costItemEdit">/WEB-INF/jsp/basedata/costItem/costItemEdit.jsp</result>
+	<result name="costItemAllotRateList">/WEB-INF/jsp/basedata/costItem/costItemAllotRateList.jsp</result>
+	<result name="costItemAllotRateAdd">/WEB-INF/jsp/basedata/costItem/costItemAllotRateAdd.jsp</result>
+	<result name="costItemAllotRateEdit">/WEB-INF/jsp/basedata/costItem/costItemAllotRateEdit.jsp</result>
+	<result name="costItemSourceSetList">/WEB-INF/jsp/basedata/costItem/costItemSourceSetList.jsp</result>
+	<result name="costItemSourceSetAdd">/WEB-INF/jsp/basedata/costItem/costItemSourceSetAdd.jsp</result>
+	<result name="costItemSourceSetEdit">/WEB-INF/jsp/basedata/costItem/costItemSourceSetEdit.jsp</result>
+	<result name="toImportCostRatePage">/WEB-INF/jsp/servicedata/costManager/toImportCostRatePage.jsp</result>
+	</action>
+</package>
+
+</struts>

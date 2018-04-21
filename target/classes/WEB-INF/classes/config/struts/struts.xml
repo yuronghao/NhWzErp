@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"
+    "http://struts.apache.org/dtds/struts-2.1.dtd">
+
+<struts>
+	<!-- <interceptors>
+		<interceptor-stack name="default">
+			<interceptor-ref name="exception">
+				<param name="logEnabled">true</param>
+				<param name="logLevel">warn</param>
+			</interceptor-ref>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+		</interceptor-stack>
+	</interceptors>
+	<default-interceptor-ref name="default"></default-interceptor-ref> -->
+	<package name="globalR" namespace="/" extends="struts-default">
+		<global-results>
+			<result name="error">/error.jsp</result>
+			<result name="forbide">/WEB-INF/jsp/common/forbide.jsp</result>
+		</global-results>
+	</package>
+	<include file="config/struts/struts-emirm-right.xml"></include>
+	<include file="config/struts/struts-common.xml"></include>
+	
+	<include file="config/struts/flow/struts-flow-form.xml"></include>
+	<include file="config/struts/flow/struts-flow-main.xml"></include>
+	<include file="config/struts/flow/struts-flow-model.xml"></include>
+	<include file="config/struts/flow/struts-flow-select.xml"></include>
+	<include file="config/struts/flow/struts-flow-mobile.xml"></include>
+    <include file="config/struts/wms/struts-basedata.xml"></include>
+	<include file="config/struts/wms/struts-servicedata.xml"></include>
+	<include file="config/struts/wms/struts-processDesign.xml"></include>
+	<include file="config/struts/struts-mobile.xml"></include>
+	<include file="config/struts/struts-mobileweigh.xml"></include>
+	<include file="config/struts/struts-shell.xml"></include>
+	<include file="config/struts/struts-lfmember.xml"></include>
+	<include file="config/struts/struts-test.xml"></include>
+</struts>

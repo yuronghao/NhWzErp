@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+            http://www.springframework.org/schema/beans 
+            http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+            http://www.springframework.org/schema/context
+			http://www.springframework.org/schema/context/spring-context-3.0.xsd
+			http://www.springframework.org/schema/tx 
+			http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+	
+	<!--销售订单-->
+	<bean id="saleAction" class="com.emi.wms.servicedata.action.SaleAction"
+		scope="prototype">
+		<property name="saleService" ref="saleService"></property>
+		<property name="cacheCtrlService" ref="cacheCtrlService"></property>
+	</bean>
+	<bean id="saleService" class="com.emi.wms.servicedata.service.SaleService">
+		<property name="saleDao" ref="saleDao"></property>
+		<property name="emiPluginDao" ref="emiPluginDao"></property>
+		<property name="cacheCtrlService" ref="cacheCtrlService"></property>
+	</bean>
+	<bean id="saleDao" class="com.emi.wms.servicedata.dao.SaleDao" scope="prototype">
+		<property name="jdbcTemplate" ref="jdbcTemplate"></property>
+	</bean>
+	
+	<bean id="saleOrderAction" class="com.emi.wms.servicedata.action.SaleOrderAction"
+		scope="prototype">
+		<property name="saleService" ref="saleService"></property>
+		<property name="saleOrderService" ref="saleOrderService"></property>
+	</bean>
+	<bean id="saleOrderService" class="com.emi.wms.servicedata.service.SaleOrderService">
+		<property name="saleOrderDao" ref="saleOrderDao"></property>
+	</bean>
+	<bean id="saleOrderDao" class="com.emi.wms.servicedata.dao.SaleOrderDao" scope="prototype">
+		<property name="jdbcTemplate" ref="jdbcTemplate"></property>
+	</bean>
+	<!--销售发货单-->
+	<bean id="saleSendAction" class="com.emi.wms.servicedata.action.SaleSendAction"
+		scope="prototype">
+		<property name="saleSendService" ref="saleSendService"></property>
+	</bean>
+	<bean id="saleSendService" class="com.emi.wms.servicedata.service.SaleSendService">
+		<property name="saleSendDao" ref="saleSendDao"></property>
+	</bean>
+	<bean id="saleSendDao" class="com.emi.wms.servicedata.dao.SaleSendDao" scope="prototype">
+		<property name="jdbcTemplate" ref="jdbcTemplate"></property>
+	</bean>
+	<!--测试 -->
+<!-- 	<bean id="testAction" class="com.emi.cache.action.TestAction" scope="prototype">
+	<property name="cacheCtrlService" ref="cacheCtrlService"></property>
+	</bean> -->
+	<bean id="cacheCtrlService" class="com.emi.cache.service.impl.CacheCtrlServiceImpl">
+	<property name="cacheCtrldao" ref="cacheCtrldao"></property>
+	</bean>
+	<bean id="cacheCtrldao" class="com.emi.cache.dao.impl.CacheCtrldaoImpl">
+	<property name="jdbcTemplate" ref="jdbcTemplate"></property>
+	</bean>
+	
+	<!--请购单-->
+	<bean id="requisitionAction" class="com.emi.wms.servicedata.action.RequisitionAction"
+		scope="prototype">
+		<property name="requisitionService" ref="requisitionService"></property>
+	</bean>
+	<bean id="requisitionService" class="com.emi.wms.servicedata.service.RequisitionService">
+		<property name="requisitionDao" ref="requisitionDao"></property>
+	</bean>
+	<bean id="requisitionDao" class="com.emi.wms.servicedata.dao.RequisitionDao" scope="prototype">
+		<property name="jdbcTemplate" ref="jdbcTemplate"></property>
+	</bean>
+	
+	<!--采购订单-->
+	<bean id="purchaseAction" class="com.emi.wms.servicedata.action.PurchaseAction"
+		scope="prototype">
+		<property name="purchaseService" ref="purchaseService"></property>
+		<property name="printServiceEmi" ref="printServiceEmi"></property>
+
+	</bean>
+	<bean id="purchaseService" class="com.emi.wms.servicedata.service.PurchaseService">
+		<property name="purchaseDao" ref="purchaseDao"></property>
+	</bean>
+	<bean id="purchaseDao" class="com.emi.wms.servicedata.dao.PurchaseDao" scope="prototype">
+		<property name="jdbcTemplate" ref="jdbcTemplate"></property>
+	</bean>
+		<!--采购到货单-->
+	<bean id="purchaseArrivalAction" class="com.emi.wms.servicedata.action.PurchaseArrivalAction"
+		scope="prototype">
+		<property name="purchaseArrivalService" ref="purchaseArrivalService"></property>
+	</bean>
+	<bean id="purchaseArrivalService" class="com.emi.wms.servicedata.service.PurchaseArrivalService">
+		<property name="purchaseArrivalDao" ref="purchaseArrivalDao"></property>
+		<property name="cacheCtrlService" ref="cacheCtrlService"></property>
+		<property name="emiPluginDao" ref="emiPluginDao"></property>
+	</bean>
+	<bean id="purchaseArrivalDao" class="com.emi.wms.servicedata.dao.PurchaseArrivalDao" scope="prototype">
+		<property name="jdbcTemplate" ref="jdbcTemplate"></property>
+	</bean>
+	
+	<!--生产订单-->
+	<bean id="produceOrderAction" class="com.emi.wms.servicedata.action.ProduceOrderAction"
+		scope="prototype">
+		<property name="produceOrderService" ref="produceOrderService"></property>
+	</bean>
+	<bean id="produceOrderService" class="com.emi.wms.servicedata.service.ProduceOrderService">
+		<property name="produceOrderDao" ref="produceOrderDao"></property>
+		<property name="cacheCtrlService" ref="cacheCtrlService"></property>
+		<property name="emiPluginDao" ref="emiPluginDao"></property>
+		<property name="taskService" ref="taskService"></property>
+		<property name="taskDao" ref="taskDao"></property>
+		<property name="wareHouseDao" ref="wareHouseDao"></property>
+	</bean>
+	<bean id="produceOrderDao" class="com.emi.wms.servicedata.dao.ProduceOrderDao" scope="prototype">
+		<property name="jdbcTemplate" ref="jdbcTemplate"></property>
+	</bean>
+	
+	<!--任务列表  -->
+	<bean id="taskService" class="com.emi.wms.servicedata.service.TaskService">
+		<property name="taskDao" ref="taskDao"/>
+		<property name="purchaseArrivalService" ref="purchaseArrivalService"/>
+		<property name="produceOrderService" ref="produceOrderService"/>
+		<property name="saleService" ref="saleService"/>
+		<property name="emiPluginDao" ref="emiPluginDao"></property>
+		<property name="cacheCtrlService" ref="cacheCtrlService"></property>
+		<property name="produceOrderDao" ref="produceOrderDao"></property>
+	</bean>
+	<bean id="taskDao" class="com.emi.wms.servicedata.dao.TaskDao" scope="prototype">
+		<property name="jdbcTemplate" ref="jdbcTemplate"></property>
+	</bean>
+	
+	<!-- 仓库 -->
+	<bean id="wareHouseService" class="com.emi.wms.servicedata.service.WareHouseService">
+	   <property name="taskDao" ref="taskDao"/>
+		<property name="wareHouseDao" ref="wareHouseDao"/>
+		<property name="emiPluginDao" ref="emiPluginDao"></property>
+		<property name="cacheCtrlService" ref="cacheCtrlService"></property>
+		<property name="saleDao" ref="saleDao"></property>
+		<property name="purchaseArrivalService" ref="purchaseArrivalService"></property>
+		<property name="produceOrderDao" ref="produceOrderDao"></property>
+		<property name="purchaseArrivalDao" ref="purchaseArrivalDao"></property>
+		
+	</bean>
+	<bean id="wareHouseDao" class="com.emi.wms.servicedata.dao.WareHouseDao" scope="prototype">
+		<property name="jdbcTemplate" ref="jdbcTemplate"></property>
+	</bean>
+	<!--质检单-->
+	<bean id="checkbillAction" class="com.emi.wms.servicedata.action.CheckBillAction"
+		scope="prototype">
+		<property name="checkbillService" ref="checkbillService"></property>
+	</bean>
+	<bean id="checkbillService" class="com.emi.wms.servicedata.service.CheckBillService">
+		<property name="checkbillDao" ref="checkbillDao"></property>
+	</bean>
+	<bean id="checkbillDao" class="com.emi.wms.servicedata.dao.CheckBillDao" scope="prototype">
+		<property name="jdbcTemplate" ref="jdbcTemplate"></property>
+	</bean>
+	<!--派工单-->
+	<bean id="produceprocessAction" class="com.emi.wms.servicedata.action.ProduceProcessAction"
+		scope="prototype">
+		<property name="produceprocessService" ref="produceprocessService"></property>
+		<property name="produceOrderService" ref="produceOrderService"></property>
+	</bean>
+	<bean id="produceprocessService" class="com.emi.wms.servicedata.service.ProduceProcessService">
+		<property name="produceprocessDao" ref="produceprocessDao"></property>
+		<property name="cacheCtrlService" ref="cacheCtrlService"></property>
+		<property name="produceOrderDao" ref="produceOrderDao"></property>
+		<property name="produceOrderService" ref="produceOrderService"></property>
+	</bean>
+	<bean id="produceprocessDao" class="com.emi.wms.servicedata.dao.ProduceProcessDao" scope="prototype">
+		<property name="jdbcTemplate" ref="jdbcTemplate"></property>
+	</bean>
+	<!--调拨单-->
+	<bean id="allocationAction" class="com.emi.wms.servicedata.action.AllocationAction"
+		scope="prototype">
+		<property name="allocationService" ref="allocationService"></property>
+	</bean>
+	<bean id="allocationService" class="com.emi.wms.servicedata.service.AllocationService">
+		<property name="allocationDao" ref="allocationDao"></property>
+	</bean>
+	<bean id="allocationDao" class="com.emi.wms.servicedata.dao.AllocationDao" scope="prototype">
+		<property name="jdbcTemplate" ref="jdbcTemplate"></property>
+	</bean>
+	
+	<!--报表中心-->
+	<bean id="reportFormAction" class="com.emi.wms.servicedata.action.ReportFormAction" scope="prototype">
+		<property name="reportFormService" ref="reportFormService"></property>
+	</bean>
+	<bean id="reportFormService" class="com.emi.wms.servicedata.service.ReportFormService">
+		<property name="reportFormDao" ref="reportFormDao"></property>
+		<property name="cacheCtrlService" ref="cacheCtrlService"></property>
+		
+		<property name="basicSettingService" ref="basicSettingService"></property>
+		<property name="produceOrderDao" ref="produceOrderDao"></property>
+	</bean>
+	<bean id="reportFormDao" class="com.emi.wms.servicedata.dao.ReportFormDao" scope="prototype">
+		<property name="jdbcTemplate" ref="jdbcTemplate"></property>
+	</bean>
+	
+	<!--打印功能-->
+	<bean id="printAction" class="com.emi.wms.servicedata.action.PrintAction">
+	   <property name="printServiceEmi" ref="printServiceEmi"/>
+	</bean>
+	
+	<bean id="printServiceEmi" class="com.emi.wms.servicedata.service.PrintServiceEmi">
+	   <property name="printDaoEmi" ref="printDaoEmi"/>
+	   <property name="cacheCtrlService" ref="cacheCtrlService"></property>
+	</bean>
+	
+	<bean id="printDaoEmi" class="com.emi.wms.servicedata.dao.PrintDaoEmi" scope="prototype">
+		<property name="jdbcTemplate" ref="jdbcTemplate"></property>
+	</bean>
+	
+	
+	<!--成本相关-->
+	<bean id="costAction" class="com.emi.wms.servicedata.action.CostAction">
+	   <property name="costService" ref="costService"/>
+	</bean>
+	
+	<bean id="costService" class="com.emi.wms.servicedata.service.CostService">
+	   <property name="produceOrderDao" ref="produceOrderDao"/>
+	   <property name="cacheCtrlService" ref="cacheCtrlService"></property>
+	   <property name="wareHouseDao" ref="wareHouseDao"></property>
+	   <property name="costDao" ref="costDao"></property>
+	</bean>
+	
+	<bean id="costDao" class="com.emi.wms.servicedata.dao.CostDao" scope="prototype">
+		<property name="jdbcTemplate" ref="jdbcTemplate"></property>
+	</bean>
+	
+</beans>
