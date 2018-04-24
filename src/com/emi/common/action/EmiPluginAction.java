@@ -172,6 +172,8 @@ public class EmiPluginAction extends BaseAction {
 			String goodsUid=getParameter("goodsUid");
 			String goodsAllocationUid=getParameter("goodsAllocationUid");
 			PageBean pb=emiPluginService.getAllocationStock(pageIndex, pageSize,goodsUid,goodsAllocationUid);
+			getRequest().setAttribute("goodsUid",goodsUid);
+			getRequest().setAttribute("goodsAllocationUid",goodsAllocationUid);
 			setRequstAttribute("data", pb);
 		} catch (Exception e) {
 			e.printStackTrace();

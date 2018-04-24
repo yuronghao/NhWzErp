@@ -218,6 +218,7 @@ public class ClassifyAction extends BaseAction {
 		try {
 			String gid = getParameter("gid");
 			classifyService.deleteClassify(gid);
+			responseWrite("success");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

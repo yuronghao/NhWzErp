@@ -1200,7 +1200,7 @@ public class WareHouseAction extends BaseAction{
 				if(goodsUid!=null&&goodsUid.length>0){//判断是否有明细信息
 					String[] mainNumber = getRequest().getParameterValues("mainNumber");          					 // 主计量数量
 					String[] goodsCode = getRequest().getParameterValues("goodsCode");   					 //商品code
-					String[] assistNumber = getRequest().getParameterValues("assistNumber");				// 辅计量数量
+//					String[] assistNumber = getRequest().getParameterValues("assistNumber");				// 辅计量数量
 					String[] batch = getRequest().getParameterValues("batch");								//批次
 					String[] goodsAllocationUid = getRequest().getParameterValues("goodsAllocationUid");	//货位号的Gid
 					String[] note = getRequest().getParameterValues("note");	// 备注
@@ -1216,9 +1216,9 @@ public class WareHouseAction extends BaseAction{
 						wmohc.setBarcode(billCode+(i+1));
 						wmohc.setGoodsallocationuid(goodsAllocationUid[i]);
 						wmohc.setBatchcode(CommonUtil.Obj2String(batch[i]));
-						if(!CommonUtil.isNullObject(CommonUtil.Obj2String(assistNumber[i]))){ 
-							wmohc.setAssistquantity(new BigDecimal(assistNumber[i]));
-						}
+//						if(!CommonUtil.isNullObject(CommonUtil.Obj2String(assistNumber[i]))){
+//							wmohc.setAssistquantity(new BigDecimal(assistNumber[i]));
+//						}
 						wmohc.setPrice(CommonUtil.object2BigDecimal(price[i]) );
 						wmohc.setAmount(CommonUtil.object2BigDecimal(amount[i]) );
 						
@@ -1234,9 +1234,9 @@ public class WareHouseAction extends BaseAction{
 						if(!CommonUtil.isNullObject(CommonUtil.Obj2String(batch[i]))){
 							wmcat.setBatch(batch[i]);
 						}
-					    if(!CommonUtil.isNullObject(CommonUtil.Obj2String(assistNumber[i]))){ 
-			             wmcat.setAssistnum(new BigDecimal(assistNumber[i]));
-						 }
+//					    if(!CommonUtil.isNullObject(CommonUtil.Obj2String(assistNumber[i]))){
+//			             wmcat.setAssistnum(new BigDecimal(assistNumber[i]));
+//						 }
 			            wmcat.setOrggid(getSession().get("OrgId").toString());
 			            wmcat.setSobgid(getSession().get("SobId").toString());
 						 if(!CommonUtil.isNullObject(CommonUtil.Obj2String(batch[i]))){                //判断是否有批次，有则添加到批次表
@@ -1246,8 +1246,8 @@ public class WareHouseAction extends BaseAction{
 				                wmb.setGoodsAllocationUid(goodsAllocationUid[i]);
 				                wmb.setBatch(CommonUtil.Obj2String(batch[i]));
 				                wmb.setNumber(new BigDecimal(mainNumber[i]));
-				                if(!CommonUtil.isNullObject(CommonUtil.Obj2String(assistNumber[i]))){ 
-				                wmb.setAssistNum(new BigDecimal(assistNumber[i]));}
+//				                if(!CommonUtil.isNullObject(CommonUtil.Obj2String(assistNumber[i]))){
+//				                wmb.setAssistNum(new BigDecimal(assistNumber[i]));}
 				                wmb.setRedBlueFlag(Integer.parseInt(badge));//1、蓝字单据，0、红字单据
 				                wmb.setRecordDate(new Timestamp(new Date().getTime()));
 				                wmBatchs.add(wmb);
@@ -1292,7 +1292,7 @@ public class WareHouseAction extends BaseAction{
 				if(goodsUid!=null&&goodsUid.length>0){//判断是否有明细信息
 					String[] mainNumber = getRequest().getParameterValues("mainNumber");          					 // 主计量数量
 					String[] goodsCode = getRequest().getParameterValues("goodsCode");   					 //商品code
-					String[] assistNumber = getRequest().getParameterValues("assistNumber");				// 辅计量数量
+//					String[] assistNumber = getRequest().getParameterValues("assistNumber");				// 辅计量数量
 					String[] batch = getRequest().getParameterValues("batch");								//批次
 					String[] goodsAllocationUid = getRequest().getParameterValues("goodsAllocationUid");	//货位号的Gid
 					String[] note = getRequest().getParameterValues("note");	// 备注
@@ -1315,10 +1315,10 @@ public class WareHouseAction extends BaseAction{
 						/*wmohc.setCallCuid(wmcc.getGid());*/
 						wmohc.setGoodsallocationuid(goodsAllocationUid[i]);
 						wmohc.setBatchcode(CommonUtil.Obj2String(batch[i]));
-						if(!CommonUtil.isNullObject(CommonUtil.Obj2String(assistNumber[i]))){ 
-							wmohc.setAssistquantity(new BigDecimal(assistNumber[i]));
-						}
-						wmohc.setPrice(CommonUtil.object2BigDecimal(price[i]) );
+//						if(!CommonUtil.isNullObject(CommonUtil.Obj2String(assistNumber[i]))){
+//							wmohc.setAssistquantity(new BigDecimal(assistNumber[i]));
+//						}
+						wmohc.setPrice(CommonUtil.object2BigDecimal(price[i]));
 						wmohc.setAmount(CommonUtil.object2BigDecimal(amount[i]) );
 						
 						WmAllocationstock wmcat=new WmAllocationstock();////货位现存量入
@@ -1330,9 +1330,9 @@ public class WareHouseAction extends BaseAction{
 						wmcat.setGoodsuid(goodsUid[i]);
 						wmcat.setGoodscode(goodsCode[i]);
 						wmcat.setNumber(new BigDecimal(mainNumber[i]));
-					    if(!CommonUtil.isNullObject(CommonUtil.Obj2String(assistNumber[i]))){ 
-			             wmcat.setAssistnum(new BigDecimal(assistNumber[i]));
-						 }
+//					    if(!CommonUtil.isNullObject(CommonUtil.Obj2String(assistNumber[i]))){
+//			             wmcat.setAssistnum(new BigDecimal(assistNumber[i]));
+//						 }
 			            wmcat.setOrggid(getSession().get("OrgId").toString());
 			            wmcat.setSobgid(getSession().get("SobId").toString());
 						 if(!CommonUtil.isNullObject(CommonUtil.Obj2String(batch[i]))){                //判断是否有批次，有则添加到批次表
@@ -1342,8 +1342,8 @@ public class WareHouseAction extends BaseAction{
 				                wmb.setGoodsAllocationUid(goodsAllocationUid[i]);
 				                wmb.setBatch(CommonUtil.Obj2String(batch[i]));
 				                wmb.setNumber(new BigDecimal(mainNumber[i]));
-				                if(!CommonUtil.isNullObject(CommonUtil.Obj2String(assistNumber[i]))){ 
-				                wmb.setAssistNum(new BigDecimal(assistNumber[i]));}
+//				                if(!CommonUtil.isNullObject(CommonUtil.Obj2String(assistNumber[i]))){
+//				                wmb.setAssistNum(new BigDecimal(assistNumber[i]));}
 				                wmb.setRedBlueFlag(Integer.parseInt(badge));//1、蓝字单据，0、红字单据
 				                wmb.setRecordDate(new Timestamp(new Date().getTime()));
 				                wmBatchs.add(wmb);
@@ -1893,7 +1893,7 @@ public class WareHouseAction extends BaseAction{
 				if(goodsUid!=null&&goodsUid.length>0){//判断是否有明细信息
 					String[] mainNumber = getRequest().getParameterValues("mainNumber");          					 // 主计量数量
 					String[] goodsCode = getRequest().getParameterValues("goodsCode");   					 //商品code
-					String[] assistNumber = getRequest().getParameterValues("assistNumber");				// 辅计量数量
+//					String[] assistNumber = getRequest().getParameterValues("assistNumber");				// 辅计量数量
 					String[] batch = getRequest().getParameterValues("batch");								//批次
 					String[] goodsAllocationUid = getRequest().getParameterValues("goodsAllocationUid");	//货位号的Gid
 					String[] note = getRequest().getParameterValues("note");	// 备注
@@ -1906,9 +1906,9 @@ public class WareHouseAction extends BaseAction{
 						wmMaterialoutC.setMaterialoutuid(materialOutGid);
 						wmMaterialoutC.setGoodsuid(goodsUid[i]);
 						wmMaterialoutC.setNumber(new BigDecimal(mainNumber[i]));
-						if(!CommonUtil.isNullObject(CommonUtil.Obj2String(assistNumber[i]))){ 
-							wmMaterialoutC.setAssistNumber(new BigDecimal(assistNumber[i]));
-						}
+//						if(!CommonUtil.isNullObject(CommonUtil.Obj2String(assistNumber[i]))){
+//							wmMaterialoutC.setAssistNumber(new BigDecimal(assistNumber[i]));
+//						}
 						wmMaterialoutC.setGoodsallocationuid(goodsAllocationUid[i]);
 //							saleOutC.setBarcode(billCode+(i+1));
 						wmMaterialoutC.setBatchcode(CommonUtil.Obj2String(batch[i]));
@@ -1926,9 +1926,9 @@ public class WareHouseAction extends BaseAction{
 						if(!CommonUtil.isNullObject(CommonUtil.Obj2String(batch[i]))){
 							wmcat.setBatch(batch[i]);
 						}
-					    if(!CommonUtil.isNullObject(CommonUtil.Obj2String(assistNumber[i]))){ 
-					    	wmcat.setAssistnum(new BigDecimal(assistNumber[i]).negate());
-						 }
+//					    if(!CommonUtil.isNullObject(CommonUtil.Obj2String(assistNumber[i]))){
+//					    	wmcat.setAssistnum(new BigDecimal(assistNumber[i]).negate());
+//						 }
 			            wmcat.setOrggid(getSession().get("OrgId").toString());
 			            wmcat.setSobgid(getSession().get("SobId").toString());
 						 if(!CommonUtil.isNullObject(CommonUtil.Obj2String(batch[i]))){                //判断是否有批次，有则添加到批次表
@@ -1938,9 +1938,9 @@ public class WareHouseAction extends BaseAction{
 				                wmb.setGoodsAllocationUid(goodsAllocationUid[i]);
 				                wmb.setBatch(CommonUtil.Obj2String(batch[i]));
 				                wmb.setNumber(new BigDecimal(mainNumber[i]).negate());
-				                if(!CommonUtil.isNullObject(CommonUtil.Obj2String(assistNumber[i]))){ 
-				                	wmb.setAssistNum(new BigDecimal(assistNumber[i]).negate());
-				                }
+//				                if(!CommonUtil.isNullObject(CommonUtil.Obj2String(assistNumber[i]))){
+//				                	wmb.setAssistNum(new BigDecimal(assistNumber[i]).negate());
+//				                }
 				                if(wmb.getNumber().compareTo(BigDecimal.valueOf(0))>=0){
 				                	wmb.setRedBlueFlag(1);//1、蓝字单据，0、红字单据
 				                }else{
@@ -1986,12 +1986,12 @@ public class WareHouseAction extends BaseAction{
 				if(goodsUid!=null&&goodsUid.length>0){//判断是否有明细信息
 					String[] mainNumber = getRequest().getParameterValues("mainNumber");          					 // 主计量数量
 					String[] goodsCode = getRequest().getParameterValues("goodsCode");   					 //商品code
-					String[] assistNumber = getRequest().getParameterValues("assistNumber");				// 辅计量数量
+//					String[] assistNumber = getRequest().getParameterValues("assistNumber");				// 辅计量数量
 					String[] batch = getRequest().getParameterValues("batch");								//批次
 					String[] goodsAllocationUid = getRequest().getParameterValues("goodsAllocationUid");	//货位号的Gid
 					String[] note = getRequest().getParameterValues("note");	// 备注
 					String[] gid = getRequest().getParameterValues("gid");	// 备注
-					String[] barCode = getRequest().getParameterValues("barCode");
+//					String[] barCode = getRequest().getParameterValues("barCode");
 					for(int i=0;i<goodsUid.length;i++){
 					
 						WmMaterialoutC wmMaterialoutC=new WmMaterialoutC();//销售出库单字表
@@ -2000,14 +2000,14 @@ public class WareHouseAction extends BaseAction{
 						wmMaterialoutC.setMaterialoutuid(materialOutWarehousegid);
 						wmMaterialoutC.setGoodsuid(goodsUid[i]);
 						wmMaterialoutC.setNumber(new BigDecimal(mainNumber[i]));
-						if(!CommonUtil.isNullObject(CommonUtil.Obj2String(assistNumber[i]))){ 
-							wmMaterialoutC.setAssistNumber(new BigDecimal(assistNumber[i]));
-						}
+//						if(!CommonUtil.isNullObject(CommonUtil.Obj2String(assistNumber[i]))){
+//							wmMaterialoutC.setAssistNumber(new BigDecimal(assistNumber[i]));
+//						}
 						wmMaterialoutC.setGoodsallocationuid(goodsAllocationUid[i]);
 						wmMaterialoutC.setBatchcode(CommonUtil.Obj2String(batch[i]));
-						if(!CommonUtil.isNullObject(barCode[i])){ 
-							wmMaterialoutC.setBarCode(barCode[i]);
-						}
+//						if(!CommonUtil.isNullObject(barCode[i])){
+//							wmMaterialoutC.setBarCode(barCode[i]);
+//						}
 						wmMaterialoutC.setNotes(note[i]);
 						WmAllocationstock wmcat=new WmAllocationstock();////货位现存量入
 						wmcat.setBatch(CommonUtil.Obj2String(batch[i]));
@@ -2018,9 +2018,9 @@ public class WareHouseAction extends BaseAction{
 						wmcat.setGoodsuid(goodsUid[i]);
 						wmcat.setGoodscode(goodsCode[i]);
 						wmcat.setNumber(new BigDecimal(mainNumber[i]).negate());//取相反数
-					    if(!CommonUtil.isNullObject(CommonUtil.Obj2String(assistNumber[i]))){ 
-			             wmcat.setAssistnum(new BigDecimal(assistNumber[i]).negate());
-						 }
+//					    if(!CommonUtil.isNullObject(CommonUtil.Obj2String(assistNumber[i]))){
+//			             wmcat.setAssistnum(new BigDecimal(assistNumber[i]).negate());
+//						 }
 			            wmcat.setOrggid(getSession().get("OrgId").toString());
 			            wmcat.setSobgid(getSession().get("SobId").toString());
 						 if(!CommonUtil.isNullObject(CommonUtil.Obj2String(batch[i]))){                //判断是否有批次，有则添加到批次表
@@ -2030,9 +2030,9 @@ public class WareHouseAction extends BaseAction{
 				                wmb.setGoodsAllocationUid(goodsAllocationUid[i]);
 				                wmb.setBatch(CommonUtil.Obj2String(batch[i]));
 				                wmb.setNumber(new BigDecimal(mainNumber[i]).negate());
-				                if(!CommonUtil.isNullObject(CommonUtil.Obj2String(assistNumber[i]))){ 
-				                	wmb.setAssistNum(new BigDecimal(assistNumber[i]).negate());
-				                }
+//				                if(!CommonUtil.isNullObject(CommonUtil.Obj2String(assistNumber[i]))){
+//				                	wmb.setAssistNum(new BigDecimal(assistNumber[i]).negate());
+//				                }
 				                if(wmb.getNumber().compareTo(BigDecimal.valueOf(0))>=0){
 				                	wmb.setRedBlueFlag(1);//1、蓝字单据，0、红字单据
 				                }else{

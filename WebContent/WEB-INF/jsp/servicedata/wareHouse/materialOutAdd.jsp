@@ -219,14 +219,14 @@
 				trs.eq(i).children('.goodsstandard').children().attr('id','goodsstandard'+(i+1));
 				trs.eq(i).children('.mainUnit').children().attr('id','mainUnit'+(i+1));
 				trs.eq(i).children('.mainNumber').children().attr('id','mainNumber'+(i+1));
-				trs.eq(i).children('.assistUnit').children().attr('id','assistUnit'+(i+1));
-				trs.eq(i).children('.assistNumber').children().attr('id','assistNumber'+(i+1));
+//				trs.eq(i).children('.assistUnit').children().attr('id','assistUnit'+(i+1));
+//				trs.eq(i).children('.assistNumber').children().attr('id','assistNumber'+(i+1));
 				trs.eq(i).children('.goodsAllocationName').children().attr('id','goodsAllocationName'+(i+1));
 				trs.eq(i).children('.goodsAllocationUid').children().attr('id','goodsAllocationUid'+(i+1));
 				trs.eq(i).children('.batch').children().attr('id','batch'+(i+1));
-				trs.eq(i).children('.barCode').children().attr('id','barCode'+(i+1));
+//				trs.eq(i).children('.barCode').children().attr('id','barCode'+(i+1));
 				trs.eq(i).children('.note').children().attr('id','note'+(i+1));
-				trs.eq(i).children('.assistUnitcode').children().attr('id','assistUnitcode'+(i+1));
+//				trs.eq(i).children('.assistUnitcode').children().attr('id','assistUnitcode'+(i+1));
 				
 			} 
 		}
@@ -253,31 +253,31 @@
 						'<td class="goodsName"><input type="text" id="" name="goodsName" class="listword" value="'+chek.eq(i).attr("goodsName")+'" readonly="readonly"></td>'+
 						'<td class="goodsstandard"><input type="text" id="" name="goodsstandard" class="listword" value="'+chek.eq(i).attr("goodsstandard")+'" readonly="readonly"></td>'+
 						'<td class="mainUnit"><input type="text" id="" name="mainUnit" class="listword" value="'+chek.eq(i).attr("unitName")+'" readonly="readonly"></td>'+
-						'<td class="mainNumber"><input type="text" id="" name="mainNumber" class="listword numric" value="" onchange="changeFlag(this)"></td>'+
+						'<td class="mainNumber"><input type="text" id="" name="mainNumber" class="listword numric" value="" onchange="changeFlag(this)"></td>';
 						
-						'<td class="assistUnit"><input type="text" id="" name="assistUnit" class="listword" value="'+chek.eq(i).attr("cstComUnitName")+'" readonly="readonly"></td>';
+//						'<td class="assistUnit"><input type="text" id="" name="assistUnit" class="listword" value="'+chek.eq(i).attr("cstComUnitName")+'" readonly="readonly"></td>';
 
 						var binvbach=chek.eq(i).attr("binvbach");
 						
-						if(chek.eq(i).attr("cstcomunitcode")!='')
-							{
-							strs+='<td class="assistUnitcode" style="display:none"><input type="text" id="" name="assistUnitcode" class="listword jnumric" value="'+chek.eq(i).attr("cstcomunitcode")+'" readonly="readonly"></td>'+
-							'<td class="assistNumber"><input type="text" id="" name="assistNumber" class="listword jjnumric" value="" onchange="changeFlag(this)"></td>';
-							}
-						else
-							{
-							strs+='<td class="assistUnitcode" style="display:none"><input type="text" id="" name="assistUnitcode" class="listword" value="'+chek.eq(i).attr("cstcomunitcode")+'" readonly="readonly"></td>'+
-							'<td class="assistNumber"><input type="text" id="" name="assistNumber" class="listword" value="" readonly="readonly"></td>';
-							}
+//						if(chek.eq(i).attr("cstcomunitcode")!='')
+//							{
+//							strs+='<td class="assistUnitcode" style="display:none"><input type="text" id="" name="assistUnitcode" class="listword jnumric" value="'+chek.eq(i).attr("cstcomunitcode")+'" readonly="readonly"></td>'+
+//							'<td class="assistNumber"><input type="text" id="" name="assistNumber" class="listword jjnumric" value="" onchange="changeFlag(this)"></td>';
+//							}
+//						else
+//							{
+//							strs+='<td class="assistUnitcode" style="display:none"><input type="text" id="" name="assistUnitcode" class="listword" value="'+chek.eq(i).attr("cstcomunitcode")+'" readonly="readonly"></td>'+
+//							'<td class="assistNumber"><input type="text" id="" name="assistNumber" class="listword" value="" readonly="readonly"></td>';
+//							}
 					strs+='<td class="goodsAllocationName"><input type="text" id="" name="goodsAllocationName" class="listword jjjnumric"  readonly="readonly" onclick="clickFlag(this)"></td>'+
 						'<td class="goodsAllocationUid" style="display:none"><input type="text" id="" name="goodsAllocationUid" class="listword "  readonly="readonly" onclick="clickFlag(this)"></td>'+
 						
 						'<td class="batch"><input type="text" id="" name="batch" class="listword batchInput" value="" isbatch="'+binvbach+'"></td>'+
 						
-						'<td class="barCode"><input type="text" id="" name="barCode" class="listword "  readonly="readonly"></td>'+
-						'<td class="note"><input type="text" id="" name="note" class="listword" value="" readonly="readonly"></td>'+
-						'<td class="produceCode"><input type="text" id="" name="produceCode" class="listword "  readonly="readonly"></td>'+
-						'<td class="goodName"><input type="text" id="" name="goodName" class="listword" value="" readonly="readonly"></td>'+
+//						'<td class="barCode"><input type="text" id="" name="barCode" class="listword "  readonly="readonly"></td>'+
+						'<td class="note"><input type="text" id="" name="note" class="listword" value="" ></td>'+
+//						'<td class="produceCode"><input type="text" id="" name="produceCode" class="listword "  readonly="readonly"></td>'+
+//						'<td class="goodName"><input type="text" id="" name="goodName" class="listword" value="" readonly="readonly"></td>'+
 						'</tr>';
 					
 						$("#contr").append(strs);
@@ -296,11 +296,13 @@
 		
 		function setIsbatch(){
 			var batchs=$('.batchInput');
+
 			for(var i=0;i<batchs.length;i++){
 				if(batchs.eq(i).attr("isbatch")!=1){
 					batchs.eq(i).attr('readonly','readonly');
 				}
 				if(batchs.eq(i).attr("isbatch")==1){
+
 					batchs.eq(i).attr('onclick','getBatch(this)');
 				}
 			}
@@ -317,11 +319,11 @@
 				$.dialog.alert_w("货位号不能为空！");
 				return;
 			}
-			
-			var goodsUid=$(obj).parent().parent().find(".goodsUid").children().val();
-			var goodsAllocationUid=$(obj).parent().parent().find(".goodsAllocationUid").children().val();
-			
-			var pwdWin = $.dialog({ 
+
+            var goodsUid = $(obj).parent().parent().find("input[name='goodsUid']").val();
+			var goodsAllocationUid=$(obj).parent().parent().find("input[name='goodsAllocationUid']").val();
+
+			var pwdWin = $.dialog({
 				drag: true,
 				lock: true,
 				resize: false,
@@ -399,7 +401,7 @@
 		{
 			
 			var tem=document.getElementsByName("mainNumber");
-			var tems=document.getElementsByName("assistNumber");
+//			var tems=document.getElementsByName("assistNumber");
 			 var reg = /^\d+(?=\.{0,1}\d+$|$)/;
 			for(var i=0;i<tem.length;i++)
 			 {
@@ -420,26 +422,26 @@
 				}
 			 }
 			
-			for(var j=0;j<tems.length;j++)
-			{
-				if(tems[j].value!=''){
-					if(obj.value=='0'){
-						
-							if(reg.test(tems[j].value))
-							{
-									tems[j].value=-tems[j].value;
-							}
-						}
-					
-					else
-					{
-						if(!reg.test(tems[j].value))
-						{
-							 tems[j].value=-tems[j].value;
-						}
-					}
-				}
-			}
+//			for(var j=0;j<tems.length;j++)
+//			{
+//				if(tems[j].value!=''){
+//					if(obj.value=='0'){
+//
+//							if(reg.test(tems[j].value))
+//							{
+//									tems[j].value=-tems[j].value;
+//							}
+//						}
+//
+//					else
+//					{
+//						if(!reg.test(tems[j].value))
+//						{
+//							 tems[j].value=-tems[j].value;
+//						}
+//					}
+//				}
+//			}
 
 		}
  		$(function(){
@@ -558,11 +560,11 @@
 		 	<div class="toolbar">
 		 		<ul>
 		 			<!--<li class="fl"><a href="AttributeProjectClass.html"><input type="button" class="backBtn" value="返回"></a></li>-->
-		 			<%--<li class="fl"><input type="button" class="btns" value="新增" id="addBtn"> </li>--%>
-		 			<%--<li class="fl"><input type="button" class="btns" value="修改" id="revBtn"> </li>--%>
-		 			<%--<li class="fl"><input type="button" class="btns" value="删除" id="delBtn" onclick="deletesob('${saleOutWarehouse['gid']}')"> </li>--%>
-		 			<%--<li class="fl"><input type="button" class="btns" value="保存" id="saveBtn"> </li>--%>
-		 			<%--<li class="fl"><input type="button" class="btns" value="放弃" id="giveUpBtn" onclick="giveup()"> </li>--%>
+		 			<li class="fl"><input type="button" class="btns" value="新增" id="addBtn"> </li>
+		 			<li class="fl"><input type="button" class="btns" value="修改" id="revBtn"> </li>
+		 			<li class="fl"><input type="button" class="btns" value="删除" id="delBtn" onclick="deletesob('${saleOutWarehouse['gid']}')"> </li>
+		 			<li class="fl"><input type="button" class="btns" value="保存" id="saveBtn"> </li>
+		 			<li class="fl"><input type="button" class="btns" value="放弃" id="giveUpBtn" onclick="giveup()"> </li>
 		 			<li class="fl" style="display:none"><input type="button" class="btns" value="审核"> </li>
 			 		<li class="fl" style="display:none"><input type="button" class="btns" value="弃审"> </li>
 		 			<li class="fl"><input type="button" class="btns" value="列表" id="tableBtn" onclick="getprocurearrivallist()"></li>
@@ -640,7 +642,7 @@
 					  </li>
 		 				<li class="wordli fl">
 							<div class="wordname fl">备注：</div>
-							<div class="wordnameinput fl"><input type="text" value="${departmentuse.depname}" id="notes" name="notes" class="toDealInput"> </div>
+							<div class="wordnameinput fl"><input type="text" value="${saleOutWarehouse['notes']}" id="notes" name="notes" class="toDealInput"> </div>
 							<div class="cf"></div> 
 		 				</li>
 		 				<div class="cf"></div> 
@@ -665,7 +667,7 @@
 				 					<%--<th>辅数量</th>--%>
 				 					<th>货位号</th>
 				 					<th>批次</th>
-				 					<th style="width: 12%">条形码</th>
+				 					<%--<th style="width: 12%">条形码</th>--%>
 				 					<th>备注</th>
 									<%--<th>生产订单号</th>--%>
 									<%--<th>产品编号</th>--%>
@@ -698,7 +700,7 @@
 			                <td class="goodsAllocationName"><input type="text" id="" name="goodsAllocationName" class="listword  jjjnumric" value="${type.alocation}" readonly="readonly" ></td>
 			                <td class="goodsAllocationUid" style="display:none"><input type="text" id="" name="goodsAllocationUid" class="listword toDealInput" value="${type.goodsallocationuid}" readonly="readonly"></td>
 			             	<td class="batch"><input type="text" id="" name="batch" class="listword " value="${type.batchcode}" readonly="readonly"></td>
-			                <td class="barCode"><input type="text" id="" name="barCode" class="listword " value="${type.barCode}" readonly="readonly"></td>
+			                <%--<td class="barCode"><input type="text" id="" name="barCode" class="listword " value="${type.barCode}" readonly="readonly"></td>--%>
 			                <td class="note"><input type="text" id="" name="note" class="listword toDealInput" value="${type.notes}" readonly="readonly"></td>
 				 		    <%--<td class="produceCode"><input type="text" id="" name="produceCode" class="listword toDealInput" value="${type.produceCode}" readonly="readonly"></td>--%>
 				 		    <%--<td class="goodName"><input type="text" id="" name="goodName" class="listword toDealInput" value="${type.goodName}" readonly="readonly"></td>--%>

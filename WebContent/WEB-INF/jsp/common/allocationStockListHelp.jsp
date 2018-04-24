@@ -45,6 +45,8 @@
 <body>
 	<form action="${ctx }/plugin_selectAllocationStockList.emi" id="myform" method="post">
 		<input type="hidden" name="id" value="${id }">
+		<input type="hidden" name="goodsUid" value="${goodsUid }">
+		<input type="hidden" name="goodsAllocationUid" value="${goodsAllocationUid }">
 		<div class="EMonecontent" style="">
 			<div style="width: 100%;height: 15px;"></div>
 		</div>

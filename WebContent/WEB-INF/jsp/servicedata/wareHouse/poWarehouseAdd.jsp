@@ -255,24 +255,24 @@
 						'<td class="goodsName"><input type="text" id="" name="goodsName" class="listword" value="'+chek.eq(i).attr("goodsName")+'" readonly="readonly"></td>'+
 						'<td class="goodsstandard"><input type="text" id="" name="goodsstandard" class="listword" value="'+chek.eq(i).attr("goodsstandard")+'" readonly="readonly"></td>'+
 						'<td class="mainUnit"><input type="text" id="" name="mainUnit" class="listword" value="'+chek.eq(i).attr("unitName")+'" readonly="readonly"></td>'+
-						'<td class="mainNumber"><input type="text" id="" name="mainNumber" class="listword numric" value="" onchange="changeFlag(this);getAmount(this)"></td>'+
+						'<td class="mainNumber"><input type="text" id="" name="mainNumber" class="listword numric" value="" onchange="changeFlag(this);getAmount(this)"></td>';
 						
-						'<td class="assistUnit"><input type="text" id="" name="assistUnit" class="listword" value="'+chek.eq(i).attr("cstComUnitName")+'" readonly="readonly"></td>';
+//						'<td class="assistUnit"><input type="text" id="" name="assistUnit" class="listword" value="'+chek.eq(i).attr("cstComUnitName")+'" readonly="readonly"></td>';
 						var binvbach='';
 						if(chek.eq(i).attr("binvbach")=='1')
 						{
 							binvbach=$("#time").val();
 						}
-						if(chek.eq(i).attr("cstcomunitcode")!='')
-							{
-							strs+='<td class="assistUnitcode" style="display:none"><input type="text" id="" name="assistUnitcode" class="listword jnumric" value="'+chek.eq(i).attr("cstcomunitcode")+'" readonly="readonly"></td>'+
-							'<td class="assistNumber"><input type="text" id="" name="assistNumber" class="listword jjnumric" value="" onchange="changeFlag(this)"></td>';
-							}
-						else
-							{
-							strs+='<td class="assistUnitcode" style="display:none"><input type="text" id="" name="assistUnitcode" class="listword" value="'+chek.eq(i).attr("cstcomunitcode")+'" readonly="readonly"></td>'+
-							'<td class="assistNumber"><input type="text" id="" name="assistNumber" class="listword" value="" readonly="readonly"></td>';
-							}
+//						if(chek.eq(i).attr("cstcomunitcode")!='')
+//							{
+//							strs+='<td class="assistUnitcode" style="display:none"><input type="text" id="" name="assistUnitcode" class="listword jnumric" value="'+chek.eq(i).attr("cstcomunitcode")+'" readonly="readonly"></td>'+
+//							'<td class="assistNumber"><input type="text" id="" name="assistNumber" class="listword jjnumric" value="" onchange="changeFlag(this)"></td>';
+//							}
+//						else
+//							{
+//							strs+='<td class="assistUnitcode" style="display:none"><input type="text" id="" name="assistUnitcode" class="listword" value="'+chek.eq(i).attr("cstcomunitcode")+'" readonly="readonly"></td>'+
+//							'<td class="assistNumber"><input type="text" id="" name="assistNumber" class="listword" value="" readonly="readonly"></td>';
+//							}
 					strs+='<td class="goodsAllocationName"><input type="text" id="" name="goodsAllocationName" class="listword jjjnumric"  readonly="readonly" onclick="clickFlag(this)"></td>'+
 						'<td class="goodsAllocationUid" style="display:none"><input type="text" id="" name="goodsAllocationUid" class="listword "  readonly="readonly" onclick="clickFlag(this)"></td>'+
 						
@@ -281,9 +281,9 @@
 		             	'<td class="amount"><input type="text" id="" name="amount" class="listword " value="" readonly="readonly"></td>'+
 						'<td class="barCode"><input type="text" id="" name="barCode" class="listword "  readonly="readonly"></td>'+
 						'<td class="note"><input type="text" id="" name="note" class="listword" value=""></td>'+
-						'<td class="cfree"><input type="text" id="" name="cfree" class="listword" value="" readonly="readonly"></td>'+
-						'<td class="smallamount"><input type="text" id="" name="smallamount" class="listword" value="" readonly="readonly"></td>'+
-		                '<td class="printamount"><input type="text" id="" name="printamount" class="listword" value="" readonly="readonly"></td>'+
+//						'<td class="cfree"><input type="text" id="" name="cfree" class="listword" value="" readonly="readonly"></td>'+
+//						'<td class="smallamount"><input type="text" id="" name="smallamount" class="listword" value="" readonly="readonly"></td>'+
+//		                '<td class="printamount"><input type="text" id="" name="printamount" class="listword" value="" readonly="readonly"></td>'+
 						'</tr>';
 					
 						$("#contr").append(strs);
@@ -622,11 +622,11 @@
 		 	<div class="toolbar">
 		 		<ul>
 		 			<!--<li class="fl"><a href="AttributeProjectClass.html"><input type="button" class="backBtn" value="返回"></a></li>-->
-		 			<%--<li class="fl"><input type="button" class="btns" value="新增" id="addBtn"> </li>--%>
-		 			<%--<li class="fl"><input type="button" class="btns" value="修改" id="revBtn" > </li>--%>
-		 			<%--<li class="fl"><input type="button" class="btns" value="删除" id="delBtn" onclick="deletesob('${produceWarehouse['gid']}')"> </li>--%>
-		 			<%--<li class="fl"><input type="button" class="btns" value="保存" id="saveBtn"> </li>--%>
-		 			<%--<li class="fl"><input type="button" class="btns" value="放弃" id="giveUpBtn" onclick="giveup()"> </li>--%>
+		 			<li class="fl"><input type="button" class="btns" value="新增" id="addBtn"> </li>
+		 			<li class="fl"><input type="button" class="btns" value="修改" id="revBtn" > </li>
+		 			<li class="fl"><input type="button" class="btns" value="删除" id="delBtn" onclick="deletesob('${produceWarehouse['gid']}')"> </li>
+		 			<li class="fl"><input type="button" class="btns" value="保存" id="saveBtn"> </li>
+		 			<li class="fl"><input type="button" class="btns" value="放弃" id="giveUpBtn" onclick="giveup()"> </li>
 		 			<li class="fl" style="display:none"><input type="button" class="btns" value="审核"> </li>
 			 		<li class="fl" style="display:none"><input type="button" class="btns" value="弃审"> </li>
 		 			<li class="fl"><input type="button" class="btns" value="列表" id="tableBtn" onclick="getprocurearrivallist()"></li>
@@ -697,8 +697,8 @@
 		 			<li class="wordli fl">
 						<div class="wordname fl">供应商：</div>
 						<div class="wordnameinput fl">
-							<input type="text" id="providerName" name="providerName" class="toDealInput" value="${customer.pcname}" >
-							<%--<input type="text" name="providerName" id="providerName" class="toDealInput" value="${customer.pcname}" onclick="selectproviderName();" >--%>
+							<%--<input type="text" id="providerName" name="providerName" class="toDealInput" value="${customer.pcname}" >--%>
+							<input type="text" name="providerName" id="providerName" class="toDealInput" value="${customer.pcname}" onclick="selectproviderName();" >
 	 						<input type="hidden" id="providerUid" name="providerUid" value="${produceWarehouse['providerUid']}" >
 						</div>
 						<div class="cf"></div>
@@ -731,7 +731,7 @@
 			 			<table>
 				 			<tbody id="contr">
 				 				<tr class="NO">
-				 					<%--<th style="width:50px;">操作</th>--%>
+				 					<th style="width:50px;">操作</th>
 				 					<th>物料编号</th>
 				 					<th>物料名称</th>
 				 					<th>规格型号</th>
@@ -751,7 +751,7 @@
 				 				</tr>
 				 			<c:forEach var="type" items="${produceWarehouseC}" varStatus="stat">
 				 		    <tr class="serialTr">
-				 		    <%--<td><div class="delrow" name = "deleteButton"  style="margin-left:15px;float: left;display: none" title="删除" gid="${type.gid}"></div> </td>--%>
+				 		    <td><div class="delrow" name = "deleteButton"  style="margin-left:15px;float: left;display: none" title="删除" gid="${type.gid}"></div> </td>
 				 		     <td class="gid" style="display:none"><input type="hidden" id="" name="gid" class="listword" value="${type.gid}" /></td>
 				 		
 				 		    <td class="goodsUid" style="display:none"><input type="text" id="" name="goodsUid" class="listword" value="${type.materialUid}"></td>
@@ -777,7 +777,7 @@
 			                <td class="goodsAllocationUid" style="display:none"><input type="text" id="" name="goodsAllocationUid" class="listword toDealInput" value="${type.goodsAllocationUid}" readonly="readonly"></td>
 			             	<td class="batch"><input type="text" id="" name="batch" class="listword " value="${type.batchCode}" ></td>
 			             	 
-			             	 <td class="price"><input type="text" id="" name="price" class="listword " value="<fmt:formatNumber type="number" value="${type.price}" minFractionDigits="2"/> " onchange="getAmount(this);"></td>
+			             	 <td class="price"><input type="text" id="" name="price" class="listword " value="<fmt:formatNumber type="number" value="${type.price}" minFractionDigits="2" groupingUsed="false"/> " onchange="getAmount(this);"></td>
 			             	 <td class="amount"><input type="text" id="" name="amount" class="listword " value="${type.amount}" readonly="readonly"></td>
 			                
 			                <td class="barCode"><input type="text" id="" name="barCode" class="listword " value="${type.barCode}" readonly="readonly"></td>

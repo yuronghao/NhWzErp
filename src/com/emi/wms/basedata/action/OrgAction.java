@@ -286,7 +286,7 @@ public class OrgAction extends BaseAction {
 		PageBean pageBean=basicSettingService.getPersonPageBean(pageIndex,pageSize,classifyGid,orgId,sobId);
 		setRequstAttribute("data", pageBean);
 		
-		return "11";
+		return "getPersonList";
 	}
 	
 	
