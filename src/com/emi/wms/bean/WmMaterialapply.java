@@ -1,13 +1,13 @@
 package com.emi.wms.bean;
 
-import java.io.Serializable;
-import java.util.Date;
-
 import com.emi.sys.core.annotation.EmiColumn;
 import com.emi.sys.core.annotation.EmiTable;
 
-@EmiTable(name = "WM_MaterialOut")
-public class WmMaterialout implements Serializable {
+import java.io.Serializable;
+import java.util.Date;
+
+@EmiTable(name = "WM_MaterialApply")
+public class WmMaterialapply implements Serializable {
 
 	private static final long serialVersionUID = -8848316127916729915L;
 
@@ -76,18 +76,7 @@ public class WmMaterialout implements Serializable {
     
     @EmiColumn(name = "badge")
     private Integer badge;//入库标记(蓝字单据1、红字单据0)
-
-	@EmiColumn(name = "materialapplygid")
-	private  String materialapplygid;//参照的材料申请表id，如果不是参照，就没有值
-
-	public String getMaterialapplygid() {
-		return materialapplygid;
-	}
-
-	public void setMaterialapplygid(String materialapplygid) {
-		this.materialapplygid = materialapplygid;
-	}
-
+    
 	private String recordPersonName;
 	private String departName;
 	private String wareHouseName;

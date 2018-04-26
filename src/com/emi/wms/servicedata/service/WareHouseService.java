@@ -5026,4 +5026,37 @@ public class WareHouseService extends EmiPluginService {
         return map;
 
     }
+
+    public Map findMaterialApplyWarehouse(String materialApplygid, String orgId, String sobId) {
+        return wareHouseDao.findMaterialApply(materialApplygid, orgId, sobId);//findSaleOutWarehouse(gid, orgId, sobId);
+    }
+
+    public List getMaterApplyList(String gid) {
+        return wareHouseDao.getMaterApplyList(gid);
+    }
+
+    public PageBean getAllListMaterialapply(int pageIndex, int pageSize, String condition) {
+        return wareHouseDao.getAllListMaterialapply(pageIndex, pageSize, condition);
+    }
+
+    public JSONObject addMaterialApplyWarehouse(WmMaterialapply wmMaterialapply, List<WmMaterialapplyC> wmohclist) {
+
+        JSONObject jobj = new JSONObject();
+
+
+
+        boolean suc = wareHouseDao.emiInsert(wmMaterialapply);// 插入销售出库主表
+        if (suc) {
+            suc = wareHouseDao.emiInsert(wmohclist);// 插入销售出库子表
+        }
+
+        //提交审核：
+
+
+
+
+        jobj.put("success", 1);
+        jobj.put("failInfor", "");
+        return jobj;
+    }
 }

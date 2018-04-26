@@ -1,15 +1,14 @@
 package com.emi.wms.bean;
 
+import com.emi.sys.core.annotation.EmiColumn;
+import com.emi.sys.core.annotation.EmiTable;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
-import com.emi.sys.core.annotation.EmiColumn;
-import com.emi.sys.core.annotation.EmiTable;
-import com.sun.xml.internal.ws.developer.StreamingAttachment;
-
-@EmiTable(name = "WM_MaterialOut_C")
-public class WmMaterialoutC implements Serializable{
+@EmiTable(name = "WM_MaterialApply_C")
+public class WmMaterialapplyC implements Serializable{
 	
 
 	private static final long serialVersionUID = 4682832332060053150L;
@@ -43,6 +42,10 @@ public class WmMaterialoutC implements Serializable{
 	
 	@EmiColumn(name = "unitprice")
     private BigDecimal unitprice;//单价
+
+	@EmiColumn(name = "receivednumber")
+	private BigDecimal receivednumber;//已领数量
+
 	
 	@EmiColumn(name = "totalprice")
     private BigDecimal totalprice;//金额
@@ -85,15 +88,12 @@ public class WmMaterialoutC implements Serializable{
 	@EmiColumn(name="barCode" )
 	private String barCode;
 
-	@EmiColumn(name="materialapplycgid" )
-	private  String materialapplycgid;
-
-	public String getMaterialapplycgid() {
-		return materialapplycgid;
+	public BigDecimal getReceivednumber() {
+		return receivednumber;
 	}
 
-	public void setMaterialapplycgid(String materialapplycgid) {
-		this.materialapplycgid = materialapplycgid;
+	public void setReceivednumber(BigDecimal receivednumber) {
+		this.receivednumber = receivednumber;
 	}
 
 	private String goodsStandard;

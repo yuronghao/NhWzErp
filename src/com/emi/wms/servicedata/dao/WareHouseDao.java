@@ -1335,4 +1335,53 @@ public class WareHouseDao extends BaseDao {
 		sql += " ORDER BY pk ";
 		return this.queryForList(sql);
 	}
+
+	public Map findMaterialApply(String gid, String orgId, String sobId) {
+		String sql="";
+		if(CommonUtil.isNullString(gid)){
+			sql="SELECT TOP 1 wowh.gid,wowh.billCode,wowh.billDate,wowh.badge,wowh.departmentUid,wowh.whUid,wowh.notes ,wowh.recordDate,ymuser.userName recordpersonName,wowh.recordPerson FROM WM_MaterialApply wowh LEFT JOIN YM_User ymuser ON ymuser.gid = wowh.recordPerson WHERE	1 = 1  AND wowh.sobGid = '" + sobId + "' AND wowh.orgGid = '" + orgId + "' ORDER BY	wowh.pk DESC ";
+		}else{
+			sql="SELECT  wowh.gid,wowh.billCode,wowh.billDate,wowh.badge,wowh.departmentUid,wowh.whUid,wowh.notes ,wowh.recordDate,ymuser.userName recordpersonName,wowh.recordPerson FROM	WM_MaterialApply wowh LEFT JOIN YM_User ymuser ON ymuser.gid = wowh.recordPerson WHERE	1 = 1 AND wowh.gid='"+gid+"' AND wowh.sobGid = '" + sobId + "' AND wowh.orgGid = '" + orgId + "' ORDER BY	wowh.pk DESC ";
+		}
+
+		return  this.queryForMap(sql);
+	}
+
+	public List getMaterApplyList(String gid) {
+		Map match = new HashMap();
+		match.put("produceCode", "produceCode");
+		match.put("goodName", "goodName");
+		String sql = "SELECT wmc.*,wpo.billCode produceCode,wpoc.goodsUid goodName FROM	WM_MaterialApply_C wmc ";
+		sql+="LEFT JOIN MES_WM_ProduceProcessRouteCGoods mwprcg ON wmc.processRouteCGoodsUid = mwprcg.gid ";
+		sql+="LEFT JOIN MES_WM_ProduceProcessRouteC prcgc ON mwprcg.produceRouteCGid = prcgc.gid ";
+		sql+="LEFT JOIN MES_WM_ProduceProcessRoute prcg ON prcg.gid = prcgc.produceRouteGid ";
+		sql+="LEFT JOIN WM_ProduceOrder wpo ON wpo.gid = prcg.produceUid ";
+		sql+="LEFT JOIN WM_ProduceOrder_C wpoc ON wpoc.gid = prcg.produceCUid ";
+		sql+="where wmc.materialOutUid = '"+gid+"' ";
+
+		return this.emiQueryList(sql, WmMaterialapplyC.class, match);
+	}
+
+	public PageBean getAllListMaterialapply(int pageIndex, int pageSize, String condition) {
+		Map match = new HashMap();
+		match.put("owhGid", "owhGid");
+		match.put("owhCode", "owhCode");
+		match.put("produceCode", "produceCode");
+		match.put("goodName", "goodName");
+		match.put("recordPerson", "recordPerson");
+		match.put("departId", "departId");
+		match.put("whUid", "whUid");
+		String sql="SELECT"+CommonUtil.colsFromBean(WmMaterialapplyC.class, "wmc")+",owh.gid owhGid,owh.billCode owhCode,owh.recordPerson recordPerson,owh.departmentUid departId,owh.whUid whUid,wpo.billCode produceCode,wpoc.goodsUid goodName FROM WM_MaterialApply owh ";
+		sql+="LEFT JOIN	WM_MaterialApply_C wmc ON wmc.materialOutUid=owh.gid ";
+		sql+="LEFT JOIN MES_WM_ProduceProcessRouteCGoods mwprcg ON wmc.processRouteCGoodsUid = mwprcg.gid ";
+		sql+="LEFT JOIN MES_WM_ProduceProcessRouteC prcgc ON mwprcg.produceRouteCGid = prcgc.gid ";
+		sql+="LEFT JOIN MES_WM_ProduceProcessRoute prcg ON prcg.gid = prcgc.produceRouteGid ";
+		sql+="LEFT JOIN WM_ProduceOrder wpo ON wpo.gid = prcg.produceUid ";
+		sql+="LEFT JOIN WM_ProduceOrder_C wpoc ON wpo.gid = prcg.producecUid where 1=1 ";
+		sql+=condition;
+		String sortSql="pk desc";
+		return emiQueryList(sql, pageIndex, pageSize, WmMaterialapplyC.class,match,sortSql);
+
+
+	}
 }
