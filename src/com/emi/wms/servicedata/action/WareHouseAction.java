@@ -9,6 +9,7 @@ import java.util.*;
 
 
 import com.alibaba.fastjson.JSON;
+import com.emi.common.util.Constants;
 import com.emi.wms.bean.*;
 import net.sf.json.JSONObject;
 
@@ -1916,6 +1917,12 @@ public class WareHouseAction extends BaseAction{
 					setRequstAttribute("saleApplyWarehouseC", materialApplyC);
 				}
 			}
+
+			//类型
+			String condition=" ";
+			List<YmRdStyle> result=wareHouseService.getRdstyleEntity(condition, Constants.TASKTYPE_LYSQ);
+			setRequstAttribute("rdstylelist", result);
+
 			String time = DateUtil.dateToString(new Date(), "yyMMdd");
 			setRequstAttribute("time", time);
 			setRequstAttribute("saleApplyWarehouse", saleApplyWarehouse);
@@ -2057,6 +2064,7 @@ public class WareHouseAction extends BaseAction{
 			wmMaterialapply.setWhuid(whUid);
 			wmMaterialapply.setDepartmentuid(depUid);
 			wmMaterialapply.setNotes(getParameter("notes"));
+			wmMaterialapply.setRdstylegid(getParameter("rdstylegid"));
 			wmMaterialapply.setRecordperson(getParameter("recordPersonUid"));//录入人
 			wmMaterialapply.setSobgid(getSession().get("SobId").toString());
 			wmMaterialapply.setOrggid(getSession().get("OrgId").toString());

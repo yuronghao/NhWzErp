@@ -1384,4 +1384,16 @@ public class WareHouseDao extends BaseDao {
 
 
 	}
+
+	public FollowRule getFollowRule(int invoicestype, String rdstylegid) {
+		String sql ="select * from FollowRule  fr where fr.invoicestype = '"+invoicestype+"' and fr.rdstylegid = '"+rdstylegid+"' and fr.isdel = 0";
+		return (FollowRule) this.emiQuery(sql,FollowRule.class);
+	}
+
+	public List<FollowRuleNodeUser> getFollowRuleNodeUserList(int id) {
+		Map match = new HashMap();
+		String sql = "select * from FollowRuleNodeUser f where f.followruleid = '"+id+"' ORDER BY f.nodeindex ASC ";
+		return this.emiQueryList(sql, WmMaterialapplyC.class, match);
+
+	}
 }

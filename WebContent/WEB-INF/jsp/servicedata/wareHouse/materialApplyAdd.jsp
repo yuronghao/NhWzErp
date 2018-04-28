@@ -553,7 +553,7 @@
 <body style="background-color: #FFFFFF;">
 <form id="myform" name="myform" action="" method="post">
 <input type="hidden" name="time" id="time" value="${time }" />
-<input type="hidden" id="materialOutgid" name="materialOutgid" value="${saleOutWarehouse['gid']}" >
+<input type="hidden" id="materialOutgid" name="materialOutgid" value="${saleApplyWarehouse['gid']}" >
 		 <div class="EMonecontent">
 		 	<div style="width: 100%;height: 15px;"></div>
 		 	<!--按钮部分-->
@@ -562,7 +562,7 @@
 		 			<!--<li class="fl"><a href="AttributeProjectClass.html"><input type="button" class="backBtn" value="返回"></a></li>-->
 		 			<li class="fl"><input type="button" class="btns" value="新增" id="addBtn"> </li>
 		 			<li class="fl"><input type="button" class="btns" value="修改" id="revBtn"> </li>
-		 			<li class="fl"><input type="button" class="btns" value="删除" id="delBtn" onclick="deletesob('${saleOutWarehouse['gid']}')"> </li>
+		 			<li class="fl"><input type="button" class="btns" value="删除" id="delBtn" onclick="deletesob('${saleApplyWarehouse['gid']}')"> </li>
 		 			<li class="fl"><input type="button" class="btns" value="保存" id="saveBtn"> </li>
 		 			<li class="fl"><input type="button" class="btns" value="放弃" id="giveUpBtn" onclick="giveup()"> </li>
 		 			<li class="fl" style="display:none"><input type="button" class="btns" value="审核"> </li>
@@ -584,7 +584,7 @@
 							 * @param [div_id] 【非必填】翻页按钮所在的div的id(默认叫emi_page_turning,如有需要可以修改)
 							 */
 							 var cond = "";
-		 					initPageTurning('${ctx }/wms/wareHouse_toAddMaterialApply.emi','WM_MaterialOut','gid',"${saleOutWarehouse['gid']}",
+		 					initPageTurning('${ctx }/wms/wareHouse_toAddMaterialApply.emi','WM_MaterialOut','gid',"${saleApplyWarehouse['gid']}",
 		 							cond,'materialOutgid');
 		 				});
 		 			</script>
@@ -603,19 +603,19 @@
 		 			<ul class="wordul">
 		 				<li class="wordli fl">
 							<div class="wordname fl">单据编号：</div>
-							<div class="wordnameinput fl"><input type="text" value="${saleOutWarehouse['billCode']}" id="billCode" name="billCode" readonly="readonly"> </div>
+							<div class="wordnameinput fl"><input type="text" value="${saleApplyWarehouse['billCode']}" id="billCode" name="billCode" readonly="readonly"> </div>
 							<div class="cf"></div> 
 		 				</li>
 		 				<li class="wordli fl">
 							<div class="wordname fl">单据日期：</div>
-							<div class="wordnameinput fl"><input type="text" value="${fn:substring(saleOutWarehouse['billDate'],0,10)}" id="billDate" name="billDate" readonly="readonly"> </div>
+							<div class="wordnameinput fl"><input type="text" value="${fn:substring(saleApplyWarehouse['billDate'],0,10)}" id="billDate" name="billDate" readonly="readonly"> </div>
 							<div class="cf"></div> 
 		 				</li>
 		 				<li class="wordli fl">
 							<div class="wordname fl">部门：</div>
 							<div class="wordnameinput fl">
 							<input type="text" name="depName" id="depName" class="toDealInput" value="${department.depname}" >
-	 						<input type="hidden" id="depUid" name="depUid" value="${saleOutWarehouse['departmentUid']}">
+	 						<input type="hidden" id="depUid" name="depUid" value="${saleApplyWarehouse['departmentUid']}">
 							</div>
 							<div class="cf"></div> 
 		 				</li>
@@ -623,7 +623,7 @@
 							<div class="wordname fl">仓库：</div>
 							<div class="wordnameinput fl">
 							<input type="text" name="whName" id="whName" class="toDealInput" value="${warehouse.whname}">
-							<input type="hidden" value="${saleOutWarehouse['whUid']}" id="whUid" name="whUid"> 
+							<input type="hidden" value="${saleApplyWarehouse['whUid']}" id="whUid" name="whUid"> 
 							</div>
 							<div class="cf"></div> 
 		 				</li>
@@ -634,17 +634,32 @@
 						<div class="wordname fl">入库标志：</div>
 						<div class="wordnameinput fl">
 							<select class="toDealSelect" id="badge" name="badge" onchange="getSelect(this)" disabled="disabled">
-								<option value="1" <c:if test="${saleOutWarehouse['badge'] == 1}">selected="selected"</c:if>>蓝字</option>
-								<option value="0" <c:if test="${saleOutWarehouse['badge'] == 0}">selected="selected"</c:if>>红字</option>
+								<option value="1" <c:if test="${saleApplyWarehouse['badge'] == 1}">selected="selected"</c:if>>蓝字</option>
+								<option value="0" <c:if test="${saleApplyWarehouse['badge'] == 0}">selected="selected"</c:if>>红字</option>
 							</select>
 						</div>
 						<div class="cf"></div>
 					  </li>
 		 				<li class="wordli fl">
 							<div class="wordname fl">备注：</div>
-							<div class="wordnameinput fl"><input type="text" value="${saleOutWarehouse['notes']}" id="notes" name="notes" class="toDealInput"> </div>
+							<div class="wordnameinput fl"><input type="text" value="${saleApplyWarehouse['notes']}" id="notes" name="notes" class="toDealInput"> </div>
 							<div class="cf"></div> 
 		 				</li>
+
+						<li class="wordli fl">
+							<div class="wordname fl">类型</div>
+							<div class="wordnameinput fl">
+								<select class="toDealSelect" id="rdstylegid" name="rdstylegid"  disabled="disabled">
+									<c:forEach items="${rdstylelist}" var="rdstyle" varStatus="status">
+										<option value="${rdstyle.gid}" <c:if test="${saleApplyWarehouse['rdstylegid'] == rdstyle.gid}">selected="selected"</c:if>>${rdstyle.crdName}</option>
+									</c:forEach>
+								</select>
+
+							</div>
+							<div class="cf"></div>
+						</li>
+
+
 		 				<div class="cf"></div> 
 		 			</ul>
 		 			<!-- <ul class="wordul">

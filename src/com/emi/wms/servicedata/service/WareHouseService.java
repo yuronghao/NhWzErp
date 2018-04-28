@@ -2027,6 +2027,8 @@ public class WareHouseService extends EmiPluginService {
             condition += " and usedInCPRK=1 ";
         } else if (taskType.equalsIgnoreCase(Constants.TASKTYPE_WWCPRK)) {//委外成品入库
             condition += " and usedInWWCPRK=1 ";
+        } else if (taskType.equalsIgnoreCase(Constants.TASKTYPE_LYSQ)) {//领用申请单类型
+            condition += " and usedInLYSQ=1 ";
         }
 
 
@@ -5045,15 +5047,29 @@ public class WareHouseService extends EmiPluginService {
 
 
 
-        boolean suc = wareHouseDao.emiInsert(wmMaterialapply);// 插入销售出库主表
+        boolean suc = wareHouseDao.emiInsert(wmMaterialapply);// 插入领用申请表主表
         if (suc) {
-            suc = wareHouseDao.emiInsert(wmohclist);// 插入销售出库子表
+            suc = wareHouseDao.emiInsert(wmohclist);// 插入领用申请表子表
         }
 
         //提交审核：
+        int  invoicestype = 1;//单据类型
+        String rdstylegid = wmMaterialapply.getRdstylegid();//单据审批类型
+        FollowRule followRule = wareHouseDao.getFollowRule(invoicestype,rdstylegid);
+        List<FollowRuleNodeUser> followRuleNodeUserList = wareHouseDao.getFollowRuleNodeUserList(followRule.getId());
 
-
-
+        //插入审核节点数据
+        List<FollowInfoMoving> list = new ArrayList<FollowInfoMoving>();
+        for(int  i = 0 ;i<followRuleNodeUserList.size();i++){
+            FollowRuleNodeUser followRuleNodeUser = followRuleNodeUserList.get(i);
+            FollowInfoMoving followInfoMoving = new FollowInfoMoving();
+            followInfoMoving.setBillsgid(wmMaterialapply.getGid());//单据id
+            followInfoMoving.setCurrentnodeid(followRuleNodeUser.getId());
+            followInfoMoving.setCurrentnodeindex(followRuleNodeUser.getNodeindex());
+            followInfoMoving.setApprovaluser(followRuleNodeUser.getUserid());
+            list.add(followInfoMoving);
+        }
+        wareHouseDao.emiInsert(list);
 
         jobj.put("success", 1);
         jobj.put("failInfor", "");

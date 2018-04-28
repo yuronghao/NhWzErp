@@ -25,7 +25,18 @@ public class WmMaterialapply implements Serializable {
 	
 	@EmiColumn(name = "businesstypeuid")
     private String businesstypeuid;//业务类型
-	
+
+	@EmiColumn(name = "rdstylegid")
+	private String rdstylegid;
+
+	public String getRdstylegid() {
+		return rdstylegid;
+	}
+
+	public void setRdstylegid(String rdstylegid) {
+		this.rdstylegid = rdstylegid;
+	}
+
 	@EmiColumn(name = "whuid")
     private String whuid;//仓库uid
 	

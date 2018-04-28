@@ -28,6 +28,7 @@ public class WmMaterialout implements Serializable {
 	
 	@EmiColumn(name = "whuid")
     private String whuid;//仓库uid
+
 	
 	@EmiColumn(name = "departmentuid")
     private String departmentuid;//部门uid

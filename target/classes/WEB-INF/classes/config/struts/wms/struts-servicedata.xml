@@ -105,6 +105,10 @@
      <!-- 材料出库单 -->
 	    <result name="materialOutAdd">/WEB-INF/jsp/servicedata/wareHouse/materialOutAdd.jsp</result>
 	    <result name="materialOutList">/WEB-INF/jsp/servicedata/wareHouse/materialOutList.jsp</result>
+
+		<!-- 领用申请单 -->
+		<result name="materialApplyAdd">/WEB-INF/jsp/servicedata/wareHouse/materialApplyAdd.jsp</result>
+		<result name="materialApplyList">/WEB-INF/jsp/servicedata/wareHouse/materialApplyList.jsp</result>
 	    
 	</action>
 	

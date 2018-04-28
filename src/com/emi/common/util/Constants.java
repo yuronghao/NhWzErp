@@ -105,6 +105,10 @@ public class Constants  {
 	public static String TASKTYPE_CJ = "0250";//抽检
 	public static String TASKTYPE_DDGYZB = "0145";//订单工艺路线子表
 	public static String TASKTYPE_MOULDINFOR = "0260";//模具查询
+
+	//新增任务类型，用做审批用
+	public static String TASKTYPE_LYSQ = "1101";//领用申请单
+
 	
 	
    ////////////////////////////////////////////////////////////任务类型结束
