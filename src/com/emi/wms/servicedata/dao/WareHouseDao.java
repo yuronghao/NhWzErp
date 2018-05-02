@@ -1339,9 +1339,9 @@ public class WareHouseDao extends BaseDao {
 	public Map findMaterialApply(String gid, String orgId, String sobId) {
 		String sql="";
 		if(CommonUtil.isNullString(gid)){
-			sql="SELECT TOP 1 wowh.gid,wowh.billCode,wowh.billDate,wowh.badge,wowh.departmentUid,wowh.whUid,wowh.notes ,wowh.recordDate,ymuser.userName recordpersonName,wowh.recordPerson FROM WM_MaterialApply wowh LEFT JOIN YM_User ymuser ON ymuser.gid = wowh.recordPerson WHERE	1 = 1  AND wowh.sobGid = '" + sobId + "' AND wowh.orgGid = '" + orgId + "' ORDER BY	wowh.pk DESC ";
+			sql="SELECT TOP 1 wowh.gid,wowh.billCode,wowh.billDate,wowh.badge,wowh.departmentUid,wowh.whUid,wowh.notes ,wowh.recordDate,ymuser.userName recordpersonName,wowh.recordPerson,wowh.status FROM WM_MaterialApply wowh LEFT JOIN YM_User ymuser ON ymuser.gid = wowh.recordPerson WHERE	1 = 1  AND wowh.sobGid = '" + sobId + "' AND wowh.orgGid = '" + orgId + "' ORDER BY	wowh.pk DESC ";
 		}else{
-			sql="SELECT  wowh.gid,wowh.billCode,wowh.billDate,wowh.badge,wowh.departmentUid,wowh.whUid,wowh.notes ,wowh.recordDate,ymuser.userName recordpersonName,wowh.recordPerson FROM	WM_MaterialApply wowh LEFT JOIN YM_User ymuser ON ymuser.gid = wowh.recordPerson WHERE	1 = 1 AND wowh.gid='"+gid+"' AND wowh.sobGid = '" + sobId + "' AND wowh.orgGid = '" + orgId + "' ORDER BY	wowh.pk DESC ";
+			sql="SELECT  wowh.gid,wowh.billCode,wowh.billDate,wowh.badge,wowh.departmentUid,wowh.whUid,wowh.notes ,wowh.recordDate,ymuser.userName recordpersonName,wowh.recordPerson,wowh.status FROM	WM_MaterialApply wowh LEFT JOIN YM_User ymuser ON ymuser.gid = wowh.recordPerson WHERE	1 = 1 AND wowh.gid='"+gid+"' AND wowh.sobGid = '" + sobId + "' AND wowh.orgGid = '" + orgId + "' ORDER BY	wowh.pk DESC ";
 		}
 
 		return  this.queryForMap(sql);
@@ -1357,7 +1357,7 @@ public class WareHouseDao extends BaseDao {
 		sql+="LEFT JOIN MES_WM_ProduceProcessRoute prcg ON prcg.gid = prcgc.produceRouteGid ";
 		sql+="LEFT JOIN WM_ProduceOrder wpo ON wpo.gid = prcg.produceUid ";
 		sql+="LEFT JOIN WM_ProduceOrder_C wpoc ON wpoc.gid = prcg.produceCUid ";
-		sql+="where wmc.materialOutUid = '"+gid+"' ";
+		sql+="where wmc.materialApplyUid = '"+gid+"' ";
 
 		return this.emiQueryList(sql, WmMaterialapplyC.class, match);
 	}
@@ -1371,8 +1371,11 @@ public class WareHouseDao extends BaseDao {
 		match.put("recordPerson", "recordPerson");
 		match.put("departId", "departId");
 		match.put("whUid", "whUid");
-		String sql="SELECT"+CommonUtil.colsFromBean(WmMaterialapplyC.class, "wmc")+",owh.gid owhGid,owh.billCode owhCode,owh.recordPerson recordPerson,owh.departmentUid departId,owh.whUid whUid,wpo.billCode produceCode,wpoc.goodsUid goodName FROM WM_MaterialApply owh ";
-		sql+="LEFT JOIN	WM_MaterialApply_C wmc ON wmc.materialOutUid=owh.gid ";
+		match.put("status", "status");
+
+		String sql="SELECT"+CommonUtil.colsFromBean(WmMaterialapplyC.class, "wmc")+",owh.gid owhGid,owh.billCode owhCode,owh.recordPerson recordPerson,owh.departmentUid departId,owh.whUid whUid,wpo.billCode produceCode,wpoc.goodsUid goodName,owh.status FROM WM_MaterialApply owh ";
+
+		sql+="LEFT JOIN	WM_MaterialApply_C wmc ON wmc.materialApplyUid=owh.gid ";
 		sql+="LEFT JOIN MES_WM_ProduceProcessRouteCGoods mwprcg ON wmc.processRouteCGoodsUid = mwprcg.gid ";
 		sql+="LEFT JOIN MES_WM_ProduceProcessRouteC prcgc ON mwprcg.produceRouteCGid = prcgc.gid ";
 		sql+="LEFT JOIN MES_WM_ProduceProcessRoute prcg ON prcg.gid = prcgc.produceRouteGid ";
@@ -1390,10 +1393,66 @@ public class WareHouseDao extends BaseDao {
 		return (FollowRule) this.emiQuery(sql,FollowRule.class);
 	}
 
-	public List<FollowRuleNodeUser> getFollowRuleNodeUserList(int id) {
+	public List<Map> getFollowRuleNodeUserList(int id) {
 		Map match = new HashMap();
 		String sql = "select * from FollowRuleNodeUser f where f.followruleid = '"+id+"' ORDER BY f.nodeindex ASC ";
-		return this.emiQueryList(sql, WmMaterialapplyC.class, match);
+		return this.queryForList(sql);
+
+	}
+
+	public void deleteMaterialApplyC(String gid) {
+		String sql = "delete from WM_MaterialApply_C where materialApplyUid ='"+gid+"'";
+		this.update(sql);
+	}
+
+	public void deleteMaterialApplyWarehouse(String gid) {
+		String sql = "delete from WM_MaterialApply where gid ='"+gid+"'";
+		this.update(sql);
+	}
+
+	public List getFollowInfoMovingByBillgid(String gid) {
+			String sql = " select * from FollowInfoMoving fm where fm.billsgid = '"+gid+"'  and fm.status <> 0 ";
+			return this.queryForList(sql);
+
+	}
+
+	public PageBean getAllListMaterialapplyMy(int pageIndex, int pageSize, String condition, String userid) {
+		Map match = new HashMap();
+		match.put("owhGid", "owhGid");
+		match.put("owhCode", "owhCode");
+		match.put("produceCode", "produceCode");
+		match.put("goodName", "goodName");
+		match.put("recordPerson", "recordPerson");
+		match.put("departId", "departId");
+		match.put("whUid", "whUid");
+		match.put("status", "status");
+		match.put("followmovinggid", "followmovinggid");
+
+		String sql="SELECT"+CommonUtil.colsFromBean(WmMaterialapplyC.class, "wmc")+",owh.gid owhGid,owh.billCode owhCode,owh.recordPerson recordPerson,owh.departmentUid departId,owh.whUid whUid,wpo.billCode produceCode,wpoc.goodsUid goodName,owh.status,x.id as followmovinggid FROM WM_MaterialApply owh ";
+		sql+=" INNER JOIN ( ";
+		sql+=" select top 1  * from FollowInfoMoving fm where fm.approvaluser = '6C353A55-DFCF-45FA-B45A-2F9745129A53'  and fm.isused = 0 and fm.status =0 ";
+		sql+=" ORDER BY fm.status ASC,fm.currentnodeindex ASC ";
+		sql+=" )x on x.billsgid = owh.gid ";
+		sql+="LEFT JOIN	WM_MaterialApply_C wmc ON wmc.materialApplyUid=owh.gid ";
+		sql+="LEFT JOIN MES_WM_ProduceProcessRouteCGoods mwprcg ON wmc.processRouteCGoodsUid = mwprcg.gid ";
+		sql+="LEFT JOIN MES_WM_ProduceProcessRouteC prcgc ON mwprcg.produceRouteCGid = prcgc.gid ";
+		sql+="LEFT JOIN MES_WM_ProduceProcessRoute prcg ON prcg.gid = prcgc.produceRouteGid ";
+		sql+="LEFT JOIN WM_ProduceOrder wpo ON wpo.gid = prcg.produceUid ";
+		sql+="LEFT JOIN WM_ProduceOrder_C wpoc ON wpo.gid = prcg.producecUid where 1=1 ";
+		sql+=condition;
+		String sortSql="pk desc";
+		return emiQueryList(sql, pageIndex, pageSize, WmMaterialapplyC.class,match,sortSql);
+	}
+
+	public void updateFollowMovingStatus(String type, String followmovinggid) {
+		String sql = " UPDATE FollowInfoMoving fm set fm.status = '"+type+"' where fm.id = '"+followmovinggid+"' ";
+		this.update(sql);
+
+	}
+
+	public void updateFollowMovingStatusBohui(String owhGid) {
+		String sql = " UPDATE FollowInfoMoving fm set fm.status = 2 where fm.billsgid = '"+owhGid+"' and fm.status = 0 and fm.isused = 0 ";
+		this.update(sql);
 
 	}
 }

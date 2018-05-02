@@ -22,15 +22,37 @@ public class WmMaterialapplyC implements Serializable{
 	@EmiColumn(name = "notes")
     private String notes;
 	
-	@EmiColumn(name = "materialoutuid")
-    private String materialoutuid;//材料出库主表uid
+	@EmiColumn(name = "materialapplyuid")
+    private String materialapplyuid;
 	
 	@EmiColumn(name = "goodsuid")
     private String goodsuid;//物品uid
 	
 	@EmiColumn(name = "number")
     private BigDecimal number;//数量
-	
+
+
+	private Integer status;
+
+
+	private Integer followmovinggid;
+
+	public Integer getFollowmovinggid() {
+		return followmovinggid;
+	}
+
+	public void setFollowmovinggid(Integer followmovinggid) {
+		this.followmovinggid = followmovinggid;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
 	@EmiColumn(name = "assistNumber")
 	private BigDecimal assistNumber;//辅计量数量
 	
@@ -240,15 +262,18 @@ public class WmMaterialapplyC implements Serializable{
 	public void setNotes(String notes) {
 		this.notes = notes;
 	}
-	public String getMaterialoutuid() {
-		return materialoutuid;
-	}
-	public void setMaterialoutuid(String materialoutuid) {
-		this.materialoutuid = materialoutuid;
-	}
 	public String getGoodsuid() {
 		return goodsuid;
 	}
+
+	public String getMaterialapplyuid() {
+		return materialapplyuid;
+	}
+
+	public void setMaterialapplyuid(String materialapplyuid) {
+		this.materialapplyuid = materialapplyuid;
+	}
+
 	public void setGoodsuid(String goodsuid) {
 		this.goodsuid = goodsuid;
 	}

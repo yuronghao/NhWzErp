@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import com.alibaba.fastjson.JSON;
 import com.emi.android.action.Submit;
 import com.emi.android.bean.GoodsAllocationInfor;
 import com.emi.android.bean.GoodsInforRsp;
@@ -5056,17 +5057,19 @@ public class WareHouseService extends EmiPluginService {
         int  invoicestype = 1;//单据类型
         String rdstylegid = wmMaterialapply.getRdstylegid();//单据审批类型
         FollowRule followRule = wareHouseDao.getFollowRule(invoicestype,rdstylegid);
-        List<FollowRuleNodeUser> followRuleNodeUserList = wareHouseDao.getFollowRuleNodeUserList(followRule.getId());
+        List<Map>  followRuleNodeUserList= wareHouseDao.getFollowRuleNodeUserList(followRule.getId());
 
         //插入审核节点数据
         List<FollowInfoMoving> list = new ArrayList<FollowInfoMoving>();
         for(int  i = 0 ;i<followRuleNodeUserList.size();i++){
-            FollowRuleNodeUser followRuleNodeUser = followRuleNodeUserList.get(i);
+            Map map  = followRuleNodeUserList.get(i);
+            FollowRuleNodeUser followRuleNodeUser = JSON.parseObject(JSON.toJSONString(map),FollowRuleNodeUser.class);
             FollowInfoMoving followInfoMoving = new FollowInfoMoving();
             followInfoMoving.setBillsgid(wmMaterialapply.getGid());//单据id
             followInfoMoving.setCurrentnodeid(followRuleNodeUser.getId());
             followInfoMoving.setCurrentnodeindex(followRuleNodeUser.getNodeindex());
             followInfoMoving.setApprovaluser(followRuleNodeUser.getUserid());
+            followInfoMoving.setCtime(new Date());
             list.add(followInfoMoving);
         }
         wareHouseDao.emiInsert(list);
@@ -5074,5 +5077,72 @@ public class WareHouseService extends EmiPluginService {
         jobj.put("success", 1);
         jobj.put("failInfor", "");
         return jobj;
+    }
+
+    public JSONObject updateMaterialApplyWarehouse(WmMaterialapply wmMaterialapply, List<WmMaterialapplyC> wmohclist) {
+
+        JSONObject jobj = new JSONObject();
+
+
+        //判断是否存在审批记录，如果存在，则无法修改
+        List list = wareHouseDao.getFollowInfoMovingByBillgid(wmMaterialapply.getGid());
+        if (list != null && list.size() >0){
+            jobj.put("success", 0);
+            jobj.put("failInfor", "已提交审批，无法修改");
+            return jobj;
+        }
+
+        List wmMaterialapplyC = wareHouseDao.getMaterialOutClist(wmMaterialapply.getGid());
+
+        wareHouseDao.deleteMaterialOutC(wmMaterialapply.getGid());
+        boolean suc = wareHouseDao.emiUpdate(wmMaterialapply);//
+        if (suc) {
+            suc = wareHouseDao.emiInsert(wmohclist);//
+        }
+
+        jobj.put("success", 1);
+        jobj.put("failInfor", "");
+        return jobj;
+    }
+
+    public JSONObject deleteMaterialApplyWarehouse(WmMaterialapply wmMaterialapply) {
+
+        JSONObject jobj = new JSONObject();
+
+        //判断是否存在审批记录，如果存在，则无法删除
+        List list = wareHouseDao.getFollowInfoMovingByBillgid(wmMaterialapply.getGid());
+        if (list != null && list.size() >0){
+            jobj.put("success", 0);
+            jobj.put("failInfor", "已提交审批，无法删除");
+            return jobj;
+        }
+
+        wareHouseDao.deleteMaterialApplyC(wmMaterialapply.getGid());// 删除领用
+        wareHouseDao.deleteMaterialApplyWarehouse(wmMaterialapply.getGid());// 删除领用
+//
+        jobj.put("success", 1);
+        jobj.put("failInfor", "");
+        return jobj;
+
+
+
+    }
+
+    public PageBean getAllListMaterialapplyMy(int pageIndex, int pageSize, String condition, String userid) {
+        return wareHouseDao.getAllListMaterialapplyMy(pageIndex, pageSize, condition,userid);
+    }
+
+    public void updateFollowMovingStatus(String type, String followmovinggid, String owhGid) {
+        if(Integer.parseInt(type) == 1){
+            //同意
+            wareHouseDao.updateFollowMovingStatus(type,followmovinggid);
+        }else if(Integer.parseInt(type) == 2){
+            //驳回
+            wareHouseDao.updateFollowMovingStatus(type,followmovinggid);
+            //把该单据所有 审核状态为0的都设置为驳回2
+            wareHouseDao.updateFollowMovingStatusBohui(owhGid);
+        }
+
+
     }
 }

@@ -2088,7 +2088,7 @@ public class WareHouseAction extends BaseAction{
 					WmMaterialapplyC wmMaterialapplyC=new WmMaterialapplyC();//领用申请单主表
 					String saleOutCGid=UUID.randomUUID().toString();
 					wmMaterialapplyC.setGid(saleOutCGid);
-					wmMaterialapplyC.setMaterialoutuid(materialApplyGid);
+					wmMaterialapplyC.setMaterialapplyuid(materialApplyGid);
 					wmMaterialapplyC.setGoodsuid(goodsUid[i]);
 					wmMaterialapplyC.setNumber(new BigDecimal(mainNumber[i]));
 					wmMaterialapplyC.setGoodsallocationuid(goodsAllocationUid[i]);
@@ -2199,6 +2199,64 @@ public class WareHouseAction extends BaseAction{
 			}
 		}
 
+
+
+	/**
+	* @Desc 修改领用申请单
+	* @author yurh
+	* @create 2018-05-02 09:31:11
+	**/
+	public void updateMaterialApplyWarehouse(){
+		try{
+			String badge=getParameter("badge");
+			String materialOutWarehousegid=getParameter("materialApplygid");
+			String whUid=getParameter("whUid"); //仓库号
+			String depUid=getParameter("depUid"); //部门
+			String billCode=getParameter("billCode"); //编号
+
+			WmMaterialapply wmMaterialapply=new WmMaterialapply();
+			wmMaterialapply.setDepartmentuid(depUid);
+			wmMaterialapply.setGid(materialOutWarehousegid);
+			wmMaterialapply.setWhuid(whUid);
+			wmMaterialapply.setNotes(getParameter("notes"));
+			wmMaterialapply.setBadge(Integer.parseInt(badge));
+
+			List<WmMaterialapplyC> wmohclist=new ArrayList<WmMaterialapplyC>();
+			String[] goodsUid = getRequest().getParameterValues("goodsUid");
+			if(goodsUid!=null&&goodsUid.length>0){//判断是否有明细信息
+				String[] mainNumber = getRequest().getParameterValues("mainNumber");          					 // 主计量数量
+				String[] goodsCode = getRequest().getParameterValues("goodsCode");   					 //商品code
+//					String[] assistNumber = getRequest().getParameterValues("assistNumber");				// 辅计量数量
+				String[] batch = getRequest().getParameterValues("batch");								//批次
+				String[] goodsAllocationUid = getRequest().getParameterValues("goodsAllocationUid");	//货位号的Gid
+				String[] note = getRequest().getParameterValues("note");	// 备注
+				String[] gid = getRequest().getParameterValues("gid");	// 备注
+				for(int i=0;i<goodsUid.length;i++){
+
+					WmMaterialapplyC wmMaterialapplyC=new WmMaterialapplyC();//销售出库单字表
+					String saleOutCGid=UUID.randomUUID().toString();
+					wmMaterialapplyC.setGid(saleOutCGid);
+					wmMaterialapplyC.setMaterialapplyuid(materialOutWarehousegid);
+					wmMaterialapplyC.setGoodsuid(goodsUid[i]);
+					wmMaterialapplyC.setNumber(new BigDecimal(mainNumber[i]));
+					wmMaterialapplyC.setGoodsallocationuid(goodsAllocationUid[i]);
+					wmMaterialapplyC.setBatchcode(CommonUtil.Obj2String(batch[i]));
+					wmMaterialapplyC.setNotes(note[i]);
+
+
+
+				}
+			}
+			JSONObject jobj=wareHouseService.updateMaterialApplyWarehouse(wmMaterialapply, wmohclist);
+			getResponse().getWriter().write(jobj.toString());
+
+		}catch(Exception e){
+			writeErrorOrSuccess(0, "提交失败！");
+			e.printStackTrace();
+		}
+	}
+
+
 		/**
 		 * 删除材料出库单
 		 * @category
@@ -2220,6 +2278,29 @@ public class WareHouseAction extends BaseAction{
 				e.printStackTrace();
 			}
 		}
+
+
+
+		/**
+		* @Desc 删除领用申请
+		* @author yurh
+		* @create 2018-05-02 09:38:32
+		**/
+	public void deleteMaterialApplyWarehouse(){
+		try {
+			String gid = getParameter("gid");
+			WmMaterialapply wmMaterialapply=new WmMaterialapply();
+			wmMaterialapply.setGid(gid);
+			wmMaterialapply.setSobgid(getSession().get("SobId").toString());
+			wmMaterialapply.setOrggid(getSession().get("OrgId").toString());
+			JSONObject jobj=wareHouseService.deleteMaterialApplyWarehouse(wmMaterialapply);
+			getResponse().getWriter().write(jobj.toString());
+
+		} catch (Exception e) {
+			writeErrorOrSuccess(0, "提交失败！");
+			e.printStackTrace();
+		}
+	}
 		
 		//材料出库列表
 		public String materialOutWarehouseList(){
@@ -2784,7 +2865,396 @@ public class WareHouseAction extends BaseAction{
 
 
 
+	//================================================审批中心============================================================
 
+	//我的代办
+	/**
+	* @Desc 我的代办 - 领用申请列表
+	* @author yurh
+	* @create 2018-05-02 11:26:54
+	**/
+	public String gtasksMymaterialApplyWarehouseList(){
+		try{
+			String userid = CommonUtil.Obj2String(getSession().get("UserId"));//当前登陆人id
+			int pageIndex = getPageIndex();
+			int pageSize = getPageSize();
+			String keyWord = getParameter("keyWord");//搜索关键字
+			String condition = CommonUtil.combQuerySql("owh.billCode,wpo.billCode", keyWord);
+			String sortCon="";
+			if(!CommonUtil.isNullString(keyWord)){
+				List<AaGoods> goods=cacheCtrlService.setGoods();
+				for (AaGoods aaGoods : goods) {
+					String gid="";
+					if (aaGoods.getGoodsname().equals(keyWord)||aaGoods.getGoodscode().equals(keyWord)) {
+						gid+=aaGoods.getGid();
+						sortCon+="or wmc.goodsUid like '%"+gid+"%'";
+					}
+				}
+			}
+			sortCon=" "+sortCon+")";
+			condition=condition.replace(")", sortCon);
+			setRequstAttribute("keyWord",keyWord);
+			String orgId=getSession().get("OrgId").toString();
+			String sobId=getSession().get("SobId").toString();
+			condition+=" and owh.sobGid='"+sobId+"' and owh.orgGid='"+orgId+"'";
+
+//			condition += " and owh.gid in ( " +
+//					" select fm.billsgid from FollowInfoMoving fm where fm.approvaluser = '"+userid+"'  " +
+//					" ) ";
+
+			PageBean list = wareHouseService.getAllListMaterialapplyMy(pageIndex, pageSize, condition,userid);
+			for(int i=0;i<list.getList().size();i++){
+				if(!CommonUtil.isNullString(((WmMaterialapplyC)list.getList().get(i)).getRecordPerson())){
+					YmUser ymuser = cacheCtrlService.getUser(((WmMaterialapplyC)list.getList().get(i)).getRecordPerson().toString());
+					if(!CommonUtil.isNullObject(ymuser)){
+						((WmMaterialapplyC)list.getList().get(i)).setRecordPersonName(ymuser.getUserName());
+					}
+				}
+				if(!CommonUtil.isNullString(((WmMaterialapplyC)list.getList().get(i)).getDepartId())){
+					AaDepartment department = cacheCtrlService.getDepartment(((WmMaterialapplyC)list.getList().get(i)).getDepartId().toString());
+					if(!CommonUtil.isNullObject(department)){
+						((WmMaterialapplyC)list.getList().get(i)).setDepartName(department.getDepname());
+					}
+				}
+				if(!CommonUtil.isNullString(((WmMaterialapplyC)list.getList().get(i)).getWhUid())){
+					AaWarehouse warehouse  = cacheCtrlService.getWareHouse(((WmMaterialapplyC)list.getList().get(i)).getWhUid().toString());
+					if(!CommonUtil.isNullObject(warehouse)){
+						((WmMaterialapplyC)list.getList().get(i)).setWareHouseName(warehouse.getWhname());
+					}
+				}
+				if (!CommonUtil.isNullString(((WmMaterialapplyC)list.getList().get(i)).getGoodName())) {
+					AaGoods good=cacheCtrlService.getGoods(((WmMaterialapplyC)list.getList().get(i)).getGoodName());
+					((WmMaterialapplyC)list.getList().get(i)).setGoodName(good.getGoodsname());
+				}
+			}
+			for(int i=0;i<list.getList().size();i++){
+				AaGoods good = cacheCtrlService.getGoods(((WmMaterialapplyC)list.getList().get(i)).getGoodsuid().toString());
+				((WmMaterialapplyC)list.getList().get(i)).setGood(good);
+				AaGoodsallocation alocation=cacheCtrlService.getGoodsAllocation(((WmMaterialapplyC)list.getList().get(i)).getGoodsallocationuid());
+				if(alocation != null){
+					((WmMaterialapplyC)list.getList().get(i)).setAlocation(alocation.getName());
+				}
+			}
+			setRequstAttribute("data", list);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return "materialApplyListgtasksMy";
+	}
+
+
+
+
+
+	/**
+	* @Desc 我的待办-材料出库单列表
+	* @author yurh
+	* @create 2018-05-02 13:35:41
+	**/
+	public String gtasksMymaterialOutWarehouseList(){
+		try{
+			//String page=this.getRequest().getParameter("pageIndex");//Integer.valueOf(page);
+			int pageIndex = getPageIndex();
+			int pageSize = getPageSize();
+			String keyWord = getParameter("keyWord");//搜索关键字
+			String condition = CommonUtil.combQuerySql("owh.billCode,wpo.billCode", keyWord);
+			String sortCon="";
+			if(!CommonUtil.isNullString(keyWord)){
+				List<AaGoods> goods=cacheCtrlService.setGoods();
+				for (AaGoods aaGoods : goods) {
+					String gid="";
+					if (aaGoods.getGoodsname().equals(keyWord)||aaGoods.getGoodscode().equals(keyWord)) {
+						gid+=aaGoods.getGid();
+						sortCon+="or wmc.goodsUid like '%"+gid+"%'";
+					}
+				}
+			}
+			sortCon=" "+sortCon+")";
+			condition=condition.replace(")", sortCon);
+			setRequstAttribute("keyWord",keyWord);
+			String orgId=getSession().get("OrgId").toString();
+			String sobId=getSession().get("SobId").toString();
+			condition+=" and owh.sobGid='"+sobId+"' and owh.orgGid='"+orgId+"'";
+
+			PageBean list = wareHouseService.getAllListMaterialout(pageIndex, pageSize, condition);
+			for(int i=0;i<list.getList().size();i++){
+				if(!CommonUtil.isNullString(((WmMaterialoutC)list.getList().get(i)).getRecordPerson())){
+					YmUser ymuser = cacheCtrlService.getUser(((WmMaterialoutC)list.getList().get(i)).getRecordPerson().toString());
+					if(!CommonUtil.isNullObject(ymuser)){
+						((WmMaterialoutC)list.getList().get(i)).setRecordPersonName(ymuser.getUserName());
+					}
+				}
+				if(!CommonUtil.isNullString(((WmMaterialoutC)list.getList().get(i)).getDepartId())){
+					AaDepartment department = cacheCtrlService.getDepartment(((WmMaterialoutC)list.getList().get(i)).getDepartId().toString());
+					if(!CommonUtil.isNullObject(department)){
+						((WmMaterialoutC)list.getList().get(i)).setDepartName(department.getDepname());
+					}
+				}
+				if(!CommonUtil.isNullString(((WmMaterialoutC)list.getList().get(i)).getWhUid())){
+					AaWarehouse warehouse  = cacheCtrlService.getWareHouse(((WmMaterialoutC)list.getList().get(i)).getWhUid().toString());
+					if(!CommonUtil.isNullObject(warehouse)){
+						((WmMaterialoutC)list.getList().get(i)).setWareHouseName(warehouse.getWhname());
+					}
+				}
+				if (!CommonUtil.isNullString(((WmMaterialoutC)list.getList().get(i)).getGoodName())) {
+					AaGoods good=cacheCtrlService.getGoods(((WmMaterialoutC)list.getList().get(i)).getGoodName());
+					((WmMaterialoutC)list.getList().get(i)).setGoodName(good.getGoodsname());
+				}
+			}
+			for(int i=0;i<list.getList().size();i++){
+				AaGoods good = cacheCtrlService.getGoods(((WmMaterialoutC)list.getList().get(i)).getGoodsuid().toString());
+				((WmMaterialoutC)list.getList().get(i)).setGood(good);
+				AaGoodsallocation alocation=cacheCtrlService.getGoodsAllocation(((WmMaterialoutC)list.getList().get(i)).getGoodsallocationuid());
+				if(alocation != null){
+					((WmMaterialoutC)list.getList().get(i)).setAlocation(alocation.getName());
+				}
+			}
+			setRequstAttribute("data", list);
+			//setRequstAttribute("outlist", listMaterialout);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return "materialOutListgtasksMy";
+	}
+
+
+
+
+
+
+	/**
+	 * @Desc 我的待办-调拨单列表
+	 * @author yurh
+	 * @create 2018-05-02 13:35:41
+	 **/
+	public String gtasksMygetAllocationList(){
+		try{
+			//String page=this.getRequest().getParameter("pageIndex");//Integer.valueOf(page);
+			int pageIndex = getPageIndex();
+			int pageSize = getPageSize();
+			String keyWord = getParameter("keyWord");//搜索关键字
+			String condition = CommonUtil.combQuerySql("owh.billCode,wpo.billCode", keyWord);
+			String sortCon="";
+			if(!CommonUtil.isNullString(keyWord)){
+				List<AaGoods> goods=cacheCtrlService.setGoods();
+				for (AaGoods aaGoods : goods) {
+					String gid="";
+					if (aaGoods.getGoodsname().equals(keyWord)||aaGoods.getGoodscode().equals(keyWord)) {
+						gid+=aaGoods.getGid();
+						sortCon+="or wmc.goodsUid like '%"+gid+"%'";
+					}
+				}
+			}
+			sortCon=" "+sortCon+")";
+			condition=condition.replace(")", sortCon);
+			setRequstAttribute("keyWord",keyWord);
+			String orgId=getSession().get("OrgId").toString();
+			String sobId=getSession().get("SobId").toString();
+			condition+=" and owh.sobGid='"+sobId+"' and owh.orgGid='"+orgId+"'";
+
+			PageBean list = wareHouseService.getAllListMaterialout(pageIndex, pageSize, condition);
+			for(int i=0;i<list.getList().size();i++){
+				if(!CommonUtil.isNullString(((WmMaterialoutC)list.getList().get(i)).getRecordPerson())){
+					YmUser ymuser = cacheCtrlService.getUser(((WmMaterialoutC)list.getList().get(i)).getRecordPerson().toString());
+					if(!CommonUtil.isNullObject(ymuser)){
+						((WmMaterialoutC)list.getList().get(i)).setRecordPersonName(ymuser.getUserName());
+					}
+				}
+				if(!CommonUtil.isNullString(((WmMaterialoutC)list.getList().get(i)).getDepartId())){
+					AaDepartment department = cacheCtrlService.getDepartment(((WmMaterialoutC)list.getList().get(i)).getDepartId().toString());
+					if(!CommonUtil.isNullObject(department)){
+						((WmMaterialoutC)list.getList().get(i)).setDepartName(department.getDepname());
+					}
+				}
+				if(!CommonUtil.isNullString(((WmMaterialoutC)list.getList().get(i)).getWhUid())){
+					AaWarehouse warehouse  = cacheCtrlService.getWareHouse(((WmMaterialoutC)list.getList().get(i)).getWhUid().toString());
+					if(!CommonUtil.isNullObject(warehouse)){
+						((WmMaterialoutC)list.getList().get(i)).setWareHouseName(warehouse.getWhname());
+					}
+				}
+				if (!CommonUtil.isNullString(((WmMaterialoutC)list.getList().get(i)).getGoodName())) {
+					AaGoods good=cacheCtrlService.getGoods(((WmMaterialoutC)list.getList().get(i)).getGoodName());
+					((WmMaterialoutC)list.getList().get(i)).setGoodName(good.getGoodsname());
+				}
+			}
+			for(int i=0;i<list.getList().size();i++){
+				AaGoods good = cacheCtrlService.getGoods(((WmMaterialoutC)list.getList().get(i)).getGoodsuid().toString());
+				((WmMaterialoutC)list.getList().get(i)).setGood(good);
+				AaGoodsallocation alocation=cacheCtrlService.getGoodsAllocation(((WmMaterialoutC)list.getList().get(i)).getGoodsallocationuid());
+				if(alocation != null){
+					((WmMaterialoutC)list.getList().get(i)).setAlocation(alocation.getName());
+				}
+			}
+			setRequstAttribute("data", list);
+			//setRequstAttribute("outlist", listMaterialout);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return "allocationlistgtasksMy";
+	}
+
+
+
+	/**
+	* @Desc 我的待办 - 报废单列表
+	* @author yurh
+	* @create 2018-05-02 14:10:33
+	**/
+	public String gtasksMyothersOutList(){
+		try{
+
+			int pageIndex = getPageIndex();
+			int pageSize = getPageSize();
+			String keyWord = getParameter("keyWord");//搜索关键字
+			String condition = CommonUtil.combQuerySql("owh.billCode", keyWord);
+			setRequstAttribute("keyWord",keyWord);
+			String orgId=getSession().get("OrgId").toString();
+			String sobId=getSession().get("SobId").toString();
+			condition+=" and owh.sobGid='"+sobId+"' and owh.orgGid='"+orgId+"'";
+			if(!CommonUtil.isNullString(keyWord)){
+				List<AaGoods> goods=cacheCtrlService.setGoods();
+				for (AaGoods aaGoods : goods) {
+					String gid="";
+					if (aaGoods.getGoodsname().equals(keyWord)||aaGoods.getGoodscode().equals(keyWord)) {
+						gid+=aaGoods.getGid();
+						condition+="or wowc.goodsUid like '%"+gid+"%'";
+					}
+
+				}
+			}
+			PageBean list = wareHouseService.getOthersOutList(pageIndex, pageSize, condition);
+			for(int i=0;i<list.getList().size();i++){
+				if(!CommonUtil.isNullString(((WmOthersout)list.getList().get(i)).getRecordPersonUid())){
+					YmUser ymuser = cacheCtrlService.getUser(((WmOthersout)list.getList().get(i)).getRecordPersonUid());
+					if(!CommonUtil.isNullObject(ymuser)){
+						((WmOthersout)list.getList().get(i)).setRecordPersonName(ymuser.getUserName());
+					}
+				}
+				if(!CommonUtil.isNullString(((WmOthersout)list.getList().get(i)).getDepartmentUid())){
+					AaDepartment department = cacheCtrlService.getDepartment(String.valueOf(((WmOthersout)list.getList().get(i)).getDepartmentUid()));
+					if(!CommonUtil.isNullObject(department)){
+						((WmOthersout)list.getList().get(i)).setDepartName(department.getDepname());
+					}
+				}
+				if(!CommonUtil.isNullString(((WmOthersout)list.getList().get(i)).getWarehouseUid())){
+					AaWarehouse warehouse  = cacheCtrlService.getWareHouse(String.valueOf(((WmOthersout)list.getList().get(i)).getWarehouseUid()));
+					if(!CommonUtil.isNullObject(warehouse)){
+						((WmOthersout)list.getList().get(i)).setWareHouseName(warehouse.getWhname());
+					}
+				}
+				if (!CommonUtil.isNullString(((WmOthersout)list.getList().get(i)).getGoodsUid())) {
+					AaGoods good=cacheCtrlService.getGoods(((WmOthersout)list.getList().get(i)).getGoodsUid());
+					if(good!= null){
+						((WmOthersout)list.getList().get(i)).setGoodsUid(good.getGoodsname());
+						((WmOthersout)list.getList().get(i)).setGoodsCode(good.getGoodscode());
+						Unit unit = cacheCtrlService.getUnit(good.getGoodsunit());
+						if(unit != null){
+							((WmOthersout)list.getList().get(i)).setUnitName(unit.getUnitname());
+						}
+
+					}
+
+				}
+			}
+			setRequstAttribute("data", list);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return "othersOutListgtasksMy";
+	}
+
+
+
+	public String toAddMaterialApplyMy(){
+		try{
+			String materialApplygid = getParameter("materialApplygid");
+			setRequstAttribute("materialApplygid", materialApplygid);
+			String followmovinggid = getParameter("followmovinggid");
+			setRequstAttribute("followmovinggid", followmovinggid);
+
+			String orgId=getSession().get("OrgId").toString();
+			String sobId=getSession().get("SobId").toString();
+			Map saleApplyWarehouse = wareHouseService.findMaterialApplyWarehouse(materialApplygid,orgId,sobId);
+
+			if(!CommonUtil.isNullObject(saleApplyWarehouse)){
+				if(!CommonUtil.isNullObject(saleApplyWarehouse.get("departmentUid"))){
+					AaDepartment department = cacheCtrlService.getDepartment(saleApplyWarehouse.get("departmentUid").toString());
+					setRequstAttribute("department", department);
+				}
+
+				if(!CommonUtil.isNullObject(saleApplyWarehouse.get("notes"))){
+					//使用部门 放在备注里了
+					AaDepartment departmentuse = cacheCtrlService.getDepartment(saleApplyWarehouse.get("notes").toString());
+					setRequstAttribute("departmentuse", departmentuse);
+				}
+
+
+				if(!CommonUtil.isNullObject(saleApplyWarehouse.get("whUid"))){
+					AaWarehouse warehouse = cacheCtrlService.getWareHouse(saleApplyWarehouse.get("whUid").toString());
+					setRequstAttribute("warehouse", warehouse);
+				}
+				if(!CommonUtil.isNullObject(saleApplyWarehouse.get("recordPerson"))){
+					AaPerson aaperson = cacheCtrlService.getPerson(saleApplyWarehouse.get("recordPerson").toString());
+					setRequstAttribute("aaperson", aaperson);
+				}
+				if(!CommonUtil.isNullObject(saleApplyWarehouse.get("customerUid"))){
+					AaProviderCustomer customer = cacheCtrlService.getProviderCustomer(saleApplyWarehouse.get("customerUid").toString());
+					setRequstAttribute("customer", customer);
+				}
+				if(!CommonUtil.isNullObject(saleApplyWarehouse.get("gid"))){
+					List materialApplyC = wareHouseService.getMaterApplyList(saleApplyWarehouse.get("gid").toString());
+					for(int i=0;i<materialApplyC.size();i++){
+						AaGoods good = cacheCtrlService.getGoods(((WmMaterialapplyC)materialApplyC.get(i)).getGoodsuid().toString());
+						((WmMaterialapplyC)materialApplyC.get(i)).setGood(good);
+						AaGoodsallocation alocation=cacheCtrlService.getGoodsAllocation(((WmMaterialapplyC)materialApplyC.get(i)).getGoodsallocationuid().toString());
+						((WmMaterialapplyC)materialApplyC.get(i)).setAlocation(alocation.getName());
+						if (!CommonUtil.isNullObject(((WmMaterialapplyC)materialApplyC.get(i)).getGoodName())) {
+							AaGoods goods = cacheCtrlService.getGoods(((WmMaterialapplyC)materialApplyC.get(i)).getGoodName().toString());
+							((WmMaterialapplyC)materialApplyC.get(i)).setGoodName(goods.getGoodsname());
+							((WmMaterialapplyC)materialApplyC.get(i)).setGoodsStandard(goods.getGoodsstandard());
+						}
+
+					}
+					setRequstAttribute("saleApplyWarehouseC", materialApplyC);
+				}
+			}
+
+			//类型
+			String condition=" ";
+			List<YmRdStyle> result=wareHouseService.getRdstyleEntity(condition, Constants.TASKTYPE_LYSQ);
+			setRequstAttribute("rdstylelist", result);
+
+			String time = DateUtil.dateToString(new Date(), "yyMMdd");
+			setRequstAttribute("time", time);
+			setRequstAttribute("saleApplyWarehouse", saleApplyWarehouse);
+			setRequstAttribute("lhg_self", "false");//lhgdialog参数，使之基于整个浏览器弹出
+
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return "materialApplyAddMy";
+	}
+
+
+
+
+
+	/**
+	* @Desc 修改审批状态/操作   同意 or 驳回
+	* @author yurh
+	* @create 2018-05-02 15:33:50
+	**/
+	public void updateFollowMovingStatus(){
+		try {
+			String type=getParameter("type"); //1 :同意   2：驳回
+			String followmovinggid=getParameter("followmovinggid");
+			String owhGid=getParameter("owhGid");//单据id
+			wareHouseService.updateFollowMovingStatus(type,followmovinggid,owhGid);
+			writeErrorOrSuccess(1,"成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 
 

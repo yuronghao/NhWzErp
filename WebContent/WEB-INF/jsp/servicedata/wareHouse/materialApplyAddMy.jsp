@@ -203,7 +203,7 @@
 		
 		
 		function getprocurearrivallist(){
-			window.location.href = '${ctx}/wms/wareHouse_materialApplyWarehouseList.emi';
+			window.location.href = '${ctx}/wms/wareHouse_gtasksMymaterialApplyWarehouseList.emi';
 		}
 		
 		function getSerial(){
@@ -560,13 +560,13 @@
 		 	<div class="toolbar">
 		 		<ul>
 		 			<!--<li class="fl"><a href="AttributeProjectClass.html"><input type="button" class="backBtn" value="返回"></a></li>-->
-		 			<li class="fl"><input type="button" class="btns" value="新增" id="addBtn"> </li>
-		 			<li class="fl"><input type="button" class="btns" value="修改" id="revBtn"> </li>
-		 			<li class="fl"><input type="button" class="btns" value="删除" id="delBtn" onclick="deletesob('${saleApplyWarehouse['gid']}')"> </li>
-		 			<li class="fl"><input type="button" class="btns" value="保存" id="saveBtn"> </li>
-		 			<li class="fl"><input type="button" class="btns" value="放弃" id="giveUpBtn" onclick="giveup()"> </li>
-		 			<li class="fl" style="display:none"><input type="button" class="btns" value="审核"> </li>
-			 		<li class="fl" style="display:none"><input type="button" class="btns" value="弃审"> </li>
+		 			<%--<li class="fl"><input type="button" class="btns" value="新增" id="addBtn"> </li>--%>
+		 			<%--<li class="fl"><input type="button" class="btns" value="修改" id="revBtn"> </li>--%>
+		 			<%--<li class="fl"><input type="button" class="btns" value="删除" id="delBtn" onclick="deletesob('${saleApplyWarehouse['gid']}')"> </li>--%>
+		 			<%--<li class="fl"><input type="button" class="btns" value="保存" id="saveBtn"> </li>--%>
+		 			<%--<li class="fl"><input type="button" class="btns" value="放弃" id="giveUpBtn" onclick="giveup()"> </li>--%>
+		 			<li class="fl"><input type="button"  style="background-color: #0e76a8" class="btns" value="同意" onclick="tongyi('${materialApplygid}','${followmovinggid}')"> </li>
+			 		<li class="fl"><input type="button" style="background-color: red" class="btns" value="驳回" onclick="bohui('${materialApplygid}','${followmovinggid}')"> </li>
 		 			<li class="fl"><input type="button" class="btns" value="列表" id="tableBtn" onclick="getprocurearrivallist()"></li>
 		 			<li class="fl">
 	 				<!-- 单据翻页begin -->
@@ -784,3 +784,29 @@
 		</form>
 	</body>
 </html>
+<script>
+    function tongyi(owhGid,followmovinggid) {
+
+        $.ajax({
+            data: {"followmovinggid":followmovinggid,"owhGid":owhGid,"type":1},
+            type: 'POST',
+            async: false,
+            url: '${ctx}/wms/wareHouse_updateFollowMovingStatus.emi',
+            success: function(req){
+                var jsonO =  eval('(' + req + ')');
+                if(jsonO.success=='1'){
+
+
+
+
+
+                }else{
+
+                }
+
+            }
+        });
+    }
+
+
+</script>

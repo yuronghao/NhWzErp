@@ -1,12 +1,14 @@
 package com.emi.wms.bean;
 
 import com.emi.sys.core.annotation.EmiColumn;
+import com.emi.sys.core.annotation.EmiTable;
 
 import java.util.Date;
 
+@EmiTable(name = "FollowRule")
 public class FollowRule {
 
-    @EmiColumn(increment=true,ID=true,name ="id")
+    @EmiColumn(increment=true,name ="id")
     private int id;
 
     @EmiColumn(name="followname" )

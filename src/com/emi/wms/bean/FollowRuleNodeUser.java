@@ -1,10 +1,13 @@
 package com.emi.wms.bean;
 
 import com.emi.sys.core.annotation.EmiColumn;
+import com.emi.sys.core.annotation.EmiTable;
 
+
+@EmiTable(name = "FollowRuleNodeUser")
 public class FollowRuleNodeUser {
 
-    @EmiColumn(increment=true,ID=true,name ="id")
+    @EmiColumn(increment=true,name ="id")
     private  int id;
 
     @EmiColumn(name ="followruleid")
@@ -18,7 +21,7 @@ public class FollowRuleNodeUser {
     @EmiColumn(name ="nextcodeid")
     private  int nextcodeid;
     @EmiColumn(name ="userid")
-    private  int userid;
+    private  String  userid;
 
 
     public int getId() {
@@ -69,11 +72,11 @@ public class FollowRuleNodeUser {
         this.nextcodeid = nextcodeid;
     }
 
-    public int getUserid() {
+    public String getUserid() {
         return userid;
     }
 
-    public void setUserid(int userid) {
+    public void setUserid(String userid) {
         this.userid = userid;
     }
 }

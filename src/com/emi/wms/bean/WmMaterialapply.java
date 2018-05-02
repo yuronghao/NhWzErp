@@ -87,7 +87,18 @@ public class WmMaterialapply implements Serializable {
     
     @EmiColumn(name = "badge")
     private Integer badge;//入库标记(蓝字单据1、红字单据0)
-    
+
+	@EmiColumn(name = "status")
+	private Integer status;
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
 	private String recordPersonName;
 	private String departName;
 	private String wareHouseName;

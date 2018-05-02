@@ -38,13 +38,13 @@
 								<th>主数量</th>
 								<th>货位号</th>
 								<th>条形码</th>
-								<th>审核状态</th>
+								<th>操作</th>
 			 				</tr>
 			 				<c:forEach var="bean" items="${data.list }" varStatus="stat">
 
 							<tr>
 								<td style="width: 20px;">${stat.count}</td>
-								<td><a href="${ctx}/wms/wareHouse_toAddMaterialApply.emi?materialApplygid=${bean.owhGid}">${bean.owhCode}</a></td>
+								<td><a href="${ctx}/wms/wareHouse_toAddMaterialApplyMy.emi?materialApplygid=${bean.owhGid}&followmovinggid=${bean.followmovinggid}">${bean.owhCode}</a></td>
 								<td>${bean.wareHouseName}</td>
 								<td>${bean.good.goodscode}</td>
 								<td>${bean.good.goodsname}</td>
@@ -54,15 +54,10 @@
 								<td>${bean.alocation}</td>
 								<td>${bean.barCode}</td>
 								<td>
-									<c:if test="${bean.status == 0}">
-										<span style="color: #0e78c9">未审核</span>
-									</c:if>
-									<c:if test="${bean.status == 1}">
-										<span style="color: #0E2D5F">审核中</span>
-									</c:if>
-									<c:if test="${bean.status == 2}">
-										<span style="color: red">未审核</span>
-									</c:if>
+
+									<span ><a href="${ctx}/wms/wareHouse_toAddMaterialApplyMy.emi?materialApplygid=${bean.owhGid}&followmovinggid=${bean.followmovinggid})" style="color: blue">审核</a></span>
+									<%--<span ><a href="javascript:bohui('${bean.followmovinggid}','${bean.owhGid}')" style="color: red">驳回</a></span>--%>
+
 								</td>
 							</tr>
 						</c:forEach>
@@ -78,3 +73,7 @@
 		</form>
 	</body>
 </html>
+<script>
+
+
+</script>
