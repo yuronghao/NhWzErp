@@ -664,13 +664,16 @@
 							<div class="wordnameinput fl">
 								<div class="wordnameinput fl">
 									<c:if test="${saleApplyWarehouse['status'] == 0}">
-										<input style="color: #0e78c9" type="text" value="未审核" id="zhuangtai" name="zhuangtai" class="toDealInput">
+										<input style="color: #0e78c9" type="text" value="未审核" id="zhuangtai" name="zhuangtai" class="" disabled>
 									</c:if>
 									<c:if test="${saleApplyWarehouse['status'] == 1}">
-										<input style="color: #0E2D5F" type="text" value="审核中" id="zhuangtai" name="zhuangtai" class="toDealInput">
+										<input style="color: #0E2D5F" type="text" value="审核中" id="zhuangtai" name="zhuangtai" class="" disabled>
 									</c:if>
 									<c:if test="${saleApplyWarehouse['status'] == 2}">
-										<input style="color: red" type="text" value="已通过" id="zhuangtai" name="zhuangtai" class="toDealInput">
+										<input style="color: #00B83F" type="text" value="已通过" id="zhuangtai" name="zhuangtai" class="" disabled>
+									</c:if>
+									<c:if test="${saleApplyWarehouse['status'] == 3}">
+										<input style="color: red" type="text" value="被驳回" id="zhuangtai" name="zhuangtai" class="" disabled>
 									</c:if>
 
 
@@ -682,10 +685,6 @@
 
 		 				<div class="cf"></div> 
 		 			</ul>
-		 			<!-- <ul class="wordul">
-		 				
-		 				<div class="cf"></div> 
-		 			</ul> -->
 		 			<div style="height: 30px;"></div>
 		 			<!--end-->
 		 			<div style="max-height:300px;overflow:auto;">

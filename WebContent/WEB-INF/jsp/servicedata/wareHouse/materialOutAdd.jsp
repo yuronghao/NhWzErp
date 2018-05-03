@@ -292,6 +292,10 @@
 				});
 			
 		}
+
+
+		//参照
+
 		
 		
 		function setIsbatch(){
@@ -421,27 +425,6 @@
 					}
 				}
 			 }
-			
-//			for(var j=0;j<tems.length;j++)
-//			{
-//				if(tems[j].value!=''){
-//					if(obj.value=='0'){
-//
-//							if(reg.test(tems[j].value))
-//							{
-//									tems[j].value=-tems[j].value;
-//							}
-//						}
-//
-//					else
-//					{
-//						if(!reg.test(tems[j].value))
-//						{
-//							 tems[j].value=-tems[j].value;
-//						}
-//					}
-//				}
-//			}
 
 		}
  		$(function(){
@@ -568,6 +551,7 @@
 		 			<li class="fl" style="display:none"><input type="button" class="btns" value="审核"> </li>
 			 		<li class="fl" style="display:none"><input type="button" class="btns" value="弃审"> </li>
 		 			<li class="fl"><input type="button" class="btns" value="列表" id="tableBtn" onclick="getprocurearrivallist()"></li>
+					<li class="fl"><input type="button" class="btns" value="参照" id="canzhao"></li>
 		 			<li class="fl">
 	 				<!-- 单据翻页begin -->
 		 			<div id="emi_page_turning" ></div>
@@ -746,5 +730,54 @@
 		 	<div class="cf"></div> 
 		</div>
 		</form>
+
+
+
 	</body>
 </html>
+<script>
+    $('#canzhao')[0].onclick = canzhao;
+
+    function canzhao(){
+        $.dialog({
+            drag: true,
+            lock: true,
+            resize: false,
+            title:'领料申请列表',
+            width: '1100px',
+            height: '590px',
+            content: 'url:${ctx}/wms/wareHouse_getApplyHelp.emi',
+            okVal:"确定",
+            ok:function(){
+
+                var chek = $('.goodsSelected:checked',this.content.document.getElementById("rtframe").contentDocument);
+                for (var i = 0; i < chek.length; i++) {
+                    var strs='<tr class="serialTr">'+
+                        '<td><div class="delrow delno" name = "deleteButton" value=""  style="margin-left:15px;" gid=""></div></td>'+
+                        '<td class="gid" style="display:none"><input type="hidden" id="" name="gid" class="listword" value=""></td>'+
+                        '<td class="goodsUid" style="display:none"><input type="text" id="" name="goodsUid" class="listword" value="'+chek.eq(i).val()+'"></td>'+
+                        '<td class="goodsCode"><input type="text" id="" name="goodsCode" class="listword" value="'+chek.eq(i).attr("goodsCode")+'" readonly="readonly"></td>'+
+                        '<td class="goodsName"><input type="text" id="" name="goodsName" class="listword" value="'+chek.eq(i).attr("goodsName")+'" readonly="readonly"></td>'+
+                        '<td class="goodsstandard"><input type="text" id="" name="goodsstandard" class="listword" value="'+chek.eq(i).attr("goodsstandard")+'" readonly="readonly"></td>'+
+                        '<td class="mainUnit"><input type="text" id="" name="mainUnit" class="listword" value="'+chek.eq(i).attr("unitName")+'" readonly="readonly"></td>'+
+                        '<td class="mainNumber"><input type="text" id="" name="mainNumber" class="listword numric" value="" onchange="changeFlag(this)"></td>';
+                    var binvbach=chek.eq(i).attr("binvbach");
+                    strs+='<td class="goodsAllocationName"><input type="text" id="" name="goodsAllocationName" class="listword jjjnumric"  readonly="readonly" onclick="clickFlag(this)"></td>'+
+                        '<td class="goodsAllocationUid" style="display:none"><input type="text" id="" name="goodsAllocationUid" class="listword "  readonly="readonly" onclick="clickFlag(this)"></td>'+
+                        '<td class="batch"><input type="text" id="" name="batch" class="listword batchInput" value="" isbatch="'+binvbach+'"></td>'+
+                        '<td class="note"><input type="text" id="" name="note" class="listword" value="" ></td>'+
+                        '</tr>';
+
+                    $("#contr").append(strs);
+                    getSerial();
+                    $(".numric").numeral(6);
+                    setIsbatch();
+                }
+            },
+            cancelVal:"关闭",
+            cancel:true
+
+        });
+    }
+
+</script>

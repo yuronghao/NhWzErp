@@ -5134,13 +5134,28 @@ public class WareHouseService extends EmiPluginService {
 
     public void updateFollowMovingStatus(String type, String followmovinggid, String owhGid) {
         if(Integer.parseInt(type) == 1){
-            //同意
+            //同意  修改当前节点的审批状态
             wareHouseDao.updateFollowMovingStatus(type,followmovinggid);
+            boolean flag = true;
+            //判断当前节点是不是最后一个节点
+            FollowInfoMoving followInfoMoving = wareHouseDao.getLastFollowMovingNode(owhGid);
+            if (followInfoMoving.getId() == Integer.parseInt(followmovinggid)){
+                flag = true;//是最后一个节点
+                //修改单据 主表的审批状态 为已通过状态
+                wareHouseDao.updateBillStatus(2,owhGid);
+            }else {
+                //修改单据 主表的审批状态 为在审核状态
+                wareHouseDao.updateBillStatus(1,owhGid);
+            }
+
         }else if(Integer.parseInt(type) == 2){
             //驳回
             wareHouseDao.updateFollowMovingStatus(type,followmovinggid);
-            //把该单据所有 审核状态为0的都设置为驳回2
+            //把该所有审核节点 审核状态为0的都设置为驳回2
             wareHouseDao.updateFollowMovingStatusBohui(owhGid);
+
+            //修改单据状态为 为驳回状态3
+            wareHouseDao.updateBillStatus(3,owhGid);
         }
 
 

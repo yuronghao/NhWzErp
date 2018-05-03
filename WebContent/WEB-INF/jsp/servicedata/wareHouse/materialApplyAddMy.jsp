@@ -670,7 +670,10 @@
 										<input style="color: #0E2D5F" type="text" value="审核中" id="zhuangtai" name="zhuangtai" class="toDealInput">
 									</c:if>
 									<c:if test="${saleApplyWarehouse['status'] == 2}">
-										<input style="color: red" type="text" value="已通过" id="zhuangtai" name="zhuangtai" class="toDealInput">
+										<input style="color: #00B83F" type="text" value="已通过" id="zhuangtai" name="zhuangtai" class="toDealInput">
+									</c:if>
+									<c:if test="${saleApplyWarehouse['status'] == 3}">
+										<input style="color: red" type="text" value="被驳回" id="zhuangtai" name="zhuangtai" class="toDealInput">
 									</c:if>
 
 
@@ -786,26 +789,49 @@
 </html>
 <script>
     function tongyi(owhGid,followmovinggid) {
-
-        $.ajax({
-            data: {"followmovinggid":followmovinggid,"owhGid":owhGid,"type":1},
-            type: 'POST',
-            async: false,
-            url: '${ctx}/wms/wareHouse_updateFollowMovingStatus.emi',
-            success: function(req){
-                var jsonO =  eval('(' + req + ')');
-                if(jsonO.success=='1'){
-
-
-
-
-
-                }else{
+        if (confirm("是否确定通过?")) {
+            $.ajax({
+                data: {"followmovinggid":followmovinggid,"owhGid":owhGid,"type":1},
+                type: 'POST',
+                async: false,
+                url: '${ctx}/wms/wareHouse_updateFollowMovingStatus.emi',
+                success: function(req){
+                    var jsonO =  eval('(' + req + ')');
+                    if(jsonO.success=='1'){
+                        $.dialog.alert_w("审核成功");
+                        windows.href.location = "${ctx}/wms/wareHouse_gtasksMymaterialApplyWarehouseList.emi";
+                    }else{
+                        $.dialog.alert_w("系统异常，请刷新界面");
+                    }
 
                 }
+            });
+        }
 
-            }
-        });
+    }
+
+
+    //驳回
+    function bohui(owhGid,followmovinggid) {
+        if (confirm("是否确定驳回?")) {
+            $.ajax({
+                data: {"followmovinggid":followmovinggid,"owhGid":owhGid,"type":2},
+                type: 'POST',
+                async: false,
+                url: '${ctx}/wms/wareHouse_updateFollowMovingStatus.emi',
+                success: function(req){
+                    var jsonO =  eval('(' + req + ')');
+                    if(jsonO.success=='1'){
+                        $.dialog.alert_w("审核成功");
+                        windows.href.location = "${ctx}/wms/wareHouse_gtasksMymaterialApplyWarehouseList.emi";
+                    }else{
+                        $.dialog.alert_w("系统异常，请刷新界面");
+                    }
+
+                }
+            });
+        }
+
     }
 
 

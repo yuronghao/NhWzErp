@@ -1445,13 +1445,26 @@ public class WareHouseDao extends BaseDao {
 	}
 
 	public void updateFollowMovingStatus(String type, String followmovinggid) {
-		String sql = " UPDATE FollowInfoMoving fm set fm.status = '"+type+"' where fm.id = '"+followmovinggid+"' ";
+		String sql = " UPDATE FollowInfoMoving  set status = '"+type+"' where id = '"+followmovinggid+"' ";
 		this.update(sql);
 
 	}
 
 	public void updateFollowMovingStatusBohui(String owhGid) {
-		String sql = " UPDATE FollowInfoMoving fm set fm.status = 2 where fm.billsgid = '"+owhGid+"' and fm.status = 0 and fm.isused = 0 ";
+		String sql = " UPDATE FollowInfoMoving  set status = 2 where billsgid = '"+owhGid+"' and status = 0 and isused = 0 ";
+		this.update(sql);
+
+	}
+
+	public FollowInfoMoving getLastFollowMovingNode(String owhGid) {
+		String sql = " select top 1 * from FollowInfoMoving fm where fm.isused = 0 and fm.billsgid  = '"+owhGid+"'  " +
+				" ORDER BY fm.currentnodeindex DESC  ";
+		return (FollowInfoMoving) this.emiQuery(sql,FollowInfoMoving.class);
+
+	}
+
+	public void updateBillStatus(int i, String owhGid) {
+		String sql = " UPDATE WM_MaterialApply set status = '"+i+"' where gid = '"+owhGid+"' ";
 		this.update(sql);
 
 	}

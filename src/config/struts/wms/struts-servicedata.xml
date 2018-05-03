@@ -111,6 +111,9 @@
 		<result name="materialApplyList">/WEB-INF/jsp/servicedata/wareHouse/materialApplyList.jsp</result>
 
 
+
+
+
 		<!-- 我的待办 -->
 		<!-- 领用申请列表 -->
 		<result name="materialApplyListgtasksMy">/WEB-INF/jsp/servicedata/wareHouse/materialApplyListgtasksMy.jsp</result>
@@ -121,6 +124,11 @@
 		<result name="allocationlistgtasksMy">/WEB-INF/jsp/servicedata/allocationManager/allocationlistgtasksMy.jsp</result>
 		<!-- 报废单列表 -->
 		<result name="othersOutListgtasksMy">/WEB-INF/jsp/servicedata/wareHouse/othersOutListgtasksMy.jsp</result>
+
+		<!-- 参照弹窗 -->
+		<result name="applyHelp">/WEB-INF/jsp/basedata/goods/help/applyHelp.jsp</result>
+		<result name="materialApplyListMain">/WEB-INF/jsp/servicedata/wareHouse/materialApplyListMain.jsp</result>
+		<result name="materialApplyListDetail">/WEB-INF/jsp/servicedata/wareHouse/materialApplyListDetail.jsp</result>
 
 	</action>
 	

@@ -11,19 +11,25 @@
 
 </head>
 <body>
-<form action="${ctx}/wms/wareHouse_materialApplyWarehouseList.emi" name="myform" id="myform" method="post">
+<script>
+    <%--parent.document.getElementById("rtframe").src="${ctx}/wms/goods_getRightGoods.emi?id="+id+"&type="+type;--%>
+	function getApplyDetailList(owhGid){
+	    alert(owhGid)
+        parent.document.getElementById("rtframe").src="${ctx}/wms/wareHouse_getApplyDetailList.emi?owhGid="+owhGid;
+	}
+</script>
+<form action="${ctx}/wms/wareHouse_getApplyMainList.emi" name="myform" id="myform" method="post">
 		<div class="EMonecontent">
 			<div style="width: 100%;height: 15px;"></div>
 			<!--按钮部分-->
 		 	<div class="toolbar">
 		 		<ul>
-		 			<input type="text" name="keyWord" placeholder="请输入搜索关键字" class="write_input" style="margin-left: 100px" value="${keyWord }"> <input class="searchBtn" type="button" value="查询" onclick="document.forms[0].submit();">
+		 			<input type="text" name="keyWord" placeholder="请输入搜索关键字" class="write_input" value="${keyWord }"> <input class="searchBtn" type="button" value="查询" onclick="document.forms[0].submit();">
 		 		</ul>
 		 	</div>
 		 	<!--按钮部分 end-->
 		 	<!--表格部分-->
 		 	<div class="creattable">
-		 		<div class="tabletitle">领用申请单列表</div>
 		 		<div>
 		 			<table>
 			 			<tbody>
@@ -44,7 +50,7 @@
 
 							<tr>
 								<td style="width: 20px;">${stat.count}</td>
-								<td><a href="${ctx}/wms/wareHouse_toAddMaterialApply.emi?materialApplygid=${bean.owhGid}">${bean.owhCode}</a></td>
+								<td><a href="javascript:getApplyDetailList('${bean.owhGid}')">${bean.owhCode}</a></td>
 								<td>${bean.wareHouseName}</td>
 								<td>${bean.good.goodscode}</td>
 								<td>${bean.good.goodsname}</td>

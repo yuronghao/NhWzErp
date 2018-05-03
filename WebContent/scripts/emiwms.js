@@ -30,7 +30,10 @@ function selectCannotUse(obj){
 		//页面加载默认效果
 		$('#saveBtn').attr("disabled","ture");
 		$('#saveBtn').attr("style","background-color:#B8B8B8;color:#787878");
-	
+
+		$('#canzhao').attr("disabled","ture");
+        $('#canzhao').attr("style","background-color:#B8B8B8;color:#787878");
+
 		$('#giveUpBtn').attr("disabled","ture");
 		$('#giveUpBtn').attr("style","background-color:#B8B8B8;color:#787878");
 		
@@ -52,6 +55,9 @@ function selectCannotUse(obj){
 		
 		$('#saveBtn').removeAttr("disabled");
 		$('#saveBtn').removeAttr("style");
+
+        $('#canzhao').removeAttr("disabled");
+        $('#canzhao').removeAttr("style");
 
 		$('#giveUpBtn').removeAttr("disabled");
 		$('#giveUpBtn').removeAttr("style");
