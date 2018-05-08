@@ -44,7 +44,8 @@
 									<th>物料名称</th>
 									<th>规格型号</th>
 									<th>主单位</th>
-									<th>主数量</th>
+									<th>申请数量</th>
+									<th>已领数量</th>
 									<th>货位号</th>
 									<th>批次</th>
 									<th>备注</th>
@@ -54,7 +55,7 @@
 				 					
 					 				<tr>
 					 					<td style="width: 50px;">
-					 						<input type="checkbox" id="" class="goodsSelected" name="lyzj_chose" value="${type.gid }"/>
+					 						<input type="checkbox" id="" class="goodsSelected" name="lyzj_chose" value="${type.goodsuid }" goodsCode="${type.good.goodscode}" goodsName="${type.good.goodsname}" goodsstandard="${type.good.goodsstandard}" unitName="${type.good.unitName}" binvbach="${type.binvbach }" materialapplygid="${type.materialapplyuid}" materialapplycgid="${type.gid}" mainNumber="${type.number}" receivednumber="${type.receivednumber}" needoutnum="${type.needoutnum}"/>
 					 					</td>
 										<td class="gid" style="display:none"><input type="hidden" id="" name="gid" class="listword" value="${type.gid}" /></td>
 
@@ -63,7 +64,9 @@
 										<td class="goodsName"><input type="text" id="" name="goodsName" class="listword" value="${type.good.goodsname}" readonly="readonly"></td>
 										<td class="goodsstandard"><input type="text" id="" name="goodsstandard" class="listword" value="${type.good.goodsstandard}" readonly="readonly"></td>
 										<td class="mainUnit" ><input type="text" id="" name="mainUnit" class="listword" value="${type.good.unitName}" readonly="readonly"></td>
-										<td class="mainNumber"><input type="text" id="" name="mainNumber" class="listword toDealInput numric" value="<fmt:formatNumber type="number" value="${type.number}" minFractionDigits="2" groupingUsed="false" />" onchange="changeFlag(this)"></td>
+										<td class="mainNumber"><input type="text" id="" name="mainNumber" class="listword toDealInput numric" value="<fmt:formatNumber type="number" value="${type.number}" minFractionDigits="2" groupingUsed="false" />" readonly="readonly" onchange="changeFlag(this)"></td>
+										<td class="receivednumber"><input type="text" id="" name="receivednumber" class="listword toDealInput numric" value="<fmt:formatNumber type="number" value="${type.receivednumber}" minFractionDigits="2" groupingUsed="false" />" readonly="readonly" onchange="changeFlag(this)"></td>
+
 										<td class="goodsAllocationName"><input type="text" id="" name="goodsAllocationName" class="listword  jjjnumric" value="${type.alocation}" readonly="readonly" ></td>
 										<td class="goodsAllocationUid" style="display:none"><input type="text" id="" name="goodsAllocationUid" class="listword toDealInput" value="${type.goodsallocationuid}" readonly="readonly"></td>
 										<td class="batch"><input type="text" id="" name="batch" class="listword " value="${type.batchcode}" readonly="readonly"></td>

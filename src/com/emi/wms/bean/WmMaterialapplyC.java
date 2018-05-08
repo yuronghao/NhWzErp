@@ -18,7 +18,17 @@ public class WmMaterialapplyC implements Serializable{
 	
 	@EmiColumn(name = "gid", ID = true)
     private String gid;
-	
+
+	private int binvbach;
+
+	public int getBinvbach() {
+		return binvbach;
+	}
+
+	public void setBinvbach(int binvbach) {
+		this.binvbach = binvbach;
+	}
+
 	@EmiColumn(name = "notes")
     private String notes;
 	
@@ -34,6 +44,15 @@ public class WmMaterialapplyC implements Serializable{
 
 	private Integer status;
 
+	private BigDecimal needoutnum;
+
+	public BigDecimal getNeedoutnum() {
+		return needoutnum;
+	}
+
+	public void setNeedoutnum(BigDecimal needoutnum) {
+		this.needoutnum = needoutnum;
+	}
 
 	private Integer followmovinggid;
 

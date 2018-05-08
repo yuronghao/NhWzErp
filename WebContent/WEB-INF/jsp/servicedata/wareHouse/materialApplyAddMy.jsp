@@ -791,15 +791,16 @@
     function tongyi(owhGid,followmovinggid) {
         if (confirm("是否确定通过?")) {
             $.ajax({
-                data: {"followmovinggid":followmovinggid,"owhGid":owhGid,"type":1},
+                data: {"followmovinggid":followmovinggid,"owhGid":owhGid,"type":1,"billtype":"materialapply"},
                 type: 'POST',
                 async: false,
                 url: '${ctx}/wms/wareHouse_updateFollowMovingStatus.emi',
                 success: function(req){
                     var jsonO =  eval('(' + req + ')');
                     if(jsonO.success=='1'){
-                        $.dialog.alert_w("审核成功");
-                        windows.href.location = "${ctx}/wms/wareHouse_gtasksMymaterialApplyWarehouseList.emi";
+
+                            window.location.href = "${ctx}/wms/wareHouse_gtasksMymaterialApplyWarehouseList.emi";
+
                     }else{
                         $.dialog.alert_w("系统异常，请刷新界面");
                     }
@@ -822,8 +823,8 @@
                 success: function(req){
                     var jsonO =  eval('(' + req + ')');
                     if(jsonO.success=='1'){
-                        $.dialog.alert_w("审核成功");
-                        windows.href.location = "${ctx}/wms/wareHouse_gtasksMymaterialApplyWarehouseList.emi";
+                            window.location.href = "${ctx}/wms/wareHouse_gtasksMymaterialApplyWarehouseList.emi";
+
                     }else{
                         $.dialog.alert_w("系统异常，请刷新界面");
                     }

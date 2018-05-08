@@ -55,7 +55,7 @@
 								<td>${bean.barCode}</td>
 								<td>
 
-									<span ><a href="${ctx}/wms/wareHouse_toAddMaterialApplyMy.emi?materialApplygid=${bean.owhGid}&followmovinggid=${bean.followmovinggid})" style="color: blue">审核</a></span>
+									<span ><a href="${ctx}/wms/wareHouse_toAddMaterialApplyMy.emi?materialApplygid=${bean.owhGid}&followmovinggid=${bean.followmovinggid}" style="color: blue">审核</a></span>
 									<%--<span ><a href="javascript:bohui('${bean.followmovinggid}','${bean.owhGid}')" style="color: red">驳回</a></span>--%>
 
 								</td>

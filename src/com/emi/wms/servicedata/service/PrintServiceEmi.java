@@ -147,7 +147,11 @@ public class PrintServiceEmi extends EmiPluginService {
 					String ss="";
 
 					AaGoods goods=cacheCtrlService.getGoods(tempgood[i]);
-					ss = printservice+"|"+printmodel+"|sntext="+goods.getGoodsname()+"|sncode="+goods.getGoodscode()+"|standard="+goods.getGoodsstandard()+"|date="+billDate;
+					String standardString = goods.getGoodsstandard();
+					if (standardString == null){
+						standardString = "";
+					}
+					ss = printservice+"|"+printmodel+"|sntext="+goods.getGoodsname()+"|sncode="+goods.getGoodscode()+"|standard="+standardString+"|date="+billDate;
 
 					FileOutputStream fos = null;
 					FileInputStream fis = null;

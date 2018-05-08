@@ -75,8 +75,30 @@ public class wmCall implements Serializable{
 
 	@EmiColumn(name="rdStyleCode")
 	private String rdStyleCode;//出库类别
-	
-	
+
+	@EmiColumn(name="status")
+	private Integer status;//审批状态 0：未审核  1:审核中  2：已通过 3:驳回
+
+
+	@EmiColumn(name="businessTypeUid")
+	private String businessTypeUid;
+
+	public String getBusinessTypeUid() {
+		return businessTypeUid;
+	}
+
+	public void setBusinessTypeUid(String businessTypeUid) {
+		this.businessTypeUid = businessTypeUid;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
 	public String getRdStyleCode() {
 		return rdStyleCode;
 	}

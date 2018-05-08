@@ -8,6 +8,21 @@ import java.util.Date;
 
 @EmiTable(name = "WM_MaterialApply")
 public class WmMaterialapply implements Serializable {
+	public String getDepName() {
+		return depName;
+	}
+
+	public void setDepName(String depName) {
+		this.depName = depName;
+	}
+
+	public String getWhName() {
+		return whName;
+	}
+
+	public void setWhName(String whName) {
+		this.whName = whName;
+	}
 
 	private static final long serialVersionUID = -8848316127916729915L;
 
@@ -28,6 +43,12 @@ public class WmMaterialapply implements Serializable {
 
 	@EmiColumn(name = "rdstylegid")
 	private String rdstylegid;
+
+	private String depName;
+
+	private String whName;
+
+
 
 	public String getRdstylegid() {
 		return rdstylegid;

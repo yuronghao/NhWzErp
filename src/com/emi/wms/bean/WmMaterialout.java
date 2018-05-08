@@ -81,6 +81,18 @@ public class WmMaterialout implements Serializable {
 	@EmiColumn(name = "materialapplygid")
 	private  String materialapplygid;//参照的材料申请表id，如果不是参照，就没有值
 
+
+	@EmiColumn(name = "status")
+	private Integer status;
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
 	public String getMaterialapplygid() {
 		return materialapplygid;
 	}

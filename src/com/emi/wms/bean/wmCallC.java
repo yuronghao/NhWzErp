@@ -53,12 +53,58 @@ public class wmCallC implements Serializable{
 	
 	@EmiColumn(name="batch")
 	private String batch;
-	
-	
 
-	
-	
-	
+
+	private String goodName;
+
+	private String goodsStandard;
+
+	public String getGoodsStandard() {
+		return goodsStandard;
+	}
+
+	public void setGoodsStandard(String goodsStandard) {
+		this.goodsStandard = goodsStandard;
+	}
+
+	public String getGoodName() {
+		return goodName;
+	}
+
+	public void setGoodName(String goodName) {
+		this.goodName = goodName;
+	}
+
+	private String inAllocationName;
+
+	private String outAllocationName;
+
+	public String getInAllocationName() {
+		return inAllocationName;
+	}
+
+	public void setInAllocationName(String inAllocationName) {
+		this.inAllocationName = inAllocationName;
+	}
+
+	public String getOutAllocationName() {
+		return outAllocationName;
+	}
+
+	public void setOutAllocationName(String outAllocationName) {
+		this.outAllocationName = outAllocationName;
+	}
+
+	private AaGoods goods;
+
+	public AaGoods getGoods() {
+		return goods;
+	}
+
+	public void setGoods(AaGoods goods) {
+		this.goods = goods;
+	}
+
 	public Integer getPk() {
 		return pk;
 	}

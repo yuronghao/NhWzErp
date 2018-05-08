@@ -6,10 +6,10 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>生产订单</title>
+<title>调拨单</title>
 <link rel="stylesheet" type="text/css" href="${ctx}/css/common.css">
 <link rel="stylesheet" type="text/css" href="${ctx}/css/emicom.css">
-<script type="text/javascript"	src="${ctx }/scripts/emiwms.js"></script> 
+<script type="text/javascript"	src="${ctx }/scripts/emiwms.js"></script>
 <script type="text/javascript" src="<%=contextPath %>/scripts/plugins/jquery.numeral.js"></script>
 <script type="text/javascript">
 		function checkForm()
@@ -22,14 +22,18 @@
 				$.dialog.alert_w("部门不能为空!");
 			  	return false;
 			} 
-		   if(document.getElementById('whUid').value==""){
-				$.dialog.alert_w("仓库不能为空!");
+		   if(document.getElementById('outwhUid').value==""){
+				$.dialog.alert_w("出仓库不能为空!");
 			  	return false;
-			} 
-			var trs=$('.serialTr');
+			}
+            if(document.getElementById('inwhUid').value==""){
+                $.dialog.alert_w("入仓库不能为空!");
+                return false;
+            }
+            var trs=$('.serialTr');
 			if(trs.length<=0)
 				{
-					$.dialog.alert_w("销售出库明细不能为空!");
+					$.dialog.alert_w("出库明细不能为空!");
 				  	return false;
 				}
 			
@@ -38,23 +42,21 @@
 			    	  $.dialog.alert('主数量不能为空');
 			    	  return false;
 			      }
-			      if($('.jjjnumric').eq(i).val()==''){
-			    	  $.dialog.alert('货位号不能为空');
+			      if($('.outjjjnumric').eq(i).val()==''){
+			    	  $.dialog.alert('出货位号不能为空');
 			    	  return false;
 			      }
-			      if(typeof($('.jnumric').eq(i).val())!= "undefined"  && $('.jnumric').eq(i).val()!='' )
-			       {
-			    	  console.log($('.jjnumric').eq(i))
-			    	  if(typeof($('.jjnumric').eq(i).val())!= "undefined" && $('.jjnumric').eq(i).val()==''){
-				    	  $.dialog.alert('辅单位存在,辅助数量不能为空');
-				    	  return false;
-				      }
-			      }
+
+                if($('.injjjnumric').eq(i).val()==''){
+                    $.dialog.alert('入货位号不能为空');
+                    return false;
+                }
+
 			}
 			
 			var batchs=$('.batchInput');
 			for(var i=0;i<batchs.length;i++){
-				
+
 				if(batchs.eq(i).attr("isbatch")==1 && batchs.eq(i).val()==""){
 					$.dialog.alert('存在批次不能为空的记录！');
 			    	return false;
@@ -84,7 +86,8 @@
 				$("select option").removeAttr("selected");
 				$(".addrow").attr("onclick","insertRow()");
 				$("#depName").attr("onclick","selectdep()");
-				$("#whName").attr("onclick","selectmanager()");
+				$("#outwhName").attr("onclick","selectmanagerout()");
+                $("#inwhName").attr("onclick","selectmanagerin()");
 				$('#billDate').attr("onclick","WdatePicker({dateFmt:'yyyy-MM-dd'})");
 				$("#customerName").attr("onclick","selectcustomer()");
 				$.ajax({
@@ -125,11 +128,13 @@
 					$(".delrow").addClass("delno");
 					$(".addrow").attr("onclick","insertRow()");
 					$("#depName").attr("onclick","selectdep()");
-					$("#whName").attr("onclick","selectmanager()");
+					$("#outwhName").attr("onclick","selectmanagerout()");
+                    $("#inwhName").attr("onclick","selectmanagerin()");
 					$('#billDate').attr("onclick","WdatePicker({dateFmt:'yyyy-MM-dd'})");
 					$('.startDate').attr("onclick","WdatePicker({dateFmt:'yyyy-MM-dd'})");
 					$('.endDate').attr("onclick","WdatePicker({dateFmt:'yyyy-MM-dd'})");
-					$(".jjjnumric").attr("onclick","clickFlag(this)");
+					$(".outjjjnumric").attr("onclick","clickFlagout(this)");
+                    $(".injjjnumric").attr("onclick","clickFlagin(this)");
 					$("#customerName").attr("onclick","selectcustomer()");
 					revBtn();
 				}
@@ -139,13 +144,13 @@
 				if(checkForm()){
 				if(isSave){//新增保存			
 					$.ajax({
-						url:'${ctx}/wms/wareHouse_addMaterialOut.emi',
+						url:'${ctx}/wms/wareHouse_addCall.emi',
 						type:"post",
 						data:$('#myform').serialize(),
 						success:function(da){
 							var obj=eval("("+da+")");
 							if(obj.success==1){
-								window.location.href = '${ctx}/wms/wareHouse_toAddMaterialOut.emi';
+								window.location.href = '${ctx}/wms/wareHouse_toAddCall.emi';
 							}else{
 								$.dialog.alert_e(obj.failInfor);
 							}					
@@ -153,13 +158,13 @@
 					});
 				}else{//修改保存			
 					$.ajax({
-						url:'${ctx}/wms/wareHouse_updateMaterialOutWarehouse.emi',
+						url:'${ctx}/wms/wareHouse_updateCall.emi',
 						type:"post",
 						data:$('#myform').serialize(),
 						success:function(da){					
 							var obj=eval("("+da+")");
 							if(obj.success==1){
-								window.location.href = '${ctx}/wms/wareHouse_toAddMaterialOut.emi';
+								window.location.href = '${ctx}/wms/wareHouse_toAddCall.emi';
 							}else{
 								$.dialog.alert_e(obj.failInfor);
 							}					
@@ -221,8 +226,10 @@
 				trs.eq(i).children('.mainNumber').children().attr('id','mainNumber'+(i+1));
 //				trs.eq(i).children('.assistUnit').children().attr('id','assistUnit'+(i+1));
 //				trs.eq(i).children('.assistNumber').children().attr('id','assistNumber'+(i+1));
-				trs.eq(i).children('.goodsAllocationName').children().attr('id','goodsAllocationName'+(i+1));
-				trs.eq(i).children('.goodsAllocationUid').children().attr('id','goodsAllocationUid'+(i+1));
+				trs.eq(i).children('.outgoodsAllocationName').children().attr('id','outgoodsAllocationName'+(i+1));
+				trs.eq(i).children('.outgoodsAllocationUid').children().attr('id','outgoodsAllocationUid'+(i+1));
+				 trs.eq(i).children('.ingoodsAllocationName').children().attr('id','ingoodsAllocationName'+(i+1));
+				 trs.eq(i).children('.ingoodsAllocationUid').children().attr('id','ingoodsAllocationUid'+(i+1));
 				trs.eq(i).children('.batch').children().attr('id','batch'+(i+1));
 //				trs.eq(i).children('.barCode').children().attr('id','barCode'+(i+1));
 				trs.eq(i).children('.note').children().attr('id','note'+(i+1));
@@ -269,8 +276,11 @@
 //							strs+='<td class="assistUnitcode" style="display:none"><input type="text" id="" name="assistUnitcode" class="listword" value="'+chek.eq(i).attr("cstcomunitcode")+'" readonly="readonly"></td>'+
 //							'<td class="assistNumber"><input type="text" id="" name="assistNumber" class="listword" value="" readonly="readonly"></td>';
 //							}
-					strs+='<td class="goodsAllocationName"><input type="text" id="" name="goodsAllocationName" class="listword jjjnumric"  readonly="readonly" onclick="clickFlag(this)"></td>'+
-						'<td class="goodsAllocationUid" style="display:none"><input type="text" id="" name="goodsAllocationUid" class="listword "  readonly="readonly" onclick="clickFlag(this)"></td>'+
+					strs+='<td class="outgoodsAllocationName"><input type="text" id="" name="outgoodsAllocationName" class="listword outjjjnumric"  readonly="readonly" onclick="clickFlagout(this)"></td>'+
+						'<td class="outgoodsAllocationUid" style="display:none"><input type="text" id="" name="outgoodsAllocationUid" class="listword "  readonly="readonly" onclick="clickFlagout(this)"></td>'+
+
+                        '<td class="ingoodsAllocationName"><input type="text" id="" name="ingoodsAllocationName" class="listword injjjnumric"  readonly="readonly" onclick="clickFlagin(this)"></td>'+
+                        '<td class="ingoodsAllocationUid" style="display:none"><input type="text" id="" name="ingoodsAllocationUid" class="listword "  readonly="readonly" onclick="clickFlagin(this)"></td>'+
 						
 						'<td class="batch"><input type="text" id="" name="batch" class="listword batchInput" value="" isbatch="'+binvbach+'"></td>'+
 						
@@ -325,7 +335,7 @@
 			}
 
             var goodsUid = $(obj).parent().parent().find("input[name='goodsUid']").val();
-			var goodsAllocationUid=$(obj).parent().parent().find("input[name='goodsAllocationUid']").val();
+			var outgoodsAllocationUid=$(obj).parent().parent().find("input[name='outgoodsAllocationUid']").val();
 
 			var pwdWin = $.dialog({
 				drag: true,
@@ -335,7 +345,7 @@
 			    width: '800px',
 				height: '400px',
 				zIndex:4004,
-				content: 'url:${ctx}/plugin_selectAllocationStockList.emi?goodsUid='+goodsUid+'&goodsAllocationUid='+goodsAllocationUid,
+				content: 'url:${ctx}/plugin_selectAllocationStockList.emi?goodsUid='+goodsUid+'&goodsAllocationUid='+outgoodsAllocationUid,
 				okVal:"确定",
 				ok:function(){
 					var usercheck = $("input:checked",this.content.document);
@@ -347,12 +357,12 @@
 		}
 		
 		
-		function clickFlag(obj)
+		function clickFlagout(obj)
 		{
-			var temp=$(obj).attr("id").substr(19);
-			if($("#whUid").val()=="")
+			var temp=$(obj).attr("id").substr(22);
+			if($("#outwhUid").val()=="")
 				{
-				  $.dialog.alert('请选择仓库！');
+				  $.dialog.alert('请选择出仓库！');
 				 return false;
 				}
 			else
@@ -364,19 +374,53 @@
 						title:'选择仓位号',
 					    width: '1100px',
 						height: '590px',
-						content: 'url:${ctx}/wms/wareHouse_getGoodsAllocationHelp.emi?id='+$("#whUid").val(),
+						content: 'url:${ctx}/wms/wareHouse_getGoodsAllocationHelp.emi?id='+$("#outwhUid").val(),
 						okVal:"确定",
 						ok:function(){
 							
 							var chek = $('.goodsSelected:checked',this.content.document); 
-							document.getElementById('goodsAllocationName'+temp).value=chek.eq(0).attr("allocationName");
-							document.getElementById('goodsAllocationUid'+temp).value=chek.eq(0).val();
+							document.getElementById('outgoodsAllocationName'+temp).value=chek.eq(0).attr("allocationName");
+							document.getElementById('outgoodsAllocationUid'+temp).value=chek.eq(0).val();
 						},
 						cancelVal:"关闭",
 						cancel:true
 						});
 				}
 		}
+
+
+
+
+        function clickFlagin(obj)
+        {
+            var temp=$(obj).attr("id").substr(21);
+            if($("#inwhUid").val()=="")
+            {
+                $.dialog.alert('请选择入仓库！');
+                return false;
+            }
+            else
+            {
+                $.dialog({
+                    drag: true,
+                    lock: true,
+                    resize: false,
+                    title:'选择仓位号',
+                    width: '1100px',
+                    height: '590px',
+                    content: 'url:${ctx}/wms/wareHouse_getGoodsAllocationHelp.emi?id='+$("#inwhUid").val(),
+                    okVal:"确定",
+                    ok:function(){
+
+                        var chek = $('.goodsSelected:checked',this.content.document);
+                        document.getElementById('ingoodsAllocationName'+temp).value=chek.eq(0).attr("allocationName");
+                        document.getElementById('ingoodsAllocationUid'+temp).value=chek.eq(0).val();
+                    },
+                    cancelVal:"关闭",
+                    cancel:true
+                });
+            }
+        }
 		function changeFlag(obj)
 		{
 			if(isNaN(obj.value)){
@@ -501,7 +545,7 @@
 				cancel:true
 			});
 	 	}
-		function selectmanager(){
+		function selectmanagerout(){
 			var pwdWin = $.dialog({ 
 				drag: true,
 				lock: true,
@@ -515,11 +559,12 @@
 				ok:function(){
 					$('.batchInput').val("");
 					var usercheck = this.content.window.jsonArray;
-					
-					document.getElementById('whName').value=usercheck[0].whname;
-					document.getElementById('whUid').value=usercheck[0].gid;
-					 var temp=document.getElementsByName("goodsAllocationName");
-					 var temps=document.getElementsByName("goodsAllocationUid");
+                        document.getElementById('outwhName').value=usercheck[0].whname;
+                        document.getElementById('outwhUid').value=usercheck[0].gid;
+
+
+					 var temp=document.getElementsByName("outgoodsAllocationName");
+					 var temps=document.getElementsByName("outgoodsAllocationUid");
 					 for(var i=0;i<temp.length;i++)
 						 {
 						 temp[i].value='';
@@ -530,13 +575,47 @@
 				cancel:true
 			});	
 		}
+
+
+
+
+        function selectmanagerin(){
+            var pwdWin = $.dialog({
+                drag: true,
+                lock: true,
+                resize: false,
+                title:'选择仓库',
+                width: '800px',
+                height: '400px',
+                zIndex:3004,
+                content: 'url:${ctx}/plugin_selectMain.emi?treeType=<%=TreeType.WAREHOUSE%>&multi=0&showTree=0',
+                okVal:"确定",
+                ok:function(){
+                    $('.batchInput').val("");
+                    var usercheck = this.content.window.jsonArray;
+                    document.getElementById('inwhName').value=usercheck[0].whname;
+                    document.getElementById('inwhUid').value=usercheck[0].gid;
+
+
+                    var temp=document.getElementsByName("ingoodsAllocationName");
+                    var temps=document.getElementsByName("ingoodsAllocationUid");
+                    for(var i=0;i<temp.length;i++)
+                    {
+                        temp[i].value='';
+                        temps[i].value='';
+                    }
+                },
+                cancelVal:"关闭",
+                cancel:true
+            });
+        }
 		
 	</script>
 </head>
 <body style="background-color: #FFFFFF;">
 <form id="myform" name="myform" action="" method="post">
 <input type="hidden" name="time" id="time" value="${time }" />
-<input type="hidden" id="materialOutgid" name="materialOutgid" value="${saleOutWarehouse['gid']}" >
+<input type="hidden" id="callgid" name="callgid" value="${call['gid']}" >
 		 <div class="EMonecontent">
 		 	<div style="width: 100%;height: 15px;"></div>
 		 	<!--按钮部分-->
@@ -545,13 +624,13 @@
 		 			<!--<li class="fl"><a href="AttributeProjectClass.html"><input type="button" class="backBtn" value="返回"></a></li>-->
 		 			<li class="fl"><input type="button" class="btns" value="新增" id="addBtn"> </li>
 		 			<li class="fl"><input type="button" class="btns" value="修改" id="revBtn"> </li>
-		 			<li class="fl"><input type="button" class="btns" value="删除" id="delBtn" onclick="deletesob('${saleOutWarehouse['gid']}')"> </li>
+		 			<li class="fl"><input type="button" class="btns" value="删除" id="delBtn" onclick="deletesob('${call['gid']}')"> </li>
 		 			<li class="fl"><input type="button" class="btns" value="保存" id="saveBtn"> </li>
 		 			<li class="fl"><input type="button" class="btns" value="放弃" id="giveUpBtn" onclick="giveup()"> </li>
 		 			<li class="fl" style="display:none"><input type="button" class="btns" value="审核"> </li>
 			 		<li class="fl" style="display:none"><input type="button" class="btns" value="弃审"> </li>
 		 			<li class="fl"><input type="button" class="btns" value="列表" id="tableBtn" onclick="getprocurearrivallist()"></li>
-					<li class="fl"><input type="button" class="btns" value="参照" id="canzhao"></li>
+					<%--<li class="fl"><input type="button" class="btns" value="参照" id="canzhao"></li>--%>
 		 			<li class="fl">
 	 				<!-- 单据翻页begin -->
 		 			<div id="emi_page_turning" ></div>
@@ -568,8 +647,8 @@
 							 * @param [div_id] 【非必填】翻页按钮所在的div的id(默认叫emi_page_turning,如有需要可以修改)
 							 */
 							 var cond = "";
-		 					initPageTurning('${ctx }/wms/wareHouse_toAddMaterialOut.emi','WM_MaterialOut','gid',"${saleOutWarehouse['gid']}",
-		 							cond,'materialOutgid');
+		 					initPageTurning('${ctx }/wms/wareHouse_toAddCall.emi','WM_Call','gid',"${call['gid']}",
+		 							cond,'callgid');
 		 				});
 		 			</script>
 		 			<!-- 单据翻页end -->
@@ -581,52 +660,45 @@
 		 	<!--按钮部分 end-->
 		 	<!--表格部分-->
 		 	<div class="creattable">
-		 		<div class="tabletitle" style="margin-top:6px;">材料出库单</div>		 		
+		 		<div class="tabletitle" style="margin-top:6px;">调拨单</div>
 		 		<div>
 		 			<!--12-->
 		 			<ul class="wordul">
 		 				<li class="wordli fl">
 							<div class="wordname fl">单据编号：</div>
-							<div class="wordnameinput fl"><input type="text" value="${saleOutWarehouse['billCode']}" id="billCode" name="billCode" readonly="readonly"> </div>
+							<div class="wordnameinput fl"><input type="text" value="${call['billCode']}" id="billCode" name="billCode" readonly="readonly"> </div>
 							<div class="cf"></div> 
 		 				</li>
 		 				<li class="wordli fl">
 							<div class="wordname fl">单据日期：</div>
-							<div class="wordnameinput fl"><input type="text" value="${fn:substring(saleOutWarehouse['billDate'],0,10)}" id="billDate" name="billDate" readonly="readonly"> </div>
+							<div class="wordnameinput fl"><input type="text" value="${fn:substring(call['billDate'],0,10)}" id="billDate" name="billDate" readonly="readonly"> </div>
 							<div class="cf"></div> 
 		 				</li>
 		 				<li class="wordli fl">
 							<div class="wordname fl">部门：</div>
 							<div class="wordnameinput fl">
 							<input type="text" name="depName" id="depName" class="toDealInput" value="${department.depname}" >
-	 						<input type="hidden" id="depUid" name="depUid" value="${saleOutWarehouse['departmentUid']}">
+	 						<input type="hidden" id="depUid" name="depUid" value="${call['departmentUid']}">
 							</div>
 							<div class="cf"></div> 
 		 				</li>
 		 				<li class="wordli fl">
-							<div class="wordname fl">仓库：</div>
+							<div class="wordname fl">调出仓库：</div>
 							<div class="wordnameinput fl">
-							<input type="text" name="whName" id="whName" class="toDealInput" value="${warehouse.whname}">
-							<input type="hidden" value="${saleOutWarehouse['whUid']}" id="whUid" name="whUid"> 
+							<input type="text" name="outwhName" id="outwhName" class="toDealInput" value="${warehouse.outwhname}">
+							<input type="hidden" value="${call['outwhUid']}" id="outwhUid" name="outwhUid">
 							</div>
 							<div class="cf"></div> 
 		 				</li>
+
 		 				<div class="cf"></div> 		 				
 		 			</ul>
 		 			<ul class="wordul">
-					<li class="wordli fl">
-						<div class="wordname fl">入库标志：</div>
-						<div class="wordnameinput fl">
-							<select class="toDealSelect" id="badge" name="badge" onchange="getSelect(this)" disabled="disabled">
-								<option value="1" <c:if test="${saleOutWarehouse['badge'] == 1}">selected="selected"</c:if>>蓝字</option>
-								<option value="0" <c:if test="${saleOutWarehouse['badge'] == 0}">selected="selected"</c:if>>红字</option>
-							</select>
-						</div>
-						<div class="cf"></div>
-					  </li>
+
+
 		 				<li class="wordli fl">
 							<div class="wordname fl">备注：</div>
-							<div class="wordnameinput fl"><input type="text" value="${saleOutWarehouse['notes']}" id="notes" name="notes" class="toDealInput"> </div>
+							<div class="wordnameinput fl"><input type="text" value="${call['notes']}" id="notes" name="notes" class="toDealInput"> </div>
 							<div class="cf"></div> 
 		 				</li>
 
@@ -636,7 +708,7 @@
 							<div class="wordnameinput fl">
 								<select class="toDealSelect" id="businessTypeUid" name="businessTypeUid"  disabled="disabled">
 									<c:forEach items="${rdstylelist}" var="rdstyle" varStatus="status">
-										<option value="${rdstyle.gid}" <c:if test="${saleOutWarehouse['businessTypeUid'] == rdstyle.gid}">selected="selected"</c:if>>${rdstyle.crdName}</option>
+										<option value="${rdstyle.gid}" <c:if test="${call['businessTypeUid'] == rdstyle.gid}">selected="selected"</c:if>>${rdstyle.crdName}</option>
 									</c:forEach>
 								</select>
 							</div>
@@ -644,21 +716,33 @@
 						</li>
 
 
+						<li class="wordli fl">
+							<div class="wordname fl">调入仓库：</div>
+							<div class="wordnameinput fl">
+								<input type="text" name="inwhName" id="inwhName" class="toDealInput" value="${warehouse.inwhname}">
+								<input type="hidden" value="${call['inwhUid']}" id="inwhUid" name="inwhUid">
+							</div>
+							<div class="cf"></div>
+						</li>
+
+
+
+
 						<c:if test="${sp == 1}">
 							<li class="wordli fl">
 								<div class="wordname fl">审批状态:</div>
 								<div class="wordnameinput fl">
 									<div class="wordnameinput fl">
-										<c:if test="${saleOutWarehouse['status'] == 0}">
+										<c:if test="${call['status'] == 0}">
 											<input style="color: #0e78c9" type="text" value="未审核" id="zhuangtai" name="zhuangtai" class="" disabled>
 										</c:if>
-										<c:if test="${saleOutWarehouse['status'] == 1}">
+										<c:if test="${call['status'] == 1}">
 											<input style="color: #0E2D5F" type="text" value="审核中" id="zhuangtai" name="zhuangtai" class="" disabled>
 										</c:if>
-										<c:if test="${saleOutWarehouse['status'] == 2}">
+										<c:if test="${call['status'] == 2}">
 											<input style="color: #00B83F" type="text" value="已通过" id="zhuangtai" name="zhuangtai" class="" disabled>
 										</c:if>
-										<c:if test="${saleOutWarehouse['status'] == 3}">
+										<c:if test="${call['status'] == 3}">
 											<input style="color: red" type="text" value="被驳回" id="zhuangtai" name="zhuangtai" class="" disabled>
 										</c:if>
 
@@ -691,14 +775,15 @@
 				 					<th>主数量</th>
 				 					<%--<th>辅单位</th>--%>
 				 					<%--<th>辅数量</th>--%>
-				 					<th>货位号</th>
+				 					<th>调出货位号</th>
+									<th>调入货位号</th>
 				 					<th>批次</th>
 				 					<%--<th style="width: 12%">条形码</th>--%>
 				 					<th>备注</th>
 									<%--<th>生产订单号</th>--%>
 									<%--<th>产品编号</th>--%>
 				 				</tr>
-				 			<c:forEach var="type" items="${saleOutWarehouseC}" varStatus="stat">
+				 			<c:forEach var="type" items="${wmCallC}" varStatus="stat">
 				 		    <tr class="serialTr">
 				 		    <td><div class="delrow" name = "deleteButton"  style="margin-left:15px;float: left;display: none" title="删除" id="${type.gid}"></div>
 				 		    </td>
@@ -723,8 +808,13 @@
 							<%--<td class="assistNumber"><input type="text" id="" name="assistNumber" class="listword" value="" readonly="readonly"></td>--%>
 							<%--</c:if>--%>
 			                
-			                <td class="goodsAllocationName"><input type="text" id="" name="goodsAllocationName" class="listword  jjjnumric" value="${type.alocation}" readonly="readonly" ></td>
-			                <td class="goodsAllocationUid" style="display:none"><input type="text" id="" name="goodsAllocationUid" class="listword toDealInput" value="${type.goodsallocationuid}" readonly="readonly"></td>
+			                <td class="outgoodsAllocationName"><input type="text" id="" name="outgoodsAllocationName" class="listword  outjjjnumric" value="${type.outalocation}" readonly="readonly" ></td>
+			                <td class="outgoodsAllocationUid" style="display:none"><input type="text" id="" name="outgoodsAllocationUid" class="listword toDealInput" value="${type.outgoodsallocationuid}" readonly="readonly"></td>
+
+							<td class="ingoodsAllocationName"><input type="text" id="" name="ingoodsAllocationName" class="listword  injjjnumric" value="${type.inalocation}" readonly="readonly" ></td>
+							<td class="ingoodsAllocationUid" style="display:none"><input type="text" id="" name="ingoodsAllocationUid" class="listword toDealInput" value="${type.ingoodsallocationuid}" readonly="readonly"></td>
+
+
 			             	<td class="batch"><input type="text" id="" name="batch" class="listword " value="${type.batchcode}" readonly="readonly"></td>
 			                <%--<td class="barCode"><input type="text" id="" name="barCode" class="listword " value="${type.barCode}" readonly="readonly"></td>--%>
 			                <td class="note"><input type="text" id="" name="note" class="listword toDealInput" value="${type.notes}" readonly="readonly"></td>
@@ -745,14 +835,14 @@
  				<li class=" fl">
 					<div class="wordname fl">录入人：</div>
 					<div class="wordnameinput fl">
-					<input type="text" value="${saleOutWarehouse['recordpersonName']}" id="recordPersonName" name="recordPersonName" readonly="readonly">
-					<input type="hidden" id="recordPersonUid" name="recordPersonUid" value="${saleOutWarehouse['recordPersonId']}">
+					<input type="text" value="${call['recordpersonName']}" id="recordPersonName" name="recordPersonName" readonly="readonly">
+					<input type="hidden" id="recordPersonUid" name="recordPersonUid" value="${call['recordPersonId']}">
 					</div>
 					<div class="cf"></div> 
  				</li>
  				<li class=" fl">
 					<div class="wordname fl wordfoot">录入日期：</div>
-					<div class="wordnameinput fl"><input type="text" value="${fn:substring(saleOutWarehouse['recordDate'],0,10)}" id="recordDate" name="recordDate" readonly="readonly"> </div>
+					<div class="wordnameinput fl"><input type="text" value="${fn:substring(call['recordDate'],0,10)}" id="recordDate" name="recordDate" readonly="readonly"> </div>
 					<div class="cf"></div> 
  				</li>
  				<%-- <li class="wordli fl">
@@ -777,110 +867,6 @@
 
 	</body>
 </html>
-<script>
-    $('#canzhao')[0].onclick = canzhao;
-    var magid;//定义一个全局的参照单据id，全局只能有一个相同的参照单据id，如果不同，则不可以新增不同的单据id
 
-    function canzhao(){
-        //判断列表里存不存在手动新增出库明细的数据。如果有，则不可以参照
-        var trs=$('.serialTr');
-        if(trs.length > 0)
-        {
-            trs.eq(0).children('.needoutnum').children().val();
-            var length = trs.eq(0).children('.needoutnum').length;
-            if(length == 0){
-                $.dialog.alert_w("存在物料，不能参照领料申请单出库");
-                return false;
-			}
-
-        }
-
-
-        $('.addrow').hide();
-        $.dialog({
-            drag: true,
-            lock: true,
-            resize: false,
-            title:'领料申请列表',
-            width: '1100px',
-            height: '590px',
-            content: 'url:${ctx}/wms/wareHouse_getApplyHelp.emi',
-            okVal:"确定",
-            ok:function(){
-                var trs=$('.serialTr');
-
-                var chek = $('.goodsSelected:checked',this.content.document.getElementById("rtframe").contentDocument);
-                if(trs.length == 0){
-                    magid = chek.eq(0).attr("materialapplygid");
-                }
-                if(trs.length > 0){
-                    var aid =  chek.eq(0).attr("materialapplygid");
-                    if(aid != magid){
-                        $.dialog.alert_w("同一个出库单，参照单据只能选择一个");
-                        return false;
-                    }
-                }
-
-                for (var i = 0; i < chek.length; i++) {
-                    var strs='<tr class="serialTr">'+
-                        '<td><div class="delrow delno" name = "deleteButton" value=""  style="margin-left:15px;" gid=""></div></td>'+
-                        '<td class="gid" style="display:none"><input type="hidden" id="" name="gid" class="listword" value=""></td>'+
-                        '<td class="materialapplygid" style="display:none"><input type="hidden" id="" name="materialapplygid" class="listword" value="'+chek.eq(i).attr("materialapplygid")+'"></td>'+
-                        '<td class="materialapplycgid" style="display:none"><input type="hidden" id="" name="materialapplycgid" class="listword" value="'+chek.eq(i).attr("materialapplycgid")+'"></td>'+
-
-                        '<td class="goodsUid" style="display:none"><input type="text" id="" name="goodsUid" class="listword" value="'+chek.eq(i).val()+'"></td>'+
-                        '<td class="goodsCode"><input type="text" id="" name="goodsCode" class="listword" value="'+chek.eq(i).attr("goodsCode")+'" readonly="readonly"></td>'+
-                        '<td class="goodsName"><input type="text" id="" name="goodsName" class="listword" value="'+chek.eq(i).attr("goodsName")+'" readonly="readonly"></td>'+
-                        '<td class="goodsstandard"><input type="text" id="" name="goodsstandard" class="listword" value="'+chek.eq(i).attr("goodsstandard")+'" readonly="readonly"></td>'+
-                        '<td class="mainUnit"><input type="text" id="" name="mainUnit" class="listword" value="'+chek.eq(i).attr("unitName")+'" readonly="readonly"></td>'+
-                        '<td class="needoutnum" style="display:none"><input type="hidden" id="" name="needoutnum" class="listword" value="'+chek.eq(i).attr("needoutnum")+'"></td>'+
-						'<td class="mainNumber"><input type="text" id="" name="mainNumber" class="listword numric" value="'+chek.eq(i).attr("needoutnum")+'" onchange="changeneednum(this)"></td>';
-                    var binvbach=chek.eq(i).attr("binvbach");
-                    strs+='<td class="goodsAllocationName"><input type="text" id="" name="goodsAllocationName" class="listword jjjnumric"  readonly="readonly" onclick="clickFlag(this)"></td>'+
-                        '<td class="goodsAllocationUid" style="display:none"><input type="text" id="" name="goodsAllocationUid" class="listword "  readonly="readonly" onclick="clickFlag(this)"></td>'+
-                        '<td class="batch"><input type="text" id="" name="batch" class="listword batchInput" value="" isbatch="'+binvbach+'"></td>'+
-                        '<td class="note"><input type="text" id="" name="note" class="listword" value="" ></td>'+
-                        '</tr>';
-                    var macgid = chek.eq(i).attr("materialapplycgid");
-					var gmaclist = $('.serialTr').find(".materialapplycgid").children();
-					var flag =1;
-					gmaclist.each(function(i,t){
-						var tempgmacgid = $(t).val();
-						if(tempgmacgid == macgid){
-                            flag = 2;
-						}
-					})
-
-					if(flag == 2){
-					    //不新增该行，继续执行下一行循环
-						continue;
-                    }
-
-                    $("#contr").append(strs);
-                    getSerial();
-                    $(".numric").numeral(6);
-                    setIsbatch();
-                }
-            },
-            cancelVal:"关闭",
-            cancel:true
-
-        });
-    }
-
-
-    function changeneednum(obj){
-		var num = $(obj).val();
-		var neednum = $(obj).parent().parent().find("input[name='needoutnum']").val();
-		if(parseFloat(num) > parseFloat(neednum)){
-            $.dialog.alert_w("出库数量不能大于申请数量");
-            $(obj).val(neednum);
-            return false;
-		}
-		return true;
-
-	}
-
-</script>
 
 

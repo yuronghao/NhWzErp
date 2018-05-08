@@ -14,7 +14,6 @@
 <script>
     <%--parent.document.getElementById("rtframe").src="${ctx}/wms/goods_getRightGoods.emi?id="+id+"&type="+type;--%>
 	function getApplyDetailList(owhGid){
-	    alert(owhGid)
         parent.document.getElementById("rtframe").src="${ctx}/wms/wareHouse_getApplyDetailList.emi?owhGid="+owhGid;
 	}
 </script>
@@ -36,29 +35,21 @@
 			 				<tr>
 			 					<th style="width: 120px;">序号</th>
 			 					<th>单据号</th>
-			 					<th>仓库</th>
-			 					<th>物料编号</th>
-								<th>物料名称</th>
-								<th>物料规格型号</th>
-								<th>主单位</th>
-								<th>主数量</th>
-								<th>货位号</th>
-								<th>条形码</th>
+								<th>单据日期</th>
+			 					<th>部门</th>
+								<th>仓库</th>
+								<th>备注</th>
 								<th>审核状态</th>
 			 				</tr>
 			 				<c:forEach var="bean" items="${data.list }" varStatus="stat">
 
 							<tr>
 								<td style="width: 20px;">${stat.count}</td>
-								<td><a href="javascript:getApplyDetailList('${bean.owhGid}')">${bean.owhCode}</a></td>
-								<td>${bean.wareHouseName}</td>
-								<td>${bean.good.goodscode}</td>
-								<td>${bean.good.goodsname}</td>
-								<td>${bean.good.goodsstandard}</td>
-								<td>${bean.good.unitName}</td>
-								<td><fmt:formatNumber type="number" value="${bean.number }" minFractionDigits="2" groupingUsed="false"/></td>
-								<td>${bean.alocation}</td>
-								<td>${bean.barCode}</td>
+								<td><a href="javascript:getApplyDetailList('${bean.gid}')">${bean.billcode}</a></td>
+								<td>${bean.billdate}</td>
+								<td>${bean.depName}</td>
+								<td>${bean.whName}</td>
+								<td>${bean.notes}</td>
 								<td>
 									<c:if test="${bean.status == 0}">
 										<span style="color: #0e78c9">未审核</span>

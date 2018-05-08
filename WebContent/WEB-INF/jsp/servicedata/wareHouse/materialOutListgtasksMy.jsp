@@ -30,29 +30,22 @@
 			 				<tr>
 			 					<th style="width: 120px;">序号</th>
 			 					<th>单据号</th>
-			 					<!-- <th>部门</th> -->
 			 					<th>仓库</th>
-			 					<!-- <th>录入人</th>
-			 					<th>日期</th>
-			 					<th>备注</th> -->
 			 					<th>物料编号</th>
 								<th>物料名称</th>
 								<th>物料规格型号</th>
 								<th>主单位</th>
 								<th>主数量</th>
-								<%--<th>辅单位</th>--%>
-								<%--<th>辅数量</th>--%>
 								<th>货位号</th>
 								<th>条形码</th>
-								<%--<th>生产订单编号</th>--%>
-								<%--<th>产品名称</th>--%>
+								<th>操作</th>
 			 				</tr>
 			 				<c:forEach var="bean" items="${data.list }" varStatus="stat">
 			 				<%-- <c:forEach items="${saleOutWarehouseC}" var="type">
 								<c:if test="${type.materialoutuid eq bean.gid }"> --%>
 							<tr>
 								<td style="width: 20px;">${stat.count}</td>
-								<td><a href="${ctx}/wms/wareHouse_toAddMaterialOut.emi?materialOutgid=${bean.owhGid}">${bean.owhCode}</a></td>
+								<td><a href="${ctx}/wms/wareHouse_toAddMaterialOutMy.emi?materialOutgid=${bean.owhGid}&followmovinggid=${bean.followmovinggid}">${bean.owhCode}</a></td>
 								<%-- <td>${bean.departName}</td> --%>
 								<td>${bean.wareHouseName}</td>					
 								<td>${bean.good.goodscode}</td>
@@ -60,20 +53,13 @@
 								<td>${bean.good.goodsstandard}</td>
 								<td>${bean.good.unitName}</td>
 								<td><fmt:formatNumber type="number" value="${bean.number }" minFractionDigits="2" groupingUsed="false"/></td>
-								<%--<td>${bean.good.cstComUnitName}</td>--%>
-								<%--<c:if test="${not empty bean.good.cstcomunitcode}">	--%>
-								<%--<td><fmt:formatNumber type="number" value="${bean.assistNumber}" minFractionDigits="2"/></td>--%>
-								<%--</c:if>--%>
-								<%--<c:if test="${empty bean.good.cstcomunitcode}">--%>
-								<%--<td></td>--%>
-								<%--</c:if>--%>
 								<td>${bean.alocation}</td>
 								<td>${bean.barCode}</td>
-								<td>${bean.produceCode}</td> 	
-								<td>${bean.goodName}</td> 									
-								<%-- <td>${bean.recordPersonName}</td>
-								<td>${fn:substring(bean.billdate,0,10)}</td>
-								<td>${bean.notes}</td> --%>
+								<td>
+
+									<span ><a href="${ctx}/wms/wareHouse_toAddMaterialOutMy.emi?materialOutgid=${bean.owhGid}&followmovinggid=${bean.followmovinggid}" style="color: blue">审核</a></span>
+
+								</td>
 							</tr>
 							<%-- </c:if>
 							</c:forEach> --%>

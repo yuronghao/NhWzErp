@@ -64,8 +64,17 @@ public class WmMaterialoutC implements Serializable{
 	
 	@EmiColumn(name = "processRouteCGoodsUid")
 	private String processRouteCGoodsUid;//生产订单工艺材料表uid
-	
-	
+
+	private Integer followmovinggid;
+
+	public Integer getFollowmovinggid() {
+		return followmovinggid;
+	}
+
+	public void setFollowmovinggid(Integer followmovinggid) {
+		this.followmovinggid = followmovinggid;
+	}
+
 	@EmiColumn(name="cfree1" )
 	private String cfree1;
 	
@@ -86,7 +95,18 @@ public class WmMaterialoutC implements Serializable{
 	private String barCode;
 
 	@EmiColumn(name="materialapplycgid" )
-	private  String materialapplycgid;
+	private String materialapplycgid;
+
+
+	private Integer status;
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
 
 	public String getMaterialapplycgid() {
 		return materialapplycgid;

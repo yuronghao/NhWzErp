@@ -2020,7 +2020,7 @@ public class WareHouseService extends EmiPluginService {
             condition += " and usedInDBCK=1 ";
         } else if (taskType.equalsIgnoreCase(Constants.TASKTYPE_DBRK)) {//调拨入库
             condition += " and usedInDBRK=1 ";
-        } else if (taskType.equalsIgnoreCase(Constants.TASKTYPE_GXTL) || taskType.equalsIgnoreCase(Constants.TASKTYPE_GXLL)) {//生产材料出
+        } else if (taskType.equalsIgnoreCase(Constants.TASKTYPE_GXTL) || taskType.equalsIgnoreCase(Constants.TASKTYPE_GXLL) || taskType.equalsIgnoreCase(Constants.TASKTYPE_CLCK)) {//生产材料出
             condition += " and usedInCLCK=1 ";
         } else if (taskType.equalsIgnoreCase(Constants.TASKTYPE_XSCK) || taskType.equalsIgnoreCase(Constants.TASKTYPE_XSTHRK)) {//销售出库
             condition += " and usedInXSCK=1 ";
@@ -4179,22 +4179,25 @@ public class WareHouseService extends EmiPluginService {
         }
 
         boolean suc = wareHouseDao.emiInsert(wmMaterialout);// 插入销售出库主表
-        if (suc) {
-            suc = wareHouseDao.emiInsert(wmohclist);// 插入销售出库子表
-            if (suc) {
-//				List<WmAllocationstock> newAsList = getNewCurrentStockList(asList);
-                suc = updateStocksEntity(newAsList);// 修改货位现存量
-                if (suc) {
-                    // 增加批次
-                    if (wmBatchs.size() > 0) {
-                        wareHouseDao.addWmBatch(wmBatchs);
-                    }
-                }
+        suc = wareHouseDao.emiInsert(wmohclist);// 插入销售出库子表
+
+
+        int invoicestype = 2; //1：领用申请单  2：材料出库单     3：调拨单  4：报废单
+        String rdstylegid = wmMaterialout.getBusinesstypeuid();
+        String billgid =wmMaterialout.getGid();
+        boolean flag = this.postAudit(invoicestype,rdstylegid,billgid);
+        if(!flag){
+            //不存在审批规则，则执行后续操作
+            suc = updateStocksEntity(newAsList);// 修改货位现存量
+            if (wmBatchs.size() > 0) { // 增加批次
+                wareHouseDao.addWmBatch(wmBatchs);
             }
+
         }
         jobj.put("success", 1);
         jobj.put("failInfor", "");
         return jobj;
+
     }
 
     // 更新销售出库信息
@@ -5052,28 +5055,11 @@ public class WareHouseService extends EmiPluginService {
         if (suc) {
             suc = wareHouseDao.emiInsert(wmohclist);// 插入领用申请表子表
         }
-
-        //提交审核：
-        int  invoicestype = 1;//单据类型
-        String rdstylegid = wmMaterialapply.getRdstylegid();//单据审批类型
-        FollowRule followRule = wareHouseDao.getFollowRule(invoicestype,rdstylegid);
-        List<Map>  followRuleNodeUserList= wareHouseDao.getFollowRuleNodeUserList(followRule.getId());
-
-        //插入审核节点数据
-        List<FollowInfoMoving> list = new ArrayList<FollowInfoMoving>();
-        for(int  i = 0 ;i<followRuleNodeUserList.size();i++){
-            Map map  = followRuleNodeUserList.get(i);
-            FollowRuleNodeUser followRuleNodeUser = JSON.parseObject(JSON.toJSONString(map),FollowRuleNodeUser.class);
-            FollowInfoMoving followInfoMoving = new FollowInfoMoving();
-            followInfoMoving.setBillsgid(wmMaterialapply.getGid());//单据id
-            followInfoMoving.setCurrentnodeid(followRuleNodeUser.getId());
-            followInfoMoving.setCurrentnodeindex(followRuleNodeUser.getNodeindex());
-            followInfoMoving.setApprovaluser(followRuleNodeUser.getUserid());
-            followInfoMoving.setCtime(new Date());
-            list.add(followInfoMoving);
-        }
-        wareHouseDao.emiInsert(list);
-
+        int invoicestype = 1; //1：领用申请单  2：材料出库单     3：调拨单  4：报废单
+        String rdstylegid = wmMaterialapply.getRdstylegid();
+        String billgid =wmMaterialapply.getGid();
+        boolean flag = this.postAudit(invoicestype,rdstylegid,billgid);
+        //.....
         jobj.put("success", 1);
         jobj.put("failInfor", "");
         return jobj;
@@ -5129,34 +5115,406 @@ public class WareHouseService extends EmiPluginService {
     }
 
     public PageBean getAllListMaterialapplyMy(int pageIndex, int pageSize, String condition, String userid) {
+
+
         return wareHouseDao.getAllListMaterialapplyMy(pageIndex, pageSize, condition,userid);
     }
 
-    public void updateFollowMovingStatus(String type, String followmovinggid, String owhGid) {
+    public void updateFollowMovingStatus(String type, String followmovinggid, String owhGid, String billtype, Map<String, Object> session) {
+        int state = 0;//最终要修改的状态
+        String billtablename ="";//要修改的单据表名
+
         if(Integer.parseInt(type) == 1){
             //同意  修改当前节点的审批状态
             wareHouseDao.updateFollowMovingStatus(type,followmovinggid);
-            boolean flag = true;
             //判断当前节点是不是最后一个节点
             FollowInfoMoving followInfoMoving = wareHouseDao.getLastFollowMovingNode(owhGid);
             if (followInfoMoving.getId() == Integer.parseInt(followmovinggid)){
-                flag = true;//是最后一个节点
-                //修改单据 主表的审批状态 为已通过状态
-                wareHouseDao.updateBillStatus(2,owhGid);
+                state = 2;//是最后一个节点
+                //WM_MaterialApply 领用申请单
+                //WM_MaterialOut 材料出库单
+                //处理单据业务：
+                if(billtype != null && !"".equals(billtype)){
+                    switch (billtype){
+                        case "materialapply"://领用申请单
+
+                            break;
+                        case "materialout": //材料出库单
+                            System.out.println("开始处理 材料出库单审核通过业务");
+                            this.doMaterialOutAuditOk(followmovinggid,owhGid,session);
+                            break;
+
+                    }
+                }
+
+
             }else {
-                //修改单据 主表的审批状态 为在审核状态
-                wareHouseDao.updateBillStatus(1,owhGid);
+                //不是最后一个节点不处理业务
+                state = 1;
+
             }
 
         }else if(Integer.parseInt(type) == 2){
             //驳回
+            state =3;
             wareHouseDao.updateFollowMovingStatus(type,followmovinggid);
             //把该所有审核节点 审核状态为0的都设置为驳回2
             wareHouseDao.updateFollowMovingStatusBohui(owhGid);
 
-            //修改单据状态为 为驳回状态3
-            wareHouseDao.updateBillStatus(3,owhGid);
         }
+
+
+        switch (billtype){
+            case "materialapply"://领用申请单
+                System.out.println("修改单据 主表的审批状态 ");
+                billtablename = "WM_MaterialApply";
+                wareHouseDao.updateBillStatus(state,owhGid,billtablename);
+                break;
+            case "materialout": //材料出库单
+                System.out.println("修改单据 主表的审批状态 ");
+                billtablename = "WM_MaterialOut";
+                wareHouseDao.updateBillStatus(state,owhGid,billtablename);
+                break;
+
+        }
+
+
+    }
+
+    /**
+    * @Desc 材料出库   审批最终通过处理业务
+    * @author yurh
+    * @create 2018-05-05 10:36:12
+    **/
+    private JSONObject doMaterialOutAuditOk(String followmovinggid, String owhGid, Map<String, Object> session) {
+        JSONObject jobj = new JSONObject();
+        List<WmAllocationstock> asList = new ArrayList<WmAllocationstock>();
+        List<WmBatch> wmBatchs = new ArrayList<WmBatch>();
+        List list = wareHouseDao.getMaterialOutClist(owhGid);
+        List<WmMaterialapplyC> applyList = new ArrayList<WmMaterialapplyC>();//修改领用申请表数量
+        for(int i = 0;i<list.size();i++){
+            Map map = (Map) list.get(i);
+            WmMaterialoutC wm = JSON.parseObject(JSON.toJSONString(map),WmMaterialoutC.class);
+            //审核最终通过处理材料出库单数据
+            WmAllocationstock wmcat=new WmAllocationstock();////货位现存量入
+            wmcat.setBatch(wm.getBatchcode());
+            AaGoodsallocation gaIn=cacheCtrlService.getGoodsAllocation(wm.getGoodsallocationuid());//goodsAllocationUid[i]
+            AaGoods aaGoods = cacheCtrlService.getGoods(wm.getGoodsuid());
+            wmcat.setGoodsallocationcode(gaIn.getCode());
+            wmcat.setGoodsallocationuid(gaIn.getGid());
+            wmcat.setWhCode(gaIn.getWhcode());
+            wmcat.setGoodsuid(wm.getGoodsuid());//goodsUid[i]
+            if(aaGoods != null){
+                wmcat.setGoodscode(aaGoods.getGoodscode());//goodsCode[i]
+            }
+            wmcat.setNumber(wm.getNumber().negate());//取相反数mainNumber[i]
+            if(!CommonUtil.isNullObject(CommonUtil.Obj2String(wm.getBatchcode()))){//batch[i]
+                wmcat.setBatch(wm.getBatchcode());
+            }
+
+            wmcat.setOrggid(session.get("OrgId").toString());
+            wmcat.setSobgid(session.get("SobId").toString());
+            if(!CommonUtil.isNullObject(CommonUtil.Obj2String(wm.getBatchcode()))){                //判断是否有批次，有则添加到批次表
+                WmBatch wmb=new WmBatch();
+                wmb.setGid(UUID.randomUUID().toString());
+                wmb.setGoodsUid(wm.getGoodsuid());
+                wmb.setGoodsAllocationUid(wm.getGoodsallocationuid());
+                wmb.setBatch(wm.getBatchcode());
+                wmb.setNumber(wm.getNumber().negate());
+                if(wmb.getNumber().compareTo(BigDecimal.valueOf(0))>=0){
+                    wmb.setRedBlueFlag(1);//1、蓝字单据，0、红字单据
+                }else{
+                    wmb.setRedBlueFlag(0);//1、蓝字单据，0、红字单据
+                }
+                wmb.setRecordDate(new Timestamp(new Date().getTime()));
+                wmBatchs.add(wmb);
+            }
+            asList.add(wmcat);
+
+            WmMaterialapplyC wmMaterialapplyC = new WmMaterialapplyC();
+            wmMaterialapplyC.setGid(wm.getMaterialapplycgid());
+            wmMaterialapplyC.setReceivednumber(wm.getNumber());
+            applyList.add(wmMaterialapplyC);//需要更新已出库数量到申请表中
+
+
+        }
+
+
+
+        //出库时判断库存是否满足
+        List<WmAllocationstock> newAsList = getNewCurrentStockList(asList);//去重
+        boolean isEnough = isEnoughStock(newAsList);
+
+        if (!isEnough) {
+            jobj.put("success", 0);
+            jobj.put("failInfor", "存在库存不满足的记录");
+            return jobj;
+        }
+
+        updateStocksEntity(newAsList);// 修改货位现存量
+        if (wmBatchs.size() > 0) { // 增加批次
+            wareHouseDao.addWmBatch(wmBatchs);
+        }
+
+
+        //修改领用申请表实际领用数量
+        wareHouseDao.updateReciveNumberByApplyCGid(applyList);
+
+        jobj.put("success", 1);
+        jobj.put("failInfor", "");
+        return jobj;
+
+    }
+
+    public PageBean getAllListMaterialapplyMain(int pageIndex, int pageSize, String condition) {
+        return wareHouseDao.getAllListMaterialapplyMain(pageIndex, pageSize, condition);
+    }
+
+
+    /**
+    * @Desc 提交审核 公用方法
+    * @author yurh
+     * @param  invoicestype 单据类型
+     * @param  rdstylegid 审批类型 （单据里面选择，例：出库类型）
+     * @param  billgid 单据id
+    * @create 2018-05-04 10:54:25
+    **/
+    public boolean postAudit(int invoicestype,String rdstylegid,String billgid){
+        //提交审核：
+
+        boolean flag = false;
+        FollowRule followRule = wareHouseDao.getFollowRule(invoicestype,rdstylegid);
+        if(followRule != null){
+            List<Map>  followRuleNodeUserList= wareHouseDao.getFollowRuleNodeUserList(followRule.getId());
+            if(followRuleNodeUserList != null && followRuleNodeUserList.size() >0){
+                //插入审核节点数据
+                List<FollowInfoMoving> list = new ArrayList<FollowInfoMoving>();
+                for(int  i = 0 ;i<followRuleNodeUserList.size();i++){
+                    Map map  = followRuleNodeUserList.get(i);
+                    FollowRuleNodeUser followRuleNodeUser = JSON.parseObject(JSON.toJSONString(map),FollowRuleNodeUser.class);
+                    FollowInfoMoving followInfoMoving = new FollowInfoMoving();
+                    followInfoMoving.setBillsgid(billgid);//单据id
+                    followInfoMoving.setCurrentnodeid(followRuleNodeUser.getId());
+                    followInfoMoving.setCurrentnodeindex(followRuleNodeUser.getNodeindex());
+                    followInfoMoving.setApprovaluser(followRuleNodeUser.getUserid());
+                    followInfoMoving.setCtime(new Date());
+                    list.add(followInfoMoving);
+                }
+                wareHouseDao.emiInsert(list);
+                flag = true;
+                return flag;
+            }
+        }
+        return flag;
+
+    }
+
+
+    public PageBean getAllListMaterialoutMy(int pageIndex, int pageSize, String condition, String userid) {
+        return wareHouseDao.getAllListMaterialoutMy(pageIndex, pageSize, condition,userid);
+    }
+
+    public List<FollowInfoMoving> getFollowMovingListByBillid(String materialOutgid) {
+        return wareHouseDao.getFollowMovingListByBillid(materialOutgid);
+
+    }
+
+    public Map findCall(String callgid, String orgId, String sobId) {
+        //findSaleOutWarehouse
+        return wareHouseDao.findCall(callgid, orgId, sobId);
+
+    }
+
+    public List getWmCallDetailByWMS(String gid) {
+        List<wmCallC> wmclist = wareHouseDao.getWmCallDetailByWMS(gid);
+        List outlist = new ArrayList();
+//        for (wmCallC wmc : wmclist) {
+//            JSONObject jso = EmiJsonObj.fromObject(wmc);
+//            AaGoods ag = cacheCtrlService.getGoods(wmc.getGoodsUid());
+//            WmsGoodsCfree wgc = new WmsGoodsCfree();
+//            wgc.setIsShow(1);
+//            wgc.setName("工序");
+//            wgc.setValue(wmc.getCfree1());
+//            wgc.setColName("cfree1");
+//            List<WmsGoodsCfree> cfree = new ArrayList();
+//            cfree.add(wgc);
+//            jso.put("cfree", cfree);
+//            jso.put("goodsname", ag.getGoodsname());
+//            jso.put("goodsUnitMainName", ag.getUnitName());
+//            jso.put("goodsstandard", ag.getGoodsstandard());
+//            jso.put("goodscode", ag.getGoodscode());
+//            if (CommonUtil.isNullObject(ag.getCassComUnitName())) {
+//                jso.put("goodsUnitAssistName", "");
+//            } else {
+//                jso.put("goodsUnitAssistName", ag.getCassComUnitName());
+//            }
+//            outlist.add(jso);
+//        }
+        return wmclist;
+    }
+
+    /**
+    * @Desc 新增调拨单
+    * @author yurh
+    * @create 2018-05-08 08:57:43
+    **/
+    public JSONObject addCall(wmCall wmc, List<wmCallC> clist, WmOthersout wmoo, WmOtherwarehouse wmoh, List<WmOthersoutC> wmooclist, List<WmOtherwarehouseC> wmohclist, List<WmBatch> wmBatchs, List<WmAllocationstock> asList, String[] sqls) {
+        JSONObject jobj = new JSONObject();
+
+
+        List<WmAllocationstock> newAsList = getNewCurrentStockList(asList);
+        boolean isEnough = isEnoughStock(newAsList);
+        if (!isEnough) {
+            jobj.put("success", 0);
+            jobj.put("failInfor", "存在库存不满足的记录");
+            return jobj;
+        }
+        wareHouseDao.emiInsert(wmc);//调拨单主表
+        wareHouseDao.emiInsert(clist);//调拨单子表
+
+
+        int invoicestype = 3; //1：领用申请单  2：材料出库单     3：调拨单  4：报废单
+        String rdstylegid = wmc.getBusinessTypeUid();
+        String billgid =wmc.getGid();
+        boolean flag = this.postAudit(invoicestype,rdstylegid,billgid);
+        if(!flag){
+            //不存在审批规则，则执行后续操作
+            // 更改调拨单状态
+            wareHouseDao.updateCallState(wmc.getGid());
+            wareHouseDao.emiInsert(wmoo);// 插入其他入主表
+            wareHouseDao.emiInsert(wmooclist);// 插入其他入子表
+            wareHouseDao.emiInsert(wmoh);// 插入其他出主表
+            wareHouseDao.emiInsert(wmohclist);// 插入其他出子表
+            wareHouseDao.batchUpdate(sqls);// 回填调拨单已出库数量
+
+            updateStocksEntity(newAsList);// 修改货位现存量
+            if (wmBatchs.size() > 0) { // 增加批次
+                wareHouseDao.addWmBatch(wmBatchs);
+            }
+        }
+
+        jobj.put("success", 1);
+        jobj.put("failInfor", "");
+        return jobj;
+
+    }
+
+
+
+    /**
+    * @Desc 修改调拨单
+    * @author yurh
+    * @create 2018-05-08 15:42:49
+    **/
+    public JSONObject updateCall(wmCall wmc, List<wmCallC> clist, WmOthersout wmoo, WmOtherwarehouse wmoh, List<WmOthersoutC> wmooclist, List<WmOtherwarehouseC> wmohclist, List<WmBatch> wmBatchs, List<WmAllocationstock> asList, String[] sqls, boolean flag) {
+        JSONObject jobj = new JSONObject();
+        List<wmCallC> wmCallClist = wareHouseDao.getWmCallDetailByWMS(wmc.getGid());//处理之前保存的货位现存量 做合并
+        for (int i = 0; i < wmCallClist.size(); i++) {
+            AaGoods good = cacheCtrlService.getGoods(((Map) wmCallClist.get(i)).get("goodsUid").toString());
+            ((Map) wmCallClist.get(i)).put("good", good);
+
+            WmAllocationstock wmcat = new WmAllocationstock();// //出仓库的 -》货位现存量入
+            wmcat.setBatch(CommonUtil.isNullObject(((Map) wmCallClist.get(i)).get("batchCode")) ? null : ((Map) wmCallClist.get(i)).get("batchCode").toString());
+            AaGoodsallocation gaOut = cacheCtrlService.getGoodsAllocation(((Map) wmCallClist.get(i)).get("outgoodsAllocationUid").toString());
+            wmcat.setGoodsallocationcode(gaOut.getCode());
+            wmcat.setGoodsallocationuid(gaOut.getGid());
+            wmcat.setWhCode(gaOut.getWhcode());
+            wmcat.setGoodsuid(good.getGid());
+            wmcat.setGoodscode(good.getGoodscode());
+            wmcat.setNumber(new BigDecimal(((Map) wmCallClist.get(i)).get("number").toString()));
+            wmcat.setOrggid(wmc.getOrgGid());
+            wmcat.setSobgid(wmc.getSobGid());
+
+
+            WmAllocationstock wmcat2 = new WmAllocationstock();// //入仓库的 -》货位现存量出
+            wmcat2.setBatch(CommonUtil.isNullObject(((Map) wmCallClist.get(i)).get("batchCode")) ? null : ((Map) wmCallClist.get(i)).get("batchCode").toString());
+            AaGoodsallocation gaIn = cacheCtrlService.getGoodsAllocation(((Map) wmCallClist.get(i)).get("ingoodsAllocationUid").toString());
+            wmcat2.setGoodsallocationcode(gaIn.getCode());
+            wmcat2.setGoodsallocationuid(gaIn.getGid());
+            wmcat2.setWhCode(gaIn.getWhcode());
+            wmcat2.setGoodsuid(good.getGid());
+            wmcat2.setGoodscode(good.getGoodscode());
+            wmcat2.setNumber(new BigDecimal(((Map) wmCallClist.get(i)).get("number").toString()).negate());//取相反数
+            wmcat2.setOrggid(wmc.getOrgGid());
+            wmcat2.setSobgid(wmc.getSobGid());
+
+
+
+            if (!CommonUtil.isNullObject(((Map) wmCallClist.get(i)).get("batchCode"))) { // 判断是否有批次，有则添加到批次表
+
+                WmBatch wmb=new WmBatch();// 出仓库批次  入
+                wmb.setGid(UUID.randomUUID().toString());
+                wmb.setGoodsUid(good.getGid());
+                wmb.setGoodsAllocationUid(gaOut.getGid());
+                wmb.setBatch(wmcat.getBatch());
+                wmb.setNumber(new BigDecimal(((Map) wmCallClist.get(i)).get("number").toString()));
+                wmb.setRedBlueFlag(1);//1、蓝字单据，0、红字单据
+                wmb.setRecordDate(new Timestamp(new Date().getTime()));
+
+
+                WmBatch wmb2=new WmBatch();// 入仓库批次  出
+                wmb2.setGid(UUID.randomUUID().toString());
+                wmb2.setGoodsUid(good.getGid());
+                wmb2.setGoodsAllocationUid(gaIn.getGid());
+                wmb2.setBatch(wmcat.getBatch());
+                wmb2.setNumber(new BigDecimal(((Map) wmCallClist.get(i)).get("number").toString()).negate());
+                wmb2.setRedBlueFlag(0);//1、蓝字单据，0、红字单据
+                wmb2.setRecordDate(new Timestamp(new Date().getTime()));
+
+
+                wmBatchs.add(wmb);
+                wmBatchs.add(wmb2);
+            }
+            asList.add(wmcat);
+            asList.add(wmcat2);
+
+        }
+
+        //出库时判断库存是否满足
+        List<WmAllocationstock> newAsList = getNewCurrentStockList(asList);//去重
+        boolean isEnough = isEnoughStock(newAsList);
+        if (!isEnough) {
+            jobj.put("success", 0);
+            jobj.put("failInfor", "存在库存不满足的记录");
+            return jobj;
+        }
+
+        if(flag){
+            //存在审批的情况
+            wareHouseDao.deleteCallC(wmc.getGid());//删除调拨单子表
+            wareHouseDao.deleteOthersOutByDBD(wmc.getGid());//删除其他出库单主表
+            wareHouseDao.deleteOthersOutCByDBD(wmc.getGid());//删除其他出库单子表
+            wareHouseDao.deleteOtherWarehouseByDBD(wmc.getGid());//删除其他入库单主表
+            wareHouseDao.deleteOtherWarehouseCByDBD(wmc.getGid());//删除其他入库单子表
+
+            wareHouseDao.emiUpdate(wmc);// 更新调拨单主表
+            wareHouseDao.emiInsert(clist);//新增调拨单子表
+            wareHouseDao.emiInsert(wmoo);//新增调拨单子表
+            wareHouseDao.emiInsert(wmooclist);// 插入其他入子表
+            wareHouseDao.emiInsert(wmoh);// 插入其他出主表
+            wareHouseDao.emiInsert(wmohclist);// 插入其他出子表
+            updateStocksEntity(newAsList);// 修改货位现存量
+            if (wmBatchs.size() > 0) {
+                wareHouseDao.addWmBatch(wmBatchs);
+            }
+
+
+        }else{
+            //不存在审批的情况 只修改调拨单主表和子表
+            wareHouseDao.deleteCallC(wmc.getGid());//删除调拨单子表
+            wareHouseDao.emiInsert(clist);//新增调拨单子表
+            wareHouseDao.emiUpdate(wmc);// 更新调拨单主表
+        }
+
+
+
+
+
+
+
+
+
+        return null;
 
 
     }

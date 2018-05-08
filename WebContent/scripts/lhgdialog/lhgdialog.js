@@ -1646,6 +1646,8 @@ lhgdialog.confirm = function( content, yes, no, parent )
 	});
 };
 
+
+
 /**
  * 提问
  * @param	{String}	提问内容

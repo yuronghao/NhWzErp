@@ -110,7 +110,8 @@
 		<result name="materialApplyAdd">/WEB-INF/jsp/servicedata/wareHouse/materialApplyAdd.jsp</result>
 		<result name="materialApplyList">/WEB-INF/jsp/servicedata/wareHouse/materialApplyList.jsp</result>
 
-
+		<!-- 调拨单 -->
+		<result name="callAdd">/WEB-INF/jsp/servicedata/wareHouse/callAdd.jsp</result>
 
 
 
@@ -120,6 +121,7 @@
 		<result name="materialApplyAddMy">/WEB-INF/jsp/servicedata/wareHouse/materialApplyAddMy.jsp</result>
 		<!-- 材料出库单列表 -->
 		<result name="materialOutListgtasksMy">/WEB-INF/jsp/servicedata/wareHouse/materialOutListgtasksMy.jsp</result>
+		<result name="materialOutAddMy">/WEB-INF/jsp/servicedata/wareHouse/materialOutAddMy.jsp</result>
 		<!-- 调拨单列表 -->
 		<result name="allocationlistgtasksMy">/WEB-INF/jsp/servicedata/allocationManager/allocationlistgtasksMy.jsp</result>
 		<!-- 报废单列表 -->
