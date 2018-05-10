@@ -83,6 +83,17 @@ public class wmCall implements Serializable{
 	@EmiColumn(name="businessTypeUid")
 	private String businessTypeUid;
 
+	@EmiColumn(name="departmentUid")
+	private String departmentUid;
+
+	public String getDepartmentUid() {
+		return departmentUid;
+	}
+
+	public void setDepartmentUid(String departmentUid) {
+		this.departmentUid = departmentUid;
+	}
+
 	public String getBusinessTypeUid() {
 		return businessTypeUid;
 	}

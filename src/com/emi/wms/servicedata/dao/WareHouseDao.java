@@ -1564,7 +1564,7 @@ public class WareHouseDao extends BaseDao {
 		if(CommonUtil.isNullString(callgid)){
 			 sql = " SELECT" +
 					" TOP 1 "+CommonUtil.colsFromBean(wmCall.class, "wowh")+" " +
-					" FROM " +
+					" ,ymuser.userName as recordpersonName FROM " +
 					" WM_Call wowh " +
 					"LEFT JOIN YM_User ymuser ON ymuser.gid = wowh.recordPersonUid " +
 					" WHERE " +
@@ -1574,7 +1574,7 @@ public class WareHouseDao extends BaseDao {
 					" wowh.pk DESC  ";
 		}else{
 			sql = " SELECT "+CommonUtil.colsFromBean(wmCall.class, "wowh")+" " +
-					" FROM " +
+					" ,ymuser.userName as recordpersonName FROM " +
 					" WM_Call wowh " +
 					"LEFT JOIN YM_User ymuser ON ymuser.gid = wowh.recordPersonUid " +
 					" WHERE " +
@@ -1651,5 +1651,29 @@ public class WareHouseDao extends BaseDao {
 				" select wac.gid from WM_Call_C wac where wac.callUid = '"+gid+"' " +
 				" ) ";
 		this.update(sql);
+	}
+
+	/**
+	* @Desc 删除 调拨单主表
+	* @author yurh
+	* @create 2018-05-09 09:39:24
+	**/
+	public void deleteCall(String gid) {
+		String sql =" DELETE from WM_Call where gid = '"+gid+"' ";
+		this.update(sql);
+	}
+
+    public PageBean getallocationlist(int pageIndex, int pageSize, String condition) {
+		String sql = "select wmcall.gid,wmcall.pk,wmcall.billCode,wmcall.billDate,wmcall.outWhUid,wmcall.inWhUid,wmcallc.goodsUid,wmcallc.number,wmcallc.outgoodsAllocationUid,wmcallc.ingoodsAllocationUid,wmcallc.outnumber,wmcallc.outassistNumber,wmcallc.cfree1,wmcallc.cfree2 from WM_Call wmcall left join WM_Call_C wmcallc on wmcallc.callUid = wmcall.gid where 1=1 ";
+		if(!CommonUtil.isNullString(condition)){
+			sql += condition;
+		}
+		return this.emiQueryList(sql, pageIndex, pageSize, "");
+
+    }
+
+	public List getcolumns() {
+		String sql = "select * from AA_freeSet where projectName is not null and projectName !='' ";
+		return this.queryForList(sql);
 	}
 }

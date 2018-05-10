@@ -40,15 +40,15 @@
 			 					<th>调入货位</th>
 			 					<th>应调出数量</th>
 			 					<th>已调出数量</th>
-			 					<c:forEach var="column" items="${columns}" varStatus="stat">
-			 					<th>${column.projectName}</th>
-			 					</c:forEach>
+			 					<%--<c:forEach var="column" items="${columns}" varStatus="stat">--%>
+			 					<%--<th>${column.projectName}</th>--%>
+			 					<%--</c:forEach>--%>
 			 					
 			 				</tr>
 			 				<c:forEach var="bean" items="${data.list }" varStatus="stat">
 							<tr>
 								<td style="width: 120px;">${stat.count}</td>
-								<td>${bean.billCode}</td>
+								<td><a href="${ctx}/wms/wareHouse_toAddCall.emi?callgid=${bean.gid}">${bean.billCode}</a></td>
 								<td>${fn:substring(bean.billDate,0,10)}</td>
 								<td>${bean.good.goodsname}</td>
 								<td>${bean.good.goodscode}</td>
@@ -59,9 +59,9 @@
 								<td>${bean.aagoodsallocationin.name}</td>
 								<td><fmt:formatNumber type="number" value="${bean.number}" minFractionDigits="2"/></td>
 								<td><fmt:formatNumber type="number" value="${bean.outnumber}" minFractionDigits="2"/></td>
-								<c:forEach var="column" items="${columns}" varStatus="stat">
-			 					<td>${bean[column.projectCode]}</td>
-			 					</c:forEach>
+								<%--<c:forEach var="column" items="${columns}" varStatus="stat">--%>
+			 					<%--<td>${bean[column.projectCode]}</td>--%>
+			 					<%--</c:forEach>--%>
 							</tr>
 						</c:forEach>
 			 			</tbody>

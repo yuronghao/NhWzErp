@@ -1524,25 +1524,24 @@ public class WareHouseAction extends BaseAction{
 					setRequstAttribute("department", department);
 				}
 
-				if(!CommonUtil.isNullObject(call.get("notes"))){
-					//使用部门 放在备注里了
-					AaDepartment departmentuse = cacheCtrlService.getDepartment(call.get("notes").toString());
-					setRequstAttribute("departmentuse", departmentuse);
-				}
 
 
-				if(!CommonUtil.isNullObject(call.get("whUid"))){
-					AaWarehouse warehouse = cacheCtrlService.getWareHouse(call.get("whUid").toString());
-					setRequstAttribute("warehouse", warehouse);
+
+				if(!CommonUtil.isNullObject(call.get("outwhUid"))){
+					AaWarehouse outwarehouse = cacheCtrlService.getWareHouse(call.get("outwhUid").toString());
+					setRequstAttribute("outwarehouse", outwarehouse);
 				}
-				if(!CommonUtil.isNullObject(call.get("recordPerson"))){
-					AaPerson aaperson = cacheCtrlService.getPerson(call.get("recordPerson").toString());
+				if(!CommonUtil.isNullObject(call.get("inwhUid"))){
+					AaWarehouse inwarehouse = cacheCtrlService.getWareHouse(call.get("inwhUid").toString());
+					setRequstAttribute("inwarehouse", inwarehouse);
+				}
+
+				if(!CommonUtil.isNullObject(call.get("recordPersonUid"))){
+					AaPerson aaperson = cacheCtrlService.getPerson(call.get("recordPersonUid").toString());
 					setRequstAttribute("aaperson", aaperson);
 				}
-				if(!CommonUtil.isNullObject(call.get("customerUid"))){
-					AaProviderCustomer customer = cacheCtrlService.getProviderCustomer(call.get("customerUid").toString());
-					setRequstAttribute("customer", customer);
-				}
+
+
 				if(!CommonUtil.isNullObject(call.get("gid"))){
 					List wmCallC = wareHouseService.getWmCallDetailByWMS(call.get("gid").toString());
 					for(int i=0;i<wmCallC.size();i++){
@@ -2210,6 +2209,8 @@ public class WareHouseAction extends BaseAction{
 			wmc.setNotes(getParameter("notes"));
 			wmc.setBusinessTypeUid(getParameter("businessTypeUid"));
 			wmc.setStatus(0);
+			wmc.setBillDate(getParameter("billDate").length()>0?new Timestamp(DateUtil.stringtoDate(getParameter("billDate"), "yyyy-MM-dd").getTime()):null);
+			wmc.setDepartmentUid(depUid);
 
 
 			// 其他出主表
@@ -2278,6 +2279,7 @@ public class WareHouseAction extends BaseAction{
 					wmcc.setIngoodsAllocationUid(ingoodsAllocationUid[i]);//调入货位
 					wmcc.setNumber(new BigDecimal(mainNumber[i]));
 					wmcc.setOutnumber(new BigDecimal(mainNumber[i]));
+					wmcc.setNotes(note[i]);
 					clist.add(wmcc);
 
 					WmAllocationstock wmcat=new WmAllocationstock();////货位现存量出
@@ -2639,6 +2641,9 @@ public class WareHouseAction extends BaseAction{
 			wmc.setNotes(getParameter("notes"));
 			wmc.setBusinessTypeUid(getParameter("businessTypeUid"));
 			wmc.setStatus(0);
+			wmc.setBillDate(getParameter("billDate").length()>0?new Timestamp(DateUtil.stringtoDate(getParameter("billDate"), "yyyy-MM-dd").getTime()):null);
+			wmc.setDepartmentUid(depUid);
+
 
 			// 其他出主表
 			String wmoouid = UUID.randomUUID().toString();
@@ -2700,6 +2705,7 @@ public class WareHouseAction extends BaseAction{
 					wmcc.setIngoodsAllocationUid(ingoodsAllocationUid[i]);//调入货位
 					wmcc.setNumber(new BigDecimal(mainNumber[i]));
 					wmcc.setOutnumber(new BigDecimal(mainNumber[i]));
+					wmcc.setNotes(note[i]);
 					clist.add(wmcc);
 
 					WmAllocationstock wmcat=new WmAllocationstock();////货位现存量出
@@ -2815,9 +2821,6 @@ public class WareHouseAction extends BaseAction{
 			JSONObject jobj=wareHouseService.updateCall(wmc,clist,wmoo,wmoh,wmooclist,wmohclist,wmBatchs,asList,sqls,flag);
 			getResponse().getWriter().write(jobj.toString());
 
-
-			getResponse().getWriter().write(jobj.toString());
-
 		}catch(Exception e){
 			writeErrorOrSuccess(0, "提交失败！");
 			e.printStackTrace();
@@ -2846,6 +2849,40 @@ public class WareHouseAction extends BaseAction{
 				e.printStackTrace();
 			}
 		}
+
+
+
+		/**
+		* @Desc  删除调拨单
+		* @author yurh
+		* @create 2018-05-09 09:29:06
+		**/
+	public void deleteCall(){
+		try {
+			String gid = getParameter("gid");
+			wmCall wmcall =new wmCall();
+			wmcall.setGid(gid);
+			wmcall.setSobGid(getSession().get("SobId").toString());
+			wmcall.setOrgGid(getSession().get("OrgId").toString());
+			boolean flag = false;
+			if(wmcall != null && wmcall.getGid()!= null){
+				//判断是否有审批
+				List<FollowInfoMoving> followInfoMovingList = wareHouseService.getFollowMovingListByBillid(wmcall.getGid());
+				if(followInfoMovingList != null && followInfoMovingList.size()>0){
+					//存在审批
+					flag = true;
+				}else{
+					flag = false;
+				}
+			}
+			JSONObject jobj=wareHouseService.deleteCall(wmcall,flag);
+			getResponse().getWriter().write(jobj.toString());
+
+		} catch (Exception e) {
+			writeErrorOrSuccess(0, "提交失败！");
+			e.printStackTrace();
+		}
+	}
 
 
 
@@ -3596,64 +3633,42 @@ public class WareHouseAction extends BaseAction{
 	 **/
 	public String gtasksMygetAllocationList(){
 		try{
-			//String page=this.getRequest().getParameter("pageIndex");//Integer.valueOf(page);
+			String userid = CommonUtil.Obj2String(getSession().get("UserId"));//当前登陆人id
+
 			int pageIndex = getPageIndex();
 			int pageSize = getPageSize();
 			String keyWord = getParameter("keyWord");//搜索关键字
-			String condition = CommonUtil.combQuerySql("owh.billCode,wpo.billCode", keyWord);
-			String sortCon="";
-			if(!CommonUtil.isNullString(keyWord)){
-				List<AaGoods> goods=cacheCtrlService.setGoods();
-				for (AaGoods aaGoods : goods) {
-					String gid="";
-					if (aaGoods.getGoodsname().equals(keyWord)||aaGoods.getGoodscode().equals(keyWord)) {
-						gid+=aaGoods.getGid();
-						sortCon+="or wmc.goodsUid like '%"+gid+"%'";
-					}
-				}
-			}
-			sortCon=" "+sortCon+")";
-			condition=condition.replace(")", sortCon);
+			String condition = CommonUtil.combQuerySql("wmcall.billCode", keyWord);
 			setRequstAttribute("keyWord",keyWord);
 			String orgId=getSession().get("OrgId").toString();
 			String sobId=getSession().get("SobId").toString();
-			condition+=" and owh.sobGid='"+sobId+"' and owh.orgGid='"+orgId+"'";
-
-			PageBean list = wareHouseService.getAllListMaterialout(pageIndex, pageSize, condition);
-			for(int i=0;i<list.getList().size();i++){
-				if(!CommonUtil.isNullString(((WmMaterialoutC)list.getList().get(i)).getRecordPerson())){
-					YmUser ymuser = cacheCtrlService.getUser(((WmMaterialoutC)list.getList().get(i)).getRecordPerson().toString());
-					if(!CommonUtil.isNullObject(ymuser)){
-						((WmMaterialoutC)list.getList().get(i)).setRecordPersonName(ymuser.getUserName());
-					}
+			condition+=" and wmcall.sobGid='"+sobId+"' and wmcall.orgGid='"+orgId+"'";
+			PageBean allocationlist = wareHouseService.getallocationlist(pageIndex,pageSize,condition);
+			for(int i=0;i<allocationlist.getList().size();i++){
+				if(!CommonUtil.isNullObject(((Map)allocationlist.getList().get(i)).get("goodsUid"))){
+					AaGoods good = cacheCtrlService.getGoods(((Map)allocationlist.getList().get(i)).get("goodsUid").toString());
+					((Map)allocationlist.getList().get(i)).put("good", good);
 				}
-				if(!CommonUtil.isNullString(((WmMaterialoutC)list.getList().get(i)).getDepartId())){
-					AaDepartment department = cacheCtrlService.getDepartment(((WmMaterialoutC)list.getList().get(i)).getDepartId().toString());
-					if(!CommonUtil.isNullObject(department)){
-						((WmMaterialoutC)list.getList().get(i)).setDepartName(department.getDepname());
-					}
+				if(!CommonUtil.isNullObject(((Map)allocationlist.getList().get(i)).get("outWhUid"))){
+					AaWarehouse aawarehouseout = cacheCtrlService.getWareHouse(((Map)allocationlist.getList().get(i)).get("outWhUid").toString());
+					((Map)allocationlist.getList().get(i)).put("aawarehouseout", aawarehouseout);
 				}
-				if(!CommonUtil.isNullString(((WmMaterialoutC)list.getList().get(i)).getWhUid())){
-					AaWarehouse warehouse  = cacheCtrlService.getWareHouse(((WmMaterialoutC)list.getList().get(i)).getWhUid().toString());
-					if(!CommonUtil.isNullObject(warehouse)){
-						((WmMaterialoutC)list.getList().get(i)).setWareHouseName(warehouse.getWhname());
-					}
+				if(!CommonUtil.isNullObject(((Map)allocationlist.getList().get(i)).get("inWhUid"))){
+					AaWarehouse aawarehousein = cacheCtrlService.getWareHouse(((Map)allocationlist.getList().get(i)).get("inWhUid").toString());
+					((Map)allocationlist.getList().get(i)).put("aawarehousein", aawarehousein);
 				}
-				if (!CommonUtil.isNullString(((WmMaterialoutC)list.getList().get(i)).getGoodName())) {
-					AaGoods good=cacheCtrlService.getGoods(((WmMaterialoutC)list.getList().get(i)).getGoodName());
-					((WmMaterialoutC)list.getList().get(i)).setGoodName(good.getGoodsname());
+				if(!CommonUtil.isNullObject(((Map)allocationlist.getList().get(i)).get("outgoodsAllocationUid"))){
+					AaGoodsallocation aagoodsallocationout= cacheCtrlService.getGoodsAllocation(((Map)allocationlist.getList().get(i)).get("outgoodsAllocationUid").toString());
+					((Map)allocationlist.getList().get(i)).put("aagoodsallocationout", aagoodsallocationout);
+				}
+				if(!CommonUtil.isNullObject(((Map)allocationlist.getList().get(i)).get("ingoodsAllocationUid"))){
+					AaGoodsallocation aagoodsallocationin= cacheCtrlService.getGoodsAllocation(((Map)allocationlist.getList().get(i)).get("ingoodsAllocationUid").toString());
+					((Map)allocationlist.getList().get(i)).put("aagoodsallocationin", aagoodsallocationin);
 				}
 			}
-			for(int i=0;i<list.getList().size();i++){
-				AaGoods good = cacheCtrlService.getGoods(((WmMaterialoutC)list.getList().get(i)).getGoodsuid().toString());
-				((WmMaterialoutC)list.getList().get(i)).setGood(good);
-				AaGoodsallocation alocation=cacheCtrlService.getGoodsAllocation(((WmMaterialoutC)list.getList().get(i)).getGoodsallocationuid());
-				if(alocation != null){
-					((WmMaterialoutC)list.getList().get(i)).setAlocation(alocation.getName());
-				}
-			}
-			setRequstAttribute("data", list);
-			//setRequstAttribute("outlist", listMaterialout);
+			List columns = wareHouseService.getcolumns();
+			setRequstAttribute("columns", columns);
+			setRequstAttribute("data", allocationlist);
 		}catch(Exception e){
 			e.printStackTrace();
 		}

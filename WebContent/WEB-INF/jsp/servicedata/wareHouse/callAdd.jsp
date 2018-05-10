@@ -161,7 +161,7 @@
 						url:'${ctx}/wms/wareHouse_updateCall.emi',
 						type:"post",
 						data:$('#myform').serialize(),
-						success:function(da){					
+						success:function(da){
 							var obj=eval("("+da+")");
 							if(obj.success==1){
 								window.location.href = '${ctx}/wms/wareHouse_toAddCall.emi';
@@ -181,14 +181,14 @@
 		function deletesob(gid) {
 			if (confirm("是否确定删除?")) {
 				$.ajax({
-							url : '${ctx}/wms/wareHouse_deleteMaterialOutWarehouse.emi',
+							url : '${ctx}/wms/wareHouse_deleteCall.emi',
 							type : 'post',
 							data : {gid : gid},
 							success : function(da) {	
 								
 								var obj=eval("("+da+")");
 								if(obj.success==1){
-									window.location.href = '${ctx}/wms/wareHouse_toAddMaterialOut.emi';
+									window.location.href = '${ctx}/wms/wareHouse_toAddCall.emi';
 								}else{
 									$.dialog.alert_e(obj.failInfor);
 								}
@@ -203,12 +203,12 @@
 		
 		//放弃
 		function giveup() {
-			location.href = '${ctx}/wms/wareHouse_toAddMaterialOut.emi';
+			location.href = '${ctx}/wms/wareHouse_toAddCall.emi';
 		}
 		
 		
 		function getprocurearrivallist(){
-			window.location.href = '${ctx}/wms/wareHouse_materialOutWarehouseList.emi';
+			window.location.href = '${ctx}/wms/allocation_getAllocationList.emi';
 		}
 		
 		function getSerial(){
@@ -685,8 +685,8 @@
 		 				<li class="wordli fl">
 							<div class="wordname fl">调出仓库：</div>
 							<div class="wordnameinput fl">
-							<input type="text" name="outwhName" id="outwhName" class="toDealInput" value="${warehouse.outwhname}">
-							<input type="hidden" value="${call['outwhUid']}" id="outwhUid" name="outwhUid">
+							<input type="text" name="outwhName" id="outwhName" class="toDealInput" value="${outwarehouse.whname}">
+							<input type="hidden" value="${call['outWhUid']}" id="outwhUid" name="outwhUid">
 							</div>
 							<div class="cf"></div> 
 		 				</li>
@@ -719,8 +719,8 @@
 						<li class="wordli fl">
 							<div class="wordname fl">调入仓库：</div>
 							<div class="wordnameinput fl">
-								<input type="text" name="inwhName" id="inwhName" class="toDealInput" value="${warehouse.inwhname}">
-								<input type="hidden" value="${call['inwhUid']}" id="inwhUid" name="inwhUid">
+								<input type="text" name="inwhName" id="inwhName" class="toDealInput" value="${inwarehouse.whname}">
+								<input type="hidden" value="${call['inWhUid']}" id="inwhUid" name="inwhUid">
 							</div>
 							<div class="cf"></div>
 						</li>
@@ -789,12 +789,12 @@
 				 		    </td>
 				 		     <td class="gid" style="display:none"><input type="hidden" id="" name="gid" class="listword" value="${type.gid}" /></td>
 				 		
-				 		    <td class="goodsUid" style="display:none"><input type="text" id="" name="goodsUid" class="listword" value="${type.goodsuid}"></td>
-			                <td class="goodsCode"><input type="text" id="" name="goodsCode" class="listword" value="${type.good.goodscode}" readonly="readonly" ></td>
-			                <td class="goodsName"><input type="text" id="" name="goodsName" class="listword" value="${type.good.goodsname}" readonly="readonly"></td>
-			                <td class="goodsstandard"><input type="text" id="" name="goodsstandard" class="listword" value="${type.good.goodsstandard}" readonly="readonly"></td>
+				 		    <td class="goodsUid" style="display:none"><input type="text" id="" name="goodsUid" class="listword" value="${type.goodsUid}"></td>
+			                <td class="goodsCode"><input type="text" id="" name="goodsCode" class="listword" value="${type.goods.goodscode}" readonly="readonly" ></td>
+			                <td class="goodsName"><input type="text" id="" name="goodsName" class="listword" value="${type.goods.goodsname}" readonly="readonly"></td>
+			                <td class="goodsstandard"><input type="text" id="" name="goodsstandard" class="listword" value="${type.goods.goodsstandard}" readonly="readonly"></td>
 			             
-			                <td class="mainUnit" ><input type="text" id="" name="mainUnit" class="listword" value="${type.good.unitName}" readonly="readonly"></td>
+			                <td class="mainUnit" ><input type="text" id="" name="mainUnit" class="listword" value="${type.goods.unitName}" readonly="readonly"></td>
 			                <td class="mainNumber"><input type="text" id="" name="mainNumber" class="listword toDealInput numric" value="<fmt:formatNumber type="number" value="${type.number}" minFractionDigits="2" groupingUsed="false" />" onchange="changeFlag(this)"></td>		             
 			                <%--<td class="assistUnit"><input type="text" id="" name="assistUnit" class="listword" value="${type.good.cstComUnitName}" readonly="readonly"></td>--%>
 			               <%--  <td class="assistUnitcode" style="display:none"><input type="text" id="" name="assistUnitcode" class="listword jnumric" value="${type.good.cstcomunitcode}" readonly="readonly"></td>
@@ -808,14 +808,14 @@
 							<%--<td class="assistNumber"><input type="text" id="" name="assistNumber" class="listword" value="" readonly="readonly"></td>--%>
 							<%--</c:if>--%>
 			                
-			                <td class="outgoodsAllocationName"><input type="text" id="" name="outgoodsAllocationName" class="listword  outjjjnumric" value="${type.outalocation}" readonly="readonly" ></td>
-			                <td class="outgoodsAllocationUid" style="display:none"><input type="text" id="" name="outgoodsAllocationUid" class="listword toDealInput" value="${type.outgoodsallocationuid}" readonly="readonly"></td>
+			                <td class="outgoodsAllocationName"><input type="text" id="" name="outgoodsAllocationName" class="listword  outjjjnumric" value="${type.outAllocationName}" readonly="readonly" ></td>
+			                <td class="outgoodsAllocationUid" style="display:none"><input type="text" id="" name="outgoodsAllocationUid" class="listword toDealInput" value="${type.outgoodsAllocationUid}" readonly="readonly"></td>
 
-							<td class="ingoodsAllocationName"><input type="text" id="" name="ingoodsAllocationName" class="listword  injjjnumric" value="${type.inalocation}" readonly="readonly" ></td>
-							<td class="ingoodsAllocationUid" style="display:none"><input type="text" id="" name="ingoodsAllocationUid" class="listword toDealInput" value="${type.ingoodsallocationuid}" readonly="readonly"></td>
+							<td class="ingoodsAllocationName"><input type="text" id="" name="ingoodsAllocationName" class="listword  injjjnumric" value="${type.inAllocationName}" readonly="readonly" ></td>
+								<td class="ingoodsAllocationUid" style="display:none"><input type="text" id="" name="ingoodsAllocationUid" class="listword toDealInput" value="${type.ingoodsAllocationUid}" readonly="readonly"></td>
 
 
-			             	<td class="batch"><input type="text" id="" name="batch" class="listword " value="${type.batchcode}" readonly="readonly"></td>
+			             	<td class="batch"><input type="text" id="" name="batch" class="listword " value="${type.batch}" readonly="readonly"></td>
 			                <%--<td class="barCode"><input type="text" id="" name="barCode" class="listword " value="${type.barCode}" readonly="readonly"></td>--%>
 			                <td class="note"><input type="text" id="" name="note" class="listword toDealInput" value="${type.notes}" readonly="readonly"></td>
 				 		    <%--<td class="produceCode"><input type="text" id="" name="produceCode" class="listword toDealInput" value="${type.produceCode}" readonly="readonly"></td>--%>
@@ -836,7 +836,7 @@
 					<div class="wordname fl">录入人：</div>
 					<div class="wordnameinput fl">
 					<input type="text" value="${call['recordpersonName']}" id="recordPersonName" name="recordPersonName" readonly="readonly">
-					<input type="hidden" id="recordPersonUid" name="recordPersonUid" value="${call['recordPersonId']}">
+					<input type="hidden" id="recordPersonUid" name="recordPersonUid" value="${call['recordPersonUid']}">
 					</div>
 					<div class="cf"></div> 
  				</li>

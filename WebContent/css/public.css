@@ -1,0 +1,153 @@
+	/*公共样式*/
+	
+	@charset "utf-8";
+
+	/**{
+		margin:0;
+		padding:0;
+	}*/
+
+	ul{
+		margin: 0;
+		padding: 0;
+	}
+
+
+	.w100{
+		width: 100%;
+	}
+	.w50{
+		width: 50%;
+	}
+	
+	.h100{
+		height: 100%;
+	}
+	.h50{
+		height: 50%;
+	}
+
+	.f1{
+		flex: 1;
+	}
+
+	.bgw{
+		background: white;
+	}
+	.cw{
+		color: white;
+	}
+	
+	.ma{
+		margin: auto;
+	}
+
+	.tl{
+		text-align:left;
+	}
+	.tr{
+		text-align:right;
+	}
+	.tc{
+		text-align:center;
+	}
+	.tj{
+		text-align: justify;
+	}
+
+	.pr{
+		position:relative;
+	}
+	.pa{
+		position:absolute;
+	}
+	.pf{
+		position:fixed;
+	}
+
+	.fl{
+		float:left;
+	}
+	.fr{
+		float:right;
+	}
+	.fn{
+		float:none;
+	}
+	.clearfix:after{
+		content:"";
+		display:block;
+		clear:both;
+	}
+
+	.vm{
+		vertical-align:middle;
+	}
+	.fw{
+		font-weight:bold;
+	}
+
+	.ellipsis{
+		white-space:nowrap;
+		overflow:hidden;
+		text-overflow:ellipsis;
+	}
+	
+	ul li{
+		list-style:none;
+	}
+
+	.dis-f{
+		display: flex;
+	}
+	.dis-in{
+		display:inline;
+	}
+	.dis-b{
+		display:block;
+	}
+	.dis-n{
+		display:none;
+	}
+	.dis-inb{
+		display:inline-block;
+	}
+
+	.br{
+		border-radius:50%;
+	}
+	.bn{
+		border: none;
+	}
+
+	.fh{
+		overflow:hidden;
+	}
+	.fxa{
+		overflow-x: auto;
+	}
+	.fya{
+		overflow-y: auto;
+	}
+
+
+	.cur{
+		cursor:pointer;
+	}
+
+
+	.size12{
+		font-size: 12px;
+	}
+	.size14{
+		font-size: 14px;
+	}
+	.size16{
+		font-size: 16px;
+	}
+	.size18{
+		font-size: 18px;
+	}
+	.size20{
+		font-size: 20px;
+	}

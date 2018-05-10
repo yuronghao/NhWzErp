@@ -48,7 +48,7 @@
 			 				<c:forEach var="bean" items="${data.list }" varStatus="stat">
 							<tr>
 								<td style="width: 120px;">${stat.count}</td>
-								<td>${bean.billCode}</td>
+								<td><a href="${ctx}/wms/wareHouse_toAddCall.emi?callgid=${bean.gid}">${bean.billCode}</a></td>
 								<td>${fn:substring(bean.billDate,0,10)}</td>
 								<td>${bean.good.goodsname}</td>
 								<td>${bean.good.goodscode}</td>

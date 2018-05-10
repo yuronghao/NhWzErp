@@ -37,7 +37,7 @@
         </property>  
         <!-- 后续延迟 -->  
         <property name="period">
-            <value>3600000</value> <!-- 36秒 -->
+            <value>60000</value> <!-- 一分钟  -->
         </property>  
         <!-- 指定触发器信息 -->  
         <property name="timerTask">  

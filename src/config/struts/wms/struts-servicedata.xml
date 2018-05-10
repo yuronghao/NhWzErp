@@ -123,7 +123,7 @@
 		<result name="materialOutListgtasksMy">/WEB-INF/jsp/servicedata/wareHouse/materialOutListgtasksMy.jsp</result>
 		<result name="materialOutAddMy">/WEB-INF/jsp/servicedata/wareHouse/materialOutAddMy.jsp</result>
 		<!-- 调拨单列表 -->
-		<result name="allocationlistgtasksMy">/WEB-INF/jsp/servicedata/allocationManager/allocationlistgtasksMy.jsp</result>
+		<result name="allocationlistgtasksMy">/WEB-INF/jsp/servicedata/allocationManager/allocationListgtasksMy.jsp</result>
 		<!-- 报废单列表 -->
 		<result name="othersOutListgtasksMy">/WEB-INF/jsp/servicedata/wareHouse/othersOutListgtasksMy.jsp</result>
 

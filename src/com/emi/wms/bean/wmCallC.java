@@ -54,6 +54,16 @@ public class wmCallC implements Serializable{
 	@EmiColumn(name="batch")
 	private String batch;
 
+	@EmiColumn(name="notes")
+	private String notes;
+
+	public String getNotes() {
+		return notes;
+	}
+
+	public void setNotes(String notes) {
+		this.notes = notes;
+	}
 
 	private String goodName;
 
