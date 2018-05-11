@@ -123,14 +123,14 @@
 				<header class="pa"></header>
 				<footer class="pa"></footer>
 			</div>
-			<div class="loginRight h100 fr bgw">
+			<div class="loginRight h100 fr bgw" style="padding: 40px 40px 0;">
 				<div class="h100">
 					<header class="tc">
 						<span class="size20">用户登录</span>
 					</header>
-					<section>
+					<section style="margin: 60px 0 40px;">
 						<p><input class="w100 bn size14" type="text" id="userName" name="userName" placeholder="请输入账号"></p>
-						<p><input class="w100 bn size14" type="text" id="password" name="password" placeholder="请输入密码"></p>
+						<p><input class="w100 bn size14" type="password" id="password" name="password" placeholder="请输入密码"></p>
 						<%--<p class="pr">--%>
 							<%--<input class="w100 bn size14" type="text" placeholder="请输入验证码">--%>
 							<%--<img class="pa cur" src="${ctx }/img/loginbg.png" alt="">--%>

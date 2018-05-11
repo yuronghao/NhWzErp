@@ -256,11 +256,7 @@
 						'<td class="mainNumber"><input type="text" id="" name="mainNumber" class="listword numric" value="" onchange="changeFlag(this)"></td>';
 						
 						// '<td class="assistUnit"><input type="text" id="" name="assistUnit" class="listword" value="'+chek.eq(i).attr("cstComUnitName")+'" readonly="readonly"></td>';
-						var binvbach='';
-						if(chek.eq(i).attr("binvbach")=='1')
-						{
-							binvbach=$("#time").val();
-						}
+                        var binvbach=chek.eq(i).attr("binvbach");
 						// if(chek.eq(i).attr("cstcomunitcode")!='')
 						// 	{
 						// 	strs+='<td class="assistUnitcode" style="display:none"><input type="text" id="" name="assistUnitcode" class="listword jnumric" value="'+chek.eq(i).attr("cstcomunitcode")+'" readonly="readonly"></td>'+
@@ -274,7 +270,7 @@
 					strs+='<td class="goodsAllocationName"><input type="text" id="" name="goodsAllocationName" class="listword jjjnumric"  readonly="readonly" onclick="clickFlag(this)"></td>'+
 						'<td class="goodsAllocationUid" style="display:none"><input type="text" id="" name="goodsAllocationUid" class="listword "  readonly="readonly" ></td>'+
 						
-						'<td class="batch" ><input type="text" id="" name="batch" class="listword batchInput" value="'+binvbach+'" ></td>'+
+						'<td class="batch" ><input type="text" id="" name="batch" class="listword batchInput"  value="" isbatch="'+binvbach+'"></td>'+
 						
                         <%--'<td class="barCode"><input type="text" id="" name="barCode" class="listword "  readonly="readonly"></td>'+--%>
                         <%--'<td class="note"><input type="text" id="" name="note" class="listword" value=""></td>'+--%>
@@ -287,6 +283,7 @@
 						$("#contr").append(strs);
 						getSerial();
 						$(".numric").numeral(6);
+                        setIsbatch();
 					}
 				},
 				cancelVal:"关闭",
@@ -295,6 +292,59 @@
 				});
 			
 		}
+
+
+        function setIsbatch(){
+            var batchs=$('.batchInput');
+
+            for(var i=0;i<batchs.length;i++){
+                if(batchs.eq(i).attr("isbatch")!=1){
+                    batchs.eq(i).attr('readonly','readonly');
+                }
+                if(batchs.eq(i).attr("isbatch")==1){
+
+                    batchs.eq(i).attr('onclick','getBatch(this)');
+                }
+            }
+        }
+
+
+        /*获得批次信息*/
+        function getBatch(obj){
+
+            if($('#badge').val()==0){//红字时不弹出批次框
+                return;
+            }
+
+            if($(obj).parent().prev().children().val()=="" || $(obj).parent().prev().children().val() == null){
+                $.dialog.alert_w("货位号不能为空！");
+                return;
+            }
+
+            var goodsUid = $(obj).parent().parent().find("input[name='goodsUid']").val();
+            var goodsAllocationUid=$(obj).parent().parent().find("input[name='goodsAllocationUid']").val();
+
+            var pwdWin = $.dialog({
+                drag: true,
+                lock: true,
+                resize: false,
+                title:'选择批次物料',
+                width: '800px',
+                height: '400px',
+                zIndex:4004,
+                content: 'url:${ctx}/plugin_selectAllocationStockList.emi?goodsUid='+goodsUid+'&goodsAllocationUid='+goodsAllocationUid,
+                okVal:"确定",
+                ok:function(){
+                    var usercheck = $("input:checked",this.content.document);
+                    $(obj).val(usercheck.attr("batch"));
+                },
+                cancelVal:"关闭",
+                cancel:true
+            });
+        }
+
+
+
 		function clickFlag(obj)
 		{
 			var temp=$(obj).attr("id").substr(19);
@@ -620,7 +670,7 @@
 							<div class="wordname fl">部门：</div>
 							<div class="wordnameinput fl">
 							<input type="text" name="depName" id="depName" class="toDealInput" value="${department.depname}" >
-	 						<input type="hidden" id="depUid" name="departmentUid" value="${otherOut['departmentUid']}">
+	 						<input type="hidden" id="depUid" name="depUid" value="${otherOut['departmentUid']}">
 							</div>
 							<div class="cf"></div> 
 		 				</li>
@@ -628,7 +678,7 @@
 							<div class="wordname fl">仓库：</div>
 							<div class="wordnameinput fl">
 							<input type="text" name="whName" id="whName" class="toDealInput" value="${warehouse.whname}">
-							<input type="hidden" value="${otherOut['warehouseUid']}" id="whUid" name="warehouseUid">
+							<input type="hidden" value="${otherOut['warehouseUid']}" id="whUid" name="whUid">
 							</div>
 							<div class="cf"></div> 
 		 				</li>

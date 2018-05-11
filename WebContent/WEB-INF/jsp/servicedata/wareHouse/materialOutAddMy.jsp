@@ -812,7 +812,7 @@
     function bohui(owhGid,followmovinggid) {
         if (confirm("是否确定驳回?")) {
             $.ajax({
-                data: {"followmovinggid":followmovinggid,"owhGid":owhGid,"type":2},
+                data: {"followmovinggid":followmovinggid,"owhGid":owhGid,"type":2,"billtype":"materialout"},
                 type: 'POST',
                 async: false,
                 url: '${ctx}/wms/wareHouse_updateFollowMovingStatus.emi',

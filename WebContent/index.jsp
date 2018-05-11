@@ -388,7 +388,7 @@
 	</style>	
 
 </head>
-<body id="mainbody">
+<body id="mainbody" style="background-image: none;background-color: #009A7A;">
 	<div id="mainContainer">		
 		<!--整体部分-->
 		<div id="mainContent" >

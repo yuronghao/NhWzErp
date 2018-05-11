@@ -881,7 +881,7 @@
                     var jsonO =  eval('(' + req + ')');
                     if(jsonO.success=='1'){
 
-                        window.location.href = "${ctx}/wms/wareHouse_gtasksMymaterialOutWarehouseList.emi";
+                        window.location.href = "${ctx}/wms/wareHouse_gtasksMygetAllocationList.emi";
 
                     }else{
                         $.dialog.alert_w("系统异常，请刷新界面");
@@ -897,14 +897,14 @@
     function bohui(owhGid,followmovinggid) {
         if (confirm("是否确定驳回?")) {
             $.ajax({
-                data: {"followmovinggid":followmovinggid,"owhGid":owhGid,"type":2},
+                data: {"followmovinggid":followmovinggid,"owhGid":owhGid,"type":2,"billtype":"call"},
                 type: 'POST',
                 async: false,
                 url: '${ctx}/wms/wareHouse_updateFollowMovingStatus.emi',
                 success: function(req){
                     var jsonO =  eval('(' + req + ')');
                     if(jsonO.success=='1'){
-                        window.location.href = "${ctx}/wms/wareHouse_gtasksMymaterialOutWarehouseList.emi";
+                        window.location.href = "${ctx}/wms/wareHouse_gtasksMygetAllocationList.emi";
 
                     }else{
                         $.dialog.alert_w("系统异常，请刷新界面");

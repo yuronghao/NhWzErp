@@ -1523,7 +1523,7 @@ public class WareHouseDao extends BaseDao {
 		sql+="			from ( ";
 		sql+="					select * from FollowInfoMoving fm ";
 		sql+="						WHERE ";
-		sql+="						fm.approvaluser = '6C353A55-DFCF-45FA-B45A-2F9745129A53'  AND fm.isused = 0 ";
+		sql+="						fm.approvaluser = '"+userid+"'  AND fm.isused = 0 ";
 		sql+="					AND fm.status = 0 ";
 		sql+="			)x ";
 		sql+="	) as AuctionRecords ";
@@ -1715,4 +1715,101 @@ public class WareHouseDao extends BaseDao {
 	}
 
 
+    public PageBean getOthersScrapList(int pageIndex, int pageSize, String condition) {
+		Map match = new HashMap();
+		match.put("goodsUid", "goodsUid");
+		match.put("number", "number");
+		String sql ="select owh.*,wowc.goodsUid goodsUid,wowc.number " +
+				" from WM_OthersScrap_C wowc " +
+				" LEFT JOIN WM_OthersScrap owh ON wowc.othersScrapUid=owh.gid  where 1=1";
+		if(!CommonUtil.isNullString(condition)){
+			sql += condition;
+		}
+		String sortSql="billDate desc";
+		return this.emiQueryList(sql, pageIndex, pageSize, WmOthersscrap.class,match,sortSql);
+    }
+
+
+	public List getOthersScrapClist(String gid) {
+		String sql = " SELECT wowhc.*,code FROM WM_OthersScrap_C wowhc " +
+				" left join AA_UserDefine aauserdefine on aauserdefine.value = wowhc.cfree1 " +
+				" WHERE wowhc.othersScrapUid = '"+gid+"' ";
+		return this.queryForList(sql);
+	}
+
+	public Map findOtherScrap(String otherScrapgid, String orgId, String sobId) {
+		String sql="";
+		if(CommonUtil.isNullString(otherScrapgid)){
+			sql="    SELECT TOP 1 wowh.gid,wowh.billCode,wowh.billDate,wowh.departmentUid,wowh.warehouseUid,wowh.notes ,wowh.recordDate,  "    +
+					"    ymuser.userName recordpersonName,wowh.recordPersonUid,wowh.status   "    +
+					"    FROM	WM_OthersScrap wowh   "    +
+					"    LEFT JOIN YM_User ymuser ON ymuser.gid = wowh.recordPersonUid   "    +
+					"    WHERE	1 = 1  AND wowh.sobGid = '"+sobId+ "' AND wowh.orgGid = '"+orgId +"' ORDER BY	wowh.pk DESC";
+		}else{
+			sql= " 	SELECT  wowh.gid,wowh.billCode,wowh.billDate,wowh.departmentUid,wowh.warehouseUid,wowh.notes ,wowh.recordDate, " +
+					" 	ymuser.userName recordpersonName,wowh.recordPersonUid ,wowh.status FROM	WM_OthersScrap wowh  " +
+					" 	LEFT JOIN YM_User ymuser ON ymuser.gid = wowh.recordPersonUid  " +
+					" 	WHERE	1 = 1 AND wowh.gid='"+otherScrapgid+"' AND wowh.sobGid = '"+sobId+"' AND wowh.orgGid = '"+ orgId +"' ORDER BY	wowh.pk DESC ";
+		}
+
+		return  this.queryForMap(sql);
+	}
+
+	public void deleteOthersScrapC(String gid) {
+		String sql = "delete from WM_OthersScrap_C where othersScrapUid ='"+gid+"'";
+		this.update(sql);
+	}
+
+	public void deleteOthersScrap(String gid) {
+		String sql = "delete from WM_OthersScrap where gid ='"+gid+"'";
+		this.update(sql);
+	}
+
+	public PageBean getOthersScrapListMy(int pageIndex, int pageSize, String condition, String userid) {
+		Map match = new HashMap();
+		match.put("goodsUid", "goodsUid");
+		match.put("number", "number");
+		match.put("followmovinggid","followmovinggid");
+		String sql ="select owh.*,wowc.goodsUid goodsUid,wowc.number,y.id AS followmovinggid " +
+				"from WM_OthersScrap owh " +
+				" INNER JOIN ( " +
+				" 	SELECT " +
+				" 		* " +
+				" 	FROM " +
+				" 		( " +
+				" 			SELECT " +
+				" 				ROW_NUMBER () OVER ( " +
+				" 					partition BY x.billsgid " +
+				" 					ORDER BY " +
+				" 						x.currentnodeindex ASC " +
+				" 				) rowId ,* " +
+				" 			FROM " +
+				" 				( " +
+				" 					SELECT " +
+				" 						* " +
+				" 					FROM " +
+				" 						FollowInfoMoving fm " +
+				" 					WHERE " +
+				" 						fm.approvaluser = '"+userid+"' " +
+				" 					AND fm.isused = 0 " +
+				" 					AND fm.status = 0 " +
+				" 				) x " +
+				" 		) AS AuctionRecords " +
+				" 	WHERE " +
+				" 		rowId = 1 " +
+				" ) y ON y.billsgid = owh.gid " +
+				"LEFT JOIN WM_OthersScrap_C wowc  ON wowc.othersScrapUid=owh.gid  where 1=1";
+		if(!CommonUtil.isNullString(condition)){
+			sql += condition;
+		}
+		String sortSql="billDate desc";
+		return this.emiQueryList(sql, pageIndex, pageSize, WmOthersscrap.class,match,sortSql);
+	}
+
+	public WmOthersscrap getOthersScrapByGid(String owhGid) {
+		String sql="select "+CommonUtil.colsFromBean(WmOthersscrap.class)+" from WM_OthersScrap where gid='"+owhGid+"'";
+		return (WmOthersscrap) this.emiQuery(sql, WmOthersscrap.class);
+
+
+	}
 }

@@ -109,6 +109,8 @@ public class Constants  {
 	//新增任务类型，用做审批用
 	public static String TASKTYPE_LYSQ = "1101";//领用申请单
 
+	public static String TASKTYPE_BFD = "1201";//报废单
+
 	
 	
    ////////////////////////////////////////////////////////////任务类型结束

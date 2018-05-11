@@ -5,13 +5,13 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>审批报废单列表</title>
+<title>报废单列表</title>
 <link rel="stylesheet" type="text/css" href="${ctx}/css/common.css">
 <link rel="stylesheet" type="text/css" href="${ctx}/css/emicom.css">
 
 </head>
 <body>
-<form action="${ctx}/wms/wareHouse_gtasksMyothersOutList.emi" name="myform" id="myform" method="post">
+<form action="${ctx}/wms/wareHouse_othersScrapList.emi" name="myform" id="myform" method="post">
 		<div class="EMonecontent">
 			<div style="width: 100%;height: 15px;"></div>
 			<!--按钮部分-->
@@ -23,7 +23,7 @@
 		 	<!--按钮部分 end-->
 		 	<!--表格部分-->
 		 	<div class="creattable">
-		 		<div class="tabletitle">审批报废单列表</div>
+		 		<div class="tabletitle">报废单列表</div>
 		 		<div>
 		 			<table>
 			 			<tbody>
@@ -38,15 +38,13 @@
 			 					<th>仓库</th>
 			 					<th>录入人</th>
 			 					<th>日期</th>
-			 					
-			 					<th>备注</th>
-								<th>操作</th>
+			 					<%--<th>备注</th>--%>
 
 			 				</tr>
 			 				<c:forEach var="bean" items="${data.list }" varStatus="stat">
 							<tr>
 								<td style="width: 120px;">${stat.count}</td>
-								<td><a href="${ctx}/wms/wareHouse_toAddOthersScrapMy.emi?otherScrapgid=${bean.gid}&followmovinggid=${bean.followmovinggid}">${bean.billCode}</a></td>
+								<td><a href="${ctx}/wms/wareHouse_toAddOthersScrap.emi?otherScrapgid=${bean.gid}">${bean.billCode}</a></td>
 								<td>${bean.goodsUid }</td>
 								<td>${bean.goodsCode }</td>
 								<td><fmt:formatNumber type="number" value="${bean.number }" minFractionDigits="2" groupingUsed="false"/></td>
@@ -55,12 +53,8 @@
 								<td>${bean.wareHouseName}</td>
 								<td>${bean.recordPersonName}</td>
 								<td>${fn:substring(bean.billDate,0,10)}</td>
-								<td>${bean.notes}</td>
-								<td>
+								<%--<td>${bean.notes}</td>--%>
 
-									<span ><a href="${ctx}/wms/wareHouse_toAddOthersScrapMy.emi?otherScrapgid=${bean.gid}&followmovinggid=${bean.followmovinggid}" style="color: blue">审核</a></span>
-
-								</td>
 							</tr>
 						</c:forEach>
 			 			</tbody>
