@@ -11,7 +11,7 @@
 
 </head>
 <body>
-<form action="${ctx}/wms/wareHouse_materialOutWarehouseList.emi" name="myform" id="myform" method="post">
+<form action="${ctx}/wms/wareHouse_gtasksMymaterialOutWarehouseList.emi" name="myform" id="myform" method="post">
 		<div class="EMonecontent">
 			<div style="width: 100%;height: 15px;"></div>
 			<!--按钮部分-->

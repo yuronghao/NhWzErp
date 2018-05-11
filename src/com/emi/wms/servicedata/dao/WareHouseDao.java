@@ -1676,4 +1676,43 @@ public class WareHouseDao extends BaseDao {
 		String sql = "select * from AA_freeSet where projectName is not null and projectName !='' ";
 		return this.queryForList(sql);
 	}
+
+	public PageBean getallocationlistMy(int pageIndex, int pageSize, String condition, String userid) {
+		String sql = "select wmcall.gid,wmcall.pk,wmcall.billCode,wmcall.billDate,wmcall.outWhUid,wmcall.inWhUid,wmcallc.goodsUid,wmcallc.number,wmcallc.outgoodsAllocationUid,wmcallc.ingoodsAllocationUid, " +
+				" wmcallc.outnumber,wmcallc.outassistNumber,wmcallc.cfree1,wmcallc.cfree2,y.id AS followmovinggid " +
+				" from WM_Call wmcall " +
+				" INNER JOIN ( " +
+				" 	SELECT " +
+				" 		* " +
+				" 	FROM " +
+				" 		( " +
+				" 			SELECT " +
+				" 				ROW_NUMBER () OVER ( " +
+				" 					partition BY x.billsgid " +
+				" 					ORDER BY " +
+				" 						x.currentnodeindex ASC " +
+				" 				) rowId ,* " +
+				" 			FROM " +
+				" 				( " +
+				" 					SELECT " +
+				" 						* " +
+				" 					FROM " +
+				" 						FollowInfoMoving fm " +
+				" 					WHERE " +
+				" 						fm.approvaluser = '"+userid+"' " +
+				" 					AND fm.isused = 0 " +
+				" 					AND fm.status = 0 " +
+				" 				) x " +
+				" 		) AS AuctionRecords " +
+				" 	WHERE " +
+				" 		rowId = 1 " +
+				" ) y ON y.billsgid = wmcall.gid " +
+				" left join WM_Call_C wmcallc on wmcallc.callUid = wmcall.gid where 1=1 ";
+		if(!CommonUtil.isNullString(condition)){
+			sql += condition;
+		}
+		return this.emiQueryList(sql, pageIndex, pageSize, "");
+	}
+
+
 }

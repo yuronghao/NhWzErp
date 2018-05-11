@@ -3643,7 +3643,7 @@ public class WareHouseAction extends BaseAction{
 			String orgId=getSession().get("OrgId").toString();
 			String sobId=getSession().get("SobId").toString();
 			condition+=" and wmcall.sobGid='"+sobId+"' and wmcall.orgGid='"+orgId+"'";
-			PageBean allocationlist = wareHouseService.getallocationlist(pageIndex,pageSize,condition);
+			PageBean allocationlist = wareHouseService.getallocationlistMy(pageIndex,pageSize,condition,userid);
 			for(int i=0;i<allocationlist.getList().size();i++){
 				if(!CommonUtil.isNullObject(((Map)allocationlist.getList().get(i)).get("goodsUid"))){
 					AaGoods good = cacheCtrlService.getGoods(((Map)allocationlist.getList().get(i)).get("goodsUid").toString());
@@ -3900,6 +3900,113 @@ public class WareHouseAction extends BaseAction{
 			e.printStackTrace();
 		}
 		return "materialOutAddMy";
+	}
+
+
+
+
+
+	/**
+	* @Desc 调拨单审核
+	* @author yurh
+	* @create 2018-05-10 17:19:32
+	**/
+	public String toAddCallMy(){
+
+
+		try{
+			String callgid = getParameter("callgid");
+			setRequstAttribute("callgid", callgid);
+			String followmovinggid = getParameter("followmovinggid");
+			setRequstAttribute("followmovinggid", followmovinggid);
+
+			String orgId=getSession().get("OrgId").toString();
+			String sobId=getSession().get("SobId").toString();
+			Map call = wareHouseService.findCall(callgid,orgId,sobId);
+
+			if(!CommonUtil.isNullObject(call)){
+				if(!CommonUtil.isNullObject(call.get("departmentUid"))){
+					AaDepartment department = cacheCtrlService.getDepartment(call.get("departmentUid").toString());
+					setRequstAttribute("department", department);
+				}
+
+
+
+
+				if(!CommonUtil.isNullObject(call.get("outwhUid"))){
+					AaWarehouse outwarehouse = cacheCtrlService.getWareHouse(call.get("outwhUid").toString());
+					setRequstAttribute("outwarehouse", outwarehouse);
+				}
+				if(!CommonUtil.isNullObject(call.get("inwhUid"))){
+					AaWarehouse inwarehouse = cacheCtrlService.getWareHouse(call.get("inwhUid").toString());
+					setRequstAttribute("inwarehouse", inwarehouse);
+				}
+
+				if(!CommonUtil.isNullObject(call.get("recordPersonUid"))){
+					AaPerson aaperson = cacheCtrlService.getPerson(call.get("recordPersonUid").toString());
+					setRequstAttribute("aaperson", aaperson);
+				}
+
+
+				if(!CommonUtil.isNullObject(call.get("gid"))){
+					List wmCallC = wareHouseService.getWmCallDetailByWMS(call.get("gid").toString());
+					for(int i=0;i<wmCallC.size();i++){
+						AaGoods good = cacheCtrlService.getGoods(((wmCallC)wmCallC.get(i)).getGoodsUid().toString());
+						((wmCallC)wmCallC.get(i)).setGoods(good);
+						if(((wmCallC)wmCallC.get(i)).getIngoodsAllocationUid() != null && !"".equals(((wmCallC)wmCallC.get(i)).getIngoodsAllocationUid())){
+							AaGoodsallocation alocation=cacheCtrlService.getGoodsAllocation(((wmCallC)wmCallC.get(i)).getIngoodsAllocationUid().toString());
+							((wmCallC)wmCallC.get(i)).setInAllocationName(alocation.getName());
+						}
+
+
+						AaGoodsallocation outalocation=cacheCtrlService.getGoodsAllocation(((wmCallC)wmCallC.get(i)).getOutgoodsAllocationUid().toString());
+						((wmCallC)wmCallC.get(i)).setOutAllocationName(outalocation.getName());
+
+
+						if (!CommonUtil.isNullObject(((wmCallC)wmCallC.get(i)).getGoodsUid())) {
+							AaGoods goods = cacheCtrlService.getGoods(((wmCallC)wmCallC.get(i)).getGoodsUid().toString());
+							if(goods!= null){
+								((wmCallC)wmCallC.get(i)).setGoodName(goods.getGoodsname());
+								((wmCallC)wmCallC.get(i)).setGoodsStandard(goods.getGoodsstandard());
+							}
+
+						}
+
+					}
+					setRequstAttribute("wmCallC", wmCallC);
+				}
+			}
+
+
+
+			//类型
+			String condition=" ";
+			List<YmRdStyle> result=wareHouseService.getRdstyleEntity(condition, Constants.TASKTYPE_DBD);//材料出库类型
+			setRequstAttribute("rdstylelist", result);
+
+			if(call != null && call.get("gid")!= null){
+				//判断是否有审批
+				List<FollowInfoMoving> followInfoMovingList = wareHouseService.getFollowMovingListByBillid(call.get("gid").toString());
+				if(followInfoMovingList != null && followInfoMovingList.size()>0){
+					//存在审批
+					setRequstAttribute("sp", 1);
+				}else{
+					setRequstAttribute("sp", 0);
+				}
+			}
+
+
+			String time = DateUtil.dateToString(new Date(), "yyMMdd");
+			setRequstAttribute("time", time);
+			setRequstAttribute("call", call);
+			setRequstAttribute("lhg_self", "false");//lhgdialog参数，使之基于整个浏览器弹出
+
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+
+
+		return "callAddMy";
 	}
 
 
