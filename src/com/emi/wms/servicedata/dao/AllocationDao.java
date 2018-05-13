@@ -20,7 +20,7 @@ public class AllocationDao extends BaseDao {
 	}
 	
 	public PageBean getallocationlist(int pageIndex,int pageSize,String condition) {
-		String sql = "select wmcall.gid,wmcall.pk,wmcall.billCode,wmcall.billDate,wmcall.outWhUid,wmcall.inWhUid,wmcallc.goodsUid,wmcallc.number,wmcallc.outgoodsAllocationUid,wmcallc.ingoodsAllocationUid,wmcallc.outnumber,wmcallc.outassistNumber,wmcallc.cfree1,wmcallc.cfree2 from WM_Call wmcall left join WM_Call_C wmcallc on wmcallc.callUid = wmcall.gid where 1=1 ";
+		String sql = "select wmcall.gid,wmcall.pk,wmcall.billCode,wmcall.billDate,wmcall.outWhUid,wmcall.inWhUid,wmcallc.goodsUid,wmcallc.number,wmcallc.outgoodsAllocationUid,wmcallc.ingoodsAllocationUid,wmcallc.outnumber,wmcallc.outassistNumber,wmcallc.cfree1,wmcallc.cfree2,wmcall.status from WM_Call wmcall left join WM_Call_C wmcallc on wmcallc.callUid = wmcall.gid where 1=1 ";
 		if(!CommonUtil.isNullString(condition)){
 			sql += condition;
 		}

@@ -36,7 +36,27 @@ public class WmOthersscrapC implements Serializable{
 	
 	@EmiColumn(name="price")
 	private BigDecimal price;
-	
+
+	private String goodsAllocationName;
+
+	public String getGoodsAllocationName() {
+		return goodsAllocationName;
+	}
+
+	public void setGoodsAllocationName(String goodsAllocationName) {
+		this.goodsAllocationName = goodsAllocationName;
+	}
+
+	private AaGoods good;
+
+	public AaGoods getGood() {
+		return good;
+	}
+
+	public void setGood(AaGoods good) {
+		this.good = good;
+	}
+
 	@EmiColumn(name="amount")
 	private BigDecimal amount;
 	

@@ -3187,7 +3187,8 @@ public class WareHouseService extends EmiPluginService {
             return jobj;
         }
 
-
+        //当前没有判断有没有审批，所以直接存入审批时间为单据日期
+        wmoh.setAuditDate(wmoh.getBillDate());
         boolean suc = wareHouseDao.emiInsert(wmoh);// 插入其他入主表
         if (suc) {
             suc = wareHouseDao.emiInsert(wmohclist);// 插入其他入子表
@@ -3228,7 +3229,8 @@ public class WareHouseService extends EmiPluginService {
             return jobj;
         }
 
-
+//当前没有判断有没有审批，所以直接存入审批时间为单据日期、
+        wmoh.setAuditDate(wmoh.getBillDate());
         boolean suc = wareHouseDao.emiInsert(wmoh);// 插入其他出主表
         if (suc) {
             suc = wareHouseDao.emiInsert(wmohclist);// 插入其他出子表
@@ -3752,6 +3754,8 @@ public class WareHouseService extends EmiPluginService {
             return jobj;
         }
 
+        //当前没有判断有没有审批，所以直接存入审批时间为单据日期
+        whouse.setAuditdate(whouse.getBilldate());
         boolean suc = wareHouseDao.emiInsert(whouse);// 插入生产入库主表
 
         for (WmPowarehouseC oc : wmohclist) {
@@ -4190,6 +4194,8 @@ public class WareHouseService extends EmiPluginService {
         boolean flag = this.postAudit(invoicestype,rdstylegid,billgid);
         if(!flag){
             //不存在审批规则，则执行后续操作
+            String tablename = "WM_MaterialOut";
+            wareHouseDao.updateauditDateBygidAndTablename(wmMaterialout.getGid(),tablename);
             suc = updateStocksEntity(newAsList);// 修改货位现存量
             if (wmBatchs.size() > 0) { // 增加批次
                 wareHouseDao.addWmBatch(wmBatchs);
@@ -5137,19 +5143,27 @@ public class WareHouseService extends EmiPluginService {
                 //WM_MaterialOut 材料出库单
                 //处理单据业务：
                 if(billtype != null && !"".equals(billtype)){
+                    String tablename = "";
                     switch (billtype){
                         case "materialapply"://领用申请单
-
+                            tablename = "WM_MaterialApply";
+                            this.updateAuditDateByBillgid(tablename,owhGid,new Date());//修改主表单据审核时间
                             break;
                         case "materialout": //材料出库单
                             System.out.println("开始处理 材料出库单审核通过业务");
+                            tablename = "WM_MaterialOut";
+                            this.updateAuditDateByBillgid(tablename,owhGid,new Date());
                             this.doMaterialOutAuditOk(followmovinggid,owhGid,session);
                             break;
                         case "call"://调拨单
                             System.out.println("开始处理 调拨单审核通过业务");
+                            tablename = "WM_Call";
+                            this.updateAuditDateByBillgid(tablename,owhGid,new Date());
                             this.doCallAuditOk(followmovinggid,owhGid,session);
                         case "othersscrap"://报废单
                             System.out.println("开始处理 报废单 审核通过业务");
+                            tablename = "WM_OthersScrap";
+                            this.updateAuditDateByBillgid(tablename,owhGid,new Date());
                             this.doOthersScrapAuditOk(followmovinggid,owhGid,session);
 
                     }
@@ -5194,6 +5208,10 @@ public class WareHouseService extends EmiPluginService {
         }
 
 
+    }
+
+    private void updateAuditDateByBillgid(String tablename,String gid,Date date){
+        wareHouseDao.updateAuditDateByBillgid(tablename,gid,date);
     }
 
     /**
@@ -5301,6 +5319,7 @@ public class WareHouseService extends EmiPluginService {
         wmoo.setSobGid(wmc.getSobGid());
         wmoo.setOrgGid(wmc.getOrgGid());
         wmoo.setNotes(wmc.getNotes());
+        wmoo.setAuditDate(new Date());//2018-5-12 这个字段重要，判断其实际影响的库存的时间
 
         // 其他入主表
         String wmohuid = UUID.randomUUID().toString();
@@ -5314,6 +5333,7 @@ public class WareHouseService extends EmiPluginService {
         wmoh.setRecordPersonId(wmc.getRecordPersonUid());
         wmoh.setSobGid(wmc.getSobGid());
         wmoh.setOrgGid(wmc.getOrgGid());
+        wmoh.setAuditDate(new Date()); //2018-5-12 这个字段重要，判断其实际影响的库存的时间
 
 
 
@@ -5640,8 +5660,9 @@ public class WareHouseService extends EmiPluginService {
         boolean flag = this.postAudit(invoicestype,rdstylegid,billgid);
         if(!flag){
             //不存在审批规则，则执行后续操作
-            // 更改调拨单状态
-            wareHouseDao.updateCallState(wmc.getGid());
+            String tablename = "WM_Call";
+            wareHouseDao.updateauditDateBygidAndTablename(wmc.getGid(),tablename);
+            wareHouseDao.updateCallState(wmc.getGid());// 更改调拨单状态
             wareHouseDao.emiInsert(wmoo);// 插入其他入主表
             wareHouseDao.emiInsert(wmooclist);// 插入其他入子表
             wareHouseDao.emiInsert(wmoh);// 插入其他出主表
@@ -6126,6 +6147,9 @@ public class WareHouseService extends EmiPluginService {
         boolean flag = this.postAudit(invoicestype,rdstylegid,billgid);
         if(!flag){
             //不存在审批规则，则执行后续操作
+            //更新主表单据的审批时间为单据时间 billDate->auditDate
+            String tablename = "WM_OthersScrap";//报废单
+            wareHouseDao.updateauditDateBygidAndTablename(wmoh.getGid(),tablename);
             suc = updateStocksEntity(newAsList);// 修改货位现存量
             // 增加批次
             if (wmBatchs.size() > 0) {

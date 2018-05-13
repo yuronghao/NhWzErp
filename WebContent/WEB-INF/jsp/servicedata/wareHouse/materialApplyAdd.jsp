@@ -87,8 +87,9 @@
 				$("#whName").attr("onclick","selectmanager()");
 				$('#billDate').attr("onclick","WdatePicker({dateFmt:'yyyy-MM-dd'})");
 				$("#customerName").attr("onclick","selectcustomer()");
+                $("#zhuangtai").parent().parent().parent().remove();
 				$.ajax({
-					data:{billType:'0050'},
+					data:{billType:'1101'},
 					url:'${ctx}/wms/saleOrder_getBillId.emi',
 					type:"post",
 					dataType:"json",
@@ -574,7 +575,7 @@
 		 			<script>
 		 				$(function() {
 		 					/*
-							 * 初始化单据翻页 
+							 * 初始化单据翻页
 							 * @param action 表单请求地址，不需要在此url中传gid，如有其他参数，可以传
 							 * @param table_name 表名
 							 * @param id_column gid字段名(一般是gid不用改)

@@ -186,13 +186,14 @@ public class WareHouseAction extends BaseAction{
 					setRequstAttribute("aaperson", aaperson);
 				}
 				if(!CommonUtil.isNullObject(otherScrap.get("gid"))){
-					List othersScrapC = wareHouseService.getOthersScrapClist(otherScrap.get("gid").toString());
+					List<WmOthersscrapC> othersScrapC = wareHouseService.getOthersScrapClist(otherScrap.get("gid").toString());
 					for(int i=0;i<othersScrapC.size();i++){
-						AaGoods good = cacheCtrlService.getGoods(String.valueOf(((Map)othersScrapC.get(i)).get("goodsUid")));
-						((Map)othersScrapC.get(i)).put("good", good);
-						AaGoodsallocation alocation=cacheCtrlService.getGoodsAllocation(String.valueOf(((Map)othersScrapC.get(i)).get("goodsAllocationUid")));
+						WmOthersscrapC wmOthersscrapC = othersScrapC.get(i);
+						AaGoods good = cacheCtrlService.getGoods(String.valueOf(wmOthersscrapC.getGoodsUid()));
+						wmOthersscrapC.setGood(good);
+						AaGoodsallocation alocation=cacheCtrlService.getGoodsAllocation(String.valueOf(wmOthersscrapC.getGoodsAllocationUid()));
 						if(alocation != null){
-							((Map)othersScrapC.get(i)).put("goodsAllocationName", alocation.getName());
+							wmOthersscrapC.setGoodsAllocationName(alocation.getName());
 						}
 
 					}
@@ -221,10 +222,11 @@ public class WareHouseAction extends BaseAction{
 			setRequstAttribute("time", time);
 			setRequstAttribute("otherScrap", otherScrap);
 			setRequstAttribute("lhg_self", "false");//lhgdialog参数，使之基于整个浏览器弹出
-			return "toAddOthersScrap";
+
 		}catch(Exception e){
-			return "toAddOthersScrap";
+			e.printStackTrace();
 		}
+		return "toAddOthersScrap";
 	}
 
 
@@ -233,7 +235,7 @@ public class WareHouseAction extends BaseAction{
 
 
 	/**
-	 * 添加其他入库
+	 * 新增其他入库单
 	 * @category
 	 * 2016年7月6日 下午3:16:37
 	 * @author 杨胜
@@ -468,8 +470,11 @@ public class WareHouseAction extends BaseAction{
 //			wmoh.setBadge(Integer.parseInt(badge));
 			wmoh.setBillCode(billCode);
 			wmoh.setNotes(getParameter("notes"));
-			wmoh.setBusinessTypeUid(getParameter("businessTypeUid"));
-			wmoh.setStatus(0);
+			if(getParameter("businessTypeUid") != null && !"".equals(getParameter("businessTypeUid"))){
+				wmoh.setBusinessTypeUid(getParameter("businessTypeUid"));
+				wmoh.setStatus(0);
+			}
+
 			List<WmAllocationstock> asList=new ArrayList<WmAllocationstock>();
 			List<WmOthersscrapC> wmohclist=new ArrayList<WmOthersscrapC>();                     //其他出库子记录表
 			List<WmBatch> wmBatchs=new ArrayList<WmBatch>();                                          //批次记录表
@@ -751,7 +756,10 @@ public class WareHouseAction extends BaseAction{
 			wmoh.setNotes(getParameter("notes"));
 			wmoh.setRecordPersonUid(getParameter("recordPersonUid"));
 			wmoh.setBillCode(billCode);
-			wmoh.setBusinessTypeUid(getParameter("businessTypeUid"));
+			if(getParameter("businessTypeUid") != null && !"".equals(getParameter("businessTypeUid"))){
+				wmoh.setBusinessTypeUid(getParameter("businessTypeUid"));
+			}
+
 //			wmoh.setBadge(Integer.parseInt(badge));
 			List otherC = wareHouseService.getOthersScrapClist(othersScrapgid);
 			List<WmAllocationstock> asList=new ArrayList<WmAllocationstock>();
@@ -1478,7 +1486,7 @@ public class WareHouseAction extends BaseAction{
 	
 	//...................................................采购入库操作。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。//
 	/**
-	 *  查询最后一条记录
+	 *  跳转 采购入库/材料入库 新增界面
 	 * @category
 	 * 2016年7月13日 下午3:14:52
 	 * @author 杨胜
@@ -1536,7 +1544,7 @@ public class WareHouseAction extends BaseAction{
 		}
 	
 		/**
-		 * 添加采购入库表
+		 * 新增材料入库单/采购入库单
 		 * @category
 		 * 2016年7月14日 上午8:48:13
 		 * @author 杨胜
@@ -2422,7 +2430,7 @@ public class WareHouseAction extends BaseAction{
 	}
 		
 		/**
-		 * 添加材料出库单
+		 * 新增材料出库单
 		 * @category
 		 * 2016年7月14日 上午8:48:13
 		 * @author 杨胜
@@ -2450,7 +2458,10 @@ public class WareHouseAction extends BaseAction{
 				wmMaterialout.setRecorddate(new Date());
 				wmMaterialout.setBadge(Integer.parseInt(badge));
 				wmMaterialout.setStatus(0);//添加状态为0
-				wmMaterialout.setBusinesstypeuid(getParameter("businessTypeUid"));
+				if(getParameter("businessTypeUid") != null && !"".equals(getParameter("businessTypeUid"))){
+					wmMaterialout.setBusinesstypeuid(getParameter("businessTypeUid"));
+				}
+
 				List<WmAllocationstock> asList=new ArrayList<WmAllocationstock>();
 				List<WmMaterialoutC> wmohclist=new ArrayList<WmMaterialoutC>();                     //销售出库子记录表
 				List<WmBatch> wmBatchs=new ArrayList<WmBatch>();                                          //批次记录表
@@ -2573,8 +2584,11 @@ public class WareHouseAction extends BaseAction{
 			wmc.setRecordPersonUid(getParameter("recordPersonUid"));
 			wmc.setRecordDate(new Date());
 			wmc.setNotes(getParameter("notes"));
-			wmc.setBusinessTypeUid(getParameter("businessTypeUid"));
-			wmc.setStatus(0);
+			if(getParameter("businessTypeUid") != null && !"".equals(getParameter("businessTypeUid"))){
+				wmc.setBusinessTypeUid(getParameter("businessTypeUid"));
+				wmc.setStatus(0);
+			}
+
 			wmc.setBillDate(getParameter("billDate").length()>0?new Timestamp(DateUtil.stringtoDate(getParameter("billDate"), "yyyy-MM-dd").getTime()):null);
 			wmc.setDepartmentUid(depUid);
 
@@ -3005,8 +3019,11 @@ public class WareHouseAction extends BaseAction{
 			wmc.setRecordPersonUid(getParameter("recordPersonUid"));
 			wmc.setRecordDate(new Date());
 			wmc.setNotes(getParameter("notes"));
-			wmc.setBusinessTypeUid(getParameter("businessTypeUid"));
-			wmc.setStatus(0);
+			if(getParameter("businessTypeUid") != null && !"".equals(getParameter("businessTypeUid"))){
+				wmc.setBusinessTypeUid(getParameter("businessTypeUid"));
+				wmc.setStatus(0);
+			}
+
 			wmc.setBillDate(getParameter("billDate").length()>0?new Timestamp(DateUtil.stringtoDate(getParameter("billDate"), "yyyy-MM-dd").getTime()):null);
 			wmc.setDepartmentUid(depUid);
 
@@ -4409,13 +4426,16 @@ public class WareHouseAction extends BaseAction{
 					setRequstAttribute("aaperson", aaperson);
 				}
 				if(!CommonUtil.isNullObject(otherScrap.get("gid"))){
-					List othersScrapC = wareHouseService.getOthersScrapClist(otherScrap.get("gid").toString());
+					List<WmOthersscrapC> othersScrapC = wareHouseService.getOthersScrapClist(otherScrap.get("gid").toString());
 					for(int i=0;i<othersScrapC.size();i++){
-						AaGoods good = cacheCtrlService.getGoods(String.valueOf(((Map)othersScrapC.get(i)).get("goodsUid")));
-						((Map)othersScrapC.get(i)).put("good", good);
-						AaGoodsallocation alocation=cacheCtrlService.getGoodsAllocation(String.valueOf(((Map)othersScrapC.get(i)).get("goodsAllocationUid")));
+						WmOthersscrapC wmOthersscrapC = othersScrapC.get(i);
+						AaGoods good = cacheCtrlService.getGoods(String.valueOf(wmOthersscrapC.getGoodsUid()));
+						if(good!= null){
+							wmOthersscrapC.setGood(good);
+						}
+						AaGoodsallocation alocation=cacheCtrlService.getGoodsAllocation(String.valueOf(wmOthersscrapC.getGoodsAllocationUid()));
 						if(alocation != null){
-							((Map)othersScrapC.get(i)).put("goodsAllocationName", alocation.getName());
+							wmOthersscrapC.setGoodsAllocationName(alocation.getName());
 						}
 
 					}

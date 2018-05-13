@@ -40,6 +40,7 @@
 			 					<th>调入货位</th>
 			 					<th>应调出数量</th>
 			 					<th>已调出数量</th>
+								<th>审核状态</th>
 			 					<%--<c:forEach var="column" items="${columns}" varStatus="stat">--%>
 			 					<%--<th>${column.projectName}</th>--%>
 			 					<%--</c:forEach>--%>
@@ -59,6 +60,20 @@
 								<td>${bean.aagoodsallocationin.name}</td>
 								<td><fmt:formatNumber type="number" value="${bean.number}" minFractionDigits="2"/></td>
 								<td><fmt:formatNumber type="number" value="${bean.outnumber}" minFractionDigits="2"/></td>
+								<td>
+									<c:if test="${bean.status == 0}">
+										<span style="color: #0e78c9">未审核</span>
+									</c:if>
+									<c:if test="${bean.status == 1}">
+										<span style="color: #0E2D5F">审核中</span>
+									</c:if>
+									<c:if test="${bean.status == 2}">
+										<span style="color: #00B83F">已通过</span>
+									</c:if>
+									<c:if test="${bean.status == 3}">
+										<span style="color: red">被驳回</span>
+									</c:if>
+								</td>
 								<%--<c:forEach var="column" items="${columns}" varStatus="stat">--%>
 			 					<%--<td>${bean[column.projectCode]}</td>--%>
 			 					<%--</c:forEach>--%>

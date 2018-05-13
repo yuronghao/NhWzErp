@@ -90,6 +90,7 @@
                 $("#inwhName").attr("onclick","selectmanagerin()");
 				$('#billDate').attr("onclick","WdatePicker({dateFmt:'yyyy-MM-dd'})");
 				$("#customerName").attr("onclick","selectcustomer()");
+                $("#zhuangtai").parent().parent().parent().remove();
 				$.ajax({
 					data:{billType:'0050'},
 					url:'${ctx}/wms/saleOrder_getBillId.emi',
@@ -707,6 +708,7 @@
 							<div class="wordname fl">类型：</div>
 							<div class="wordnameinput fl">
 								<select class="toDealSelect" id="businessTypeUid" name="businessTypeUid"  disabled="disabled">
+									<option value="" >-- 请选择 --</option>
 									<c:forEach items="${rdstylelist}" var="rdstyle" varStatus="status">
 										<option value="${rdstyle.gid}" <c:if test="${call['businessTypeUid'] == rdstyle.gid}">selected="selected"</c:if>>${rdstyle.crdName}</option>
 									</c:forEach>

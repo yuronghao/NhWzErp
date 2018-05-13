@@ -42,14 +42,14 @@
 			    	  $.dialog.alert('货位号不能为空');
 			    	  return false;
 			      }
-			      if(typeof($('.jnumric').eq(i).val())!= "undefined"  && $('.jnumric').eq(i).val()!='' )
-			       {
-			    	  console.log($('.jjnumric').eq(i))
-			    	  if(typeof($('.jjnumric').eq(i).val())!= "undefined" && $('.jjnumric').eq(i).val()==''){
-				    	  $.dialog.alert('辅单位存在,辅助数量不能为空');
-				    	  return false;
-				      }
-			      }
+			      // if(typeof($('.jnumric').eq(i).val())!= "undefined"  && $('.jnumric').eq(i).val()!='' )
+			      //  {
+			    	//   console.log($('.jjnumric').eq(i))
+			    	//   if(typeof($('.jjnumric').eq(i).val())!= "undefined" && $('.jjnumric').eq(i).val()==''){
+				   //  	  $.dialog.alert('辅单位存在,辅助数量不能为空');
+				   //  	  return false;
+				   //    }
+			      // }
 			}
 			
 			var batchs=$('.batchInput');
@@ -87,8 +87,10 @@
 				$("#whName").attr("onclick","selectmanager()");
 				$('#billDate').attr("onclick","WdatePicker({dateFmt:'yyyy-MM-dd'})");
 				$(".jjjnumric").attr("onclick","clickFlag(this)");
+
+				$("#zhuangtai").parent().parent().parent().remove();
 				$.ajax({
-					data:{billType:'0030'},
+					data:{billType:'1201'},
 					url:'${ctx}/wms/saleOrder_getBillId.emi',
 					type:"post",
 					dataType:"json",
@@ -101,8 +103,8 @@
 						$('#recordPersonUid').val(da.gRecordPersonUid);
 					}				
 				});
-				addBtn();
 
+				addBtn();
 			});
 			//修改
 			$('#revBtn').click(function(){	
@@ -632,7 +634,7 @@
 		 			<script>
 		 				$(function() {
 		 					/*
-							 * 初始化单据翻页 
+							 * 初始化单据翻页
 							 * @param action 表单请求地址，不需要在此url中传gid，如有其他参数，可以传
 							 * @param table_name 表名
 							 * @param id_column gid字段名(一般是gid不用改)
@@ -642,7 +644,7 @@
 							 * @param [div_id] 【非必填】翻页按钮所在的div的id(默认叫emi_page_turning,如有需要可以修改)
 							 */
 							 var cond = "";
-		 					initPageTurning('${ctx }/wms/wareHouse_toAddOthersScrap.emi','WM_OthersOut','gid',"${otherScrap['gid']}",
+		 					initPageTurning('${ctx }/wms/wareHouse_toAddOthersScrap.emi','WM_OthersScrap','gid',"${otherScrap['gid']}",
 		 							cond,'otherScrapgid');
 		 				});
 		 			</script>
@@ -710,6 +712,8 @@
 							<div class="wordname fl">类型：</div>
 							<div class="wordnameinput fl">
 								<select class="toDealSelect" id="businessTypeUid" name="businessTypeUid"  disabled="disabled">
+									<option value="" >-- 请选择 --</option>
+
 									<c:forEach items="${rdstylelist}" var="rdstyle" varStatus="status">
 										<option value="${rdstyle.gid}" <c:if test="${otherScrap['businessTypeUid'] == rdstyle.gid}">selected="selected"</c:if>>${rdstyle.crdName}</option>
 									</c:forEach>
@@ -774,14 +778,14 @@
 				 		    <td><div class="delrow" name = "deleteButton"  style="margin-left:15px;float: left;display: none" title="删除" gid="${type.gid}"></div>
 				 		    </td>
 				 		     <td class="gid" style="display:none"><input type="hidden" id="" name="gid" class="listword" value="${type.gid}" /></td>
-				 		
-				 		    <td class="goodsUid" style="display:none"><input type="text" id="" name="goodsUid" class="listword" value="${type.goodsuid}"></td>
+
+				 		    <td class="goodsUid" style="display:none"><input type="text" id="" name="goodsUid" class="listword" value="${type.goodsUid}"></td>
 			                <td class="goodsCode"><input type="text" id="" name="goodsCode" class="listword" value="${type.good.goodscode}" readonly="readonly" ></td>
 			                <td class="goodsName"><input type="text" id="" name="goodsName" class="listword" value="${type.good.goodsname}" readonly="readonly"></td>
 			                <td class="goodsstandard"><input type="text" id="" name="goodsstandard" class="listword" value="${type.good.goodsstandard}" readonly="readonly"></td>
-			             
+
 			                <td class="mainUnit" ><input type="text" id="" name="mainUnit" class="listword" value="${type.good.unitName}" readonly="readonly"></td>
-			                <td class="mainNumber"><input type="text" id="" name="mainNumber" class="listword toDealInput numric" value="<fmt:formatNumber type="number" value="${type.number}" minFractionDigits="2" groupingUsed="false" />" onchange="changeFlag(this)"></td>		             
+			                <td class="mainNumber"><input type="text" id="" name="mainNumber" class="listword toDealInput numric" value="<fmt:formatNumber type="number" value="${type.number}" minFractionDigits="2" groupingUsed="false" />" onchange="changeFlag(this)"></td>
 			                <%--<td class="assistUnit"><input type="text" id="" name="assistUnit" class="listword" value="${type.good.cassComUnitName}" readonly="readonly"></td>--%>
 			               <%--<c:if test="${not empty type.good.cstcomunitcode}">--%>
 			          <%----%>
@@ -800,7 +804,7 @@
 			                <%--<td class="note"><input type="text" id="" name="note" class="listword toDealInput" value="${type.notes}" readonly="readonly"></td>--%>
 			                <%--<td class="cfree"><input type="text" id="" name="cfree" class="listword" value="${type.cfree1}" readonly="readonly"></td>--%>
 			                <%--<td class="smallamount"><input type="text" id="" name="smallamount" class="listword" value="<fmt:formatNumber type="number" value="${type.number}" minFractionDigits="2"/>"></td>--%>
-			                <input type="hidden" id="" name="process" class="listword" value="${type.code}">
+			                <input type="hidden" id="" name="process" class="listword" value="">
 				 		    </tr>
 				 	        </c:forEach>
 				 			</tbody>

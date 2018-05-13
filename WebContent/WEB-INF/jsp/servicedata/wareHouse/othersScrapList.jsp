@@ -38,6 +38,7 @@
 			 					<th>仓库</th>
 			 					<th>录入人</th>
 			 					<th>日期</th>
+								<th>审核状态</th>
 			 					<%--<th>备注</th>--%>
 
 			 				</tr>
@@ -54,7 +55,20 @@
 								<td>${bean.recordPersonName}</td>
 								<td>${fn:substring(bean.billDate,0,10)}</td>
 								<%--<td>${bean.notes}</td>--%>
-
+								<td>
+									<c:if test="${bean.status == 0}">
+										<span style="color: #0e78c9">未审核</span>
+									</c:if>
+									<c:if test="${bean.status == 1}">
+										<span style="color: #0E2D5F">审核中</span>
+									</c:if>
+									<c:if test="${bean.status == 2}">
+										<span style="color: #00B83F">已通过</span>
+									</c:if>
+									<c:if test="${bean.status == 3}">
+										<span style="color: red">被驳回</span>
+									</c:if>
+								</td>
 							</tr>
 						</c:forEach>
 			 			</tbody>

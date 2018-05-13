@@ -5,10 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import com.emi.wms.bean.*;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
@@ -1044,9 +1042,9 @@ public class WareHouseDao extends BaseDao {
 		public Map findMaterialOut(String gid,String orgId,String sobId) {
 			String sql="";
 			if(CommonUtil.isNullString(gid)){
-				sql="SELECT TOP 1 wowh.gid,wowh.billCode,wowh.billDate,wowh.badge,wowh.departmentUid,wowh.whUid,wowh.notes ,wowh.recordDate,ymuser.userName recordpersonName,wowh.recordPerson,wowh.status FROM WM_MaterialOut wowh LEFT JOIN YM_User ymuser ON ymuser.gid = wowh.recordPerson WHERE	1 = 1  AND wowh.sobGid = '" + sobId + "' AND wowh.orgGid = '" + orgId + "' ORDER BY	wowh.pk DESC ";
+				sql="SELECT TOP 1 wowh.gid,wowh.billCode,wowh.billDate,wowh.badge,wowh.departmentUid,wowh.whUid,wowh.notes ,wowh.recordDate,ymuser.userName recordpersonName,wowh.recordPerson,wowh.status,wowh.businessTypeUid FROM WM_MaterialOut wowh LEFT JOIN YM_User ymuser ON ymuser.gid = wowh.recordPerson WHERE	1 = 1  AND wowh.sobGid = '" + sobId + "' AND wowh.orgGid = '" + orgId + "' ORDER BY	wowh.pk DESC ";
 			}else{
-				sql="SELECT  wowh.gid,wowh.billCode,wowh.billDate,wowh.badge,wowh.departmentUid,wowh.whUid,wowh.notes ,wowh.recordDate,ymuser.userName recordpersonName,wowh.recordPerson,wowh.status FROM	WM_MaterialOut wowh LEFT JOIN YM_User ymuser ON ymuser.gid = wowh.recordPerson WHERE	1 = 1 AND wowh.gid='"+gid+"' AND wowh.sobGid = '" + sobId + "' AND wowh.orgGid = '" + orgId + "' ORDER BY	wowh.pk DESC ";
+				sql="SELECT  wowh.gid,wowh.billCode,wowh.billDate,wowh.badge,wowh.departmentUid,wowh.whUid,wowh.notes ,wowh.recordDate,ymuser.userName recordpersonName,wowh.recordPerson,wowh.status,wowh.businessTypeUid FROM	WM_MaterialOut wowh LEFT JOIN YM_User ymuser ON ymuser.gid = wowh.recordPerson WHERE	1 = 1 AND wowh.gid='"+gid+"' AND wowh.sobGid = '" + sobId + "' AND wowh.orgGid = '" + orgId + "' ORDER BY	wowh.pk DESC ";
 			}
 			
 			return  this.queryForMap(sql);
@@ -1734,20 +1732,20 @@ public class WareHouseDao extends BaseDao {
 		String sql = " SELECT wowhc.*,code FROM WM_OthersScrap_C wowhc " +
 				" left join AA_UserDefine aauserdefine on aauserdefine.value = wowhc.cfree1 " +
 				" WHERE wowhc.othersScrapUid = '"+gid+"' ";
-		return this.queryForList(sql);
+		return this.emiQueryList(sql,WmOthersscrapC.class);
 	}
 
 	public Map findOtherScrap(String otherScrapgid, String orgId, String sobId) {
 		String sql="";
 		if(CommonUtil.isNullString(otherScrapgid)){
 			sql="    SELECT TOP 1 wowh.gid,wowh.billCode,wowh.billDate,wowh.departmentUid,wowh.warehouseUid,wowh.notes ,wowh.recordDate,  "    +
-					"    ymuser.userName recordpersonName,wowh.recordPersonUid,wowh.status   "    +
+					"    ymuser.userName recordpersonName,wowh.recordPersonUid,wowh.status,wowh.businessTypeUid   "    +
 					"    FROM	WM_OthersScrap wowh   "    +
 					"    LEFT JOIN YM_User ymuser ON ymuser.gid = wowh.recordPersonUid   "    +
 					"    WHERE	1 = 1  AND wowh.sobGid = '"+sobId+ "' AND wowh.orgGid = '"+orgId +"' ORDER BY	wowh.pk DESC";
 		}else{
 			sql= " 	SELECT  wowh.gid,wowh.billCode,wowh.billDate,wowh.departmentUid,wowh.warehouseUid,wowh.notes ,wowh.recordDate, " +
-					" 	ymuser.userName recordpersonName,wowh.recordPersonUid ,wowh.status FROM	WM_OthersScrap wowh  " +
+					" 	ymuser.userName recordpersonName,wowh.recordPersonUid ,wowh.status,wowh.businessTypeUid FROM	WM_OthersScrap wowh  " +
 					" 	LEFT JOIN YM_User ymuser ON ymuser.gid = wowh.recordPersonUid  " +
 					" 	WHERE	1 = 1 AND wowh.gid='"+otherScrapgid+"' AND wowh.sobGid = '"+sobId+"' AND wowh.orgGid = '"+ orgId +"' ORDER BY	wowh.pk DESC ";
 		}
@@ -1811,5 +1809,20 @@ public class WareHouseDao extends BaseDao {
 		return (WmOthersscrap) this.emiQuery(sql, WmOthersscrap.class);
 
 
+	}
+
+	public void updateauditDateBygidAndTablename(String gid, String tablename) {
+		String sql = " UPDATE "+tablename+"  set auditDate = billDate where gid  = '"+gid+"' ";
+		this.update(sql);
+
+	}
+
+
+	public void updateAuditDateByBillgid(String tablename ,String gid, Date date) {
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+
+		String formatDate = df.format(date);
+		String sql = " UPDATE "+tablename+"  set auditDate = "+formatDate+" where gid  = '"+gid+"' ";
+		this.update(sql);
 	}
 }
