@@ -2,6 +2,8 @@ package com.emi.wms.servicedata.service;
 
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,6 +41,9 @@ import com.emi.wms.servicedata.dao.WareHouseDao;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
+
+import javax.servlet.http.HttpServletRequest;
 
 public class WareHouseService extends EmiPluginService {
 
@@ -6150,7 +6155,7 @@ public class WareHouseService extends EmiPluginService {
             //更新主表单据的审批时间为单据时间 billDate->auditDate
             String tablename = "WM_OthersScrap";//报废单
             wareHouseDao.updateauditDateBygidAndTablename(wmoh.getGid(),tablename);
-            suc = updateStocksEntity(newAsList);// 修改货位现存量
+            updateStocksEntity(newAsList);// 修改货位现存量
             // 增加批次
             if (wmBatchs.size() > 0) {
                 wareHouseDao.addWmBatch(wmBatchs);
@@ -6167,4 +6172,168 @@ public class WareHouseService extends EmiPluginService {
         return wareHouseDao.getOthersScrapListMy(pageIndex, pageSize,
                 condition,userid);
     }
+
+
+    /**
+     * 获取当前网络ip
+     * @param request
+     * @return
+     */
+        /**
+         * 获取Ip地址
+         * @param request
+         * @return
+         */
+        private  String getIpAdrress(HttpServletRequest request) {
+            String Xip = request.getHeader("X-Real-IP");
+            String XFor = request.getHeader("X-Forwarded-For");
+            if(StringUtils.isNotEmpty(XFor) && !"unKnown".equalsIgnoreCase(XFor)){
+                //多次反向代理后会有多个ip值，第一个ip才是真实ip
+                int index = XFor.indexOf(",");
+                if(index != -1){
+                    return XFor.substring(0,index);
+                }else{
+                    return XFor;
+                }
+            }
+            XFor = Xip;
+            if(StringUtils.isNotEmpty(XFor) && !"unKnown".equalsIgnoreCase(XFor)){
+                return XFor;
+            }
+            if (StringUtils.isBlank(XFor) || "unknown".equalsIgnoreCase(XFor)) {
+                XFor = request.getHeader("Proxy-Client-IP");
+            }
+            if (StringUtils.isBlank(XFor) || "unknown".equalsIgnoreCase(XFor)) {
+                XFor = request.getHeader("WL-Proxy-Client-IP");
+            }
+            if (StringUtils.isBlank(XFor) || "unknown".equalsIgnoreCase(XFor)) {
+                XFor = request.getHeader("HTTP_CLIENT_IP");
+            }
+            if (StringUtils.isBlank(XFor) || "unknown".equalsIgnoreCase(XFor)) {
+                XFor = request.getHeader("HTTP_X_FORWARDED_FOR");
+            }
+            if (StringUtils.isBlank(XFor) || "unknown".equalsIgnoreCase(XFor)) {
+                XFor = request.getRemoteAddr();
+            }
+            return XFor;
+        }
+
+    public PageBean getTransceiversList(int pageIndex, int pageSize, String condition, String startMouth, String endMouth, String whUid, String[] warehouses, HttpServletRequest request) {
+
+        String ip = this.getIpAdrress(request);
+        System.out.println(ip);
+
+        String sql = "";
+        sql+=" DECLARE @MyTable TypeWhUidList ";
+        sql+=" INSERT INTO @MyTable(whUid) ";
+        sql+="     VALUES ('-1')";
+        if(warehouses != null && warehouses.length >0 && !"".equals(warehouses[0])){
+
+            for(int i = 0;i<warehouses.length;i++){
+                String tempcode = warehouses[i];
+                sql += " ,('"+tempcode+"') ";
+            }
+
+        }
+        sql+=" EXEC getTransceiversRealToPage '"+startMouth+"','"+endMouth+"',@MyTable, '"+ip+"'";
+
+
+        wareHouseDao.execute(sql);
+
+        PageBean pageBean =  wareHouseDao.getTransceiversList(pageIndex, pageSize, condition);
+        List list = pageBean.getList();
+        if(list != null && list.size()>0){
+            for(int i = 0 ;i<list.size();i++){
+                WmTransceiversPage wmTransceiversPage = (WmTransceiversPage) list.get(i);
+                AaGoods good = cacheCtrlService.getGoods(wmTransceiversPage.getGoodsuid());
+                if(good!=null){
+                    wmTransceiversPage.setGoodsStandard(good.getGoodsstandard());
+                    wmTransceiversPage.setGoodscode(good.getGoodscode());
+                    Unit unit = cacheCtrlService.getUnit(good.getGoodsunit());
+                    wmTransceiversPage.setClassificationName(unit.getUnitname());
+                }
+            }
+
+
+//        List list = pageBean.getList();
+//        List<String> goodsUidList = new ArrayList<String>();//定义一个goodsUid集合
+//        if(list != null && list.size()>0){
+//            for(int i = 0 ;i<list.size();i++){
+//                WmTransceivers wmTransceivers = (WmTransceivers) list.get(i);
+//                String goodsUid = wmTransceivers.getGoodsuid();
+//                if(!goodsUidList.contains(goodsUid)){
+//                    goodsUidList.add(goodsUid);
+//                }
+//
+//            }
+//
+//
+//            List<WmTransceivers> realWmTList = new ArrayList<WmTransceivers>();
+//            for(int i = 0 ;i<goodsUidList.size();i++){
+//                String realGoodsuid = goodsUidList.get(i);
+//                WmTransceivers wmTransceivers1 = new WmTransceivers();//放在循环外面，说明下面只循环的是realGoodsuid当前物料id的东西，变相更新
+//                BigDecimal mouthInNumber = new BigDecimal(0);
+//                BigDecimal mouthOutNumber = new BigDecimal(0);
+//                for(int j = 0 ;j<list.size();j++){
+//                    WmTransceivers wmTransceivers = (WmTransceivers) list.get(j);
+//                    if(realGoodsuid.equals(wmTransceivers.getGoodsuid())){
+//                        AaGoods good = cacheCtrlService.getGoods(realGoodsuid);
+//                        if(good!=null){
+//                            Unit unit  = cacheCtrlService.getUnit(good.getGoodsunit());
+//                            wmTransceivers1.setClassificationName(unit.getUnitname());//主单位名称
+//                            wmTransceivers1.setGoodsName(good.getGoodsname());
+//                            wmTransceivers1.setGoodscode(good.getGoodscode());
+//                            wmTransceivers1.setGoodsStandard(good.getGoodsstandard());
+//
+//                        }
+//                        if(startMouth.equals(wmTransceivers.getSearchDate())){
+//                            wmTransceivers1.setTopTotalNumber(wmTransceivers.getTopTotalNumber());
+//                        }
+//                        if(endMouth.equals(wmTransceivers.getSearchDate())){
+//                            wmTransceivers1.setEndTotalNumber(wmTransceivers.getEndTotalNumber());
+//                        }
+//
+//                        //当月入库数量相加
+//                        BigDecimal mouthInNumber1 = wmTransceivers.getMouthInNumber();
+//                        mouthInNumber =  mouthInNumber.add(mouthInNumber1);
+//                        //当月出库数量相加
+//                        BigDecimal mouthOutNumber1 = wmTransceivers.getMouthInNumber();
+//                        mouthOutNumber =  mouthOutNumber.add(mouthOutNumber1);
+//
+//
+//                    }
+//                }
+//                wmTransceivers1.setMouthInNumber(mouthInNumber);
+//                wmTransceivers1.setMouthOutNumber(mouthOutNumber);
+//
+//                realWmTList.add(wmTransceivers1);
+//
+//            }
+
+
+            //realWmTList是最终的数据List
+
+
+    }
+    return pageBean;
+    }
+
+    public List<Map> getReportListTransceivers(int aa,int bb,String serachEm, String condition) {
+        List list  =  wareHouseDao.getTransceiversListForAll(condition);
+//        if(list != null && list.size()>0) {
+//            for (int i = 0; i < list.size(); i++) {
+//                Map map  = (Map) list.get(i);
+//                AaGoods good = cacheCtrlService.getGoods(wmTransceiversPage.getGoodsuid());
+//                if (good != null) {
+//                    wmTransceiversPage.setGoodsStandard(good.getGoodsstandard());
+//                    wmTransceiversPage.setGoodscode(good.getGoodscode());
+//                    Unit unit = cacheCtrlService.getUnit(good.getGoodsunit());
+//                    wmTransceiversPage.setClassificationName(unit.getUnitname());
+//                }
+//            }
+//        }
+        return list;
+    }
+
+
 }

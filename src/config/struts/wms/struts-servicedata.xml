@@ -99,9 +99,11 @@
 	    <result name="addSaleOutWarehouse">/WEB-INF/jsp/servicedata/wareHouse/saleOutWarehouseAdd.jsp</result>
 	    <result name="saleOutWarehouseList">/WEB-INF/jsp/servicedata/wareHouse/saleOutWarehouseList.jsp</result>
 	 <!-- 库存 -->
-	    <result name="allocationStockList">/WEB-INF/jsp/servicedata/wareHouse/allocationStockList.jsp</result>    
-	 
-	 <!-- 采购入库单 -->
+	    <result name="allocationStockList">/WEB-INF/jsp/servicedata/wareHouse/allocationStockList.jsp</result>
+	<!-- 收发存 汇总表 -->
+		<result name="allocationStockListTransc">/WEB-INF/jsp/servicedata/wareHouse/allocationStockListTransc.jsp</result>
+
+		<!-- 采购入库单 -->
 	    <result name="poWarehouseAdd">/WEB-INF/jsp/servicedata/wareHouse/poWarehouseAdd.jsp</result>
 	    <result name="poWarehouseList">/WEB-INF/jsp/servicedata/wareHouse/poWarehouseList.jsp</result>
 	    

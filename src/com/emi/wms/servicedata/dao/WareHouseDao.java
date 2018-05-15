@@ -1825,4 +1825,29 @@ public class WareHouseDao extends BaseDao {
 		String sql = " UPDATE "+tablename+"  set auditDate = "+formatDate+" where gid  = '"+gid+"' ";
 		this.update(sql);
 	}
+
+	public PageBean getTransceiversList(int pageIndex, int pageSize, String condition) {
+		Map match = new HashMap();
+
+//		match.put("goodsName", "goodsName");
+//		match.put("goodsStandard", "goodsStandard");
+
+		String sql ="select "+CommonUtil.colsFromBean(WmTransceiversPage.class,"owh")+" from WM_Transceivers_Page owh  WITH (NoLock)  ";
+		if(!CommonUtil.isNullString(condition)){
+			sql += condition;
+		}
+		return this.emiQueryList(sql, pageIndex, pageSize, WmTransceiversPage.class,match,"pk");
+
+	}
+
+	public List getTransceiversListForAll(String condition) {
+		String sql ="select "+CommonUtil.colsFromBean(WmTransceiversPage.class,"owh")+" ,ag.goodsCode as goodsCode1,u.unitName as  goodsUnit1,ag.goodsStandard as  goodsStandard1 from WM_Transceivers_Page owh  WITH (NoLock)  ";
+		sql+= " left join AA_Goods ag on ag.gid = owh.goodsUid " +
+				" left join unit u on u.gid = ag.goodsUnit ";
+		if(!CommonUtil.isNullString(condition)){
+			sql += condition;
+		}
+		return this.queryForList(sql);
+
+	}
 }

@@ -2,6 +2,7 @@ package com.emi.wms.servicedata.action;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.InetAddress;
 import java.net.URLEncoder;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -3432,10 +3433,10 @@ public class WareHouseAction extends BaseAction{
 
 	public String allocationStockList(){
 		try{
-			
-		int pageIndex = getPageIndex();
-		int pageSize = getPageSize();
-		String goodscode = getParameter("goodscode");//物料编码
+
+			int pageIndex = getPageIndex();
+			int pageSize = getPageSize();
+			String goodscode = getParameter("goodscode");//物料编码
 			String goodsname = getParameter("goodsname");//物料名称
 			String[] warehouses = getRequest().getParameterValues("xsry");//仓库子集
 			StringBuffer sb = new StringBuffer();
@@ -3463,18 +3464,18 @@ public class WareHouseAction extends BaseAction{
 			}
 			String  condition = sb.toString();
 
-		setRequstAttribute("goodscode",goodscode);
-		setRequstAttribute("goodsname",goodsname);
-		if(warehouses != null){
-			setRequstAttribute("warehouses",String.join(",",warehouses));
-		}
+			setRequstAttribute("goodscode",goodscode);
+			setRequstAttribute("goodsname",goodsname);
+			if(warehouses != null){
+				setRequstAttribute("warehouses",String.join(",",warehouses));
+			}
 
 
-		String orgId=getSession().get("OrgId").toString();
-		String sobId=getSession().get("SobId").toString();
-		condition+=" and owh.sobGid='"+sobId+"' and owh.orgGid='"+orgId+"'";
-		PageBean list = wareHouseService.getAllocationStockList(pageIndex, pageSize, condition);
-		for(int i=0;i<list.getList().size();i++){
+			String orgId=getSession().get("OrgId").toString();
+			String sobId=getSession().get("SobId").toString();
+			condition+=" and owh.sobGid='"+sobId+"' and owh.orgGid='"+orgId+"'";
+			PageBean list = wareHouseService.getAllocationStockList(pageIndex, pageSize, condition);
+			for(int i=0;i<list.getList().size();i++){
 				if(!CommonUtil.isNullString(((WmAllocationstock)list.getList().get(i)).getGoodsuid())){
 					AaGoods good = cacheCtrlService.getGoods(((WmAllocationstock)list.getList().get(i)).getGoodsuid().toString());
 					if(!CommonUtil.isNullObject(good)){
@@ -3492,16 +3493,72 @@ public class WareHouseAction extends BaseAction{
 							((WmAllocationstock)list.getList().get(i)).setWhname(warehouse.getWhname());
 						}
 					}
-					
+
 				}
-				
-		}
-		setRequstAttribute("data", list);
+
+			}
+			setRequstAttribute("data", list);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 		return "allocationStockList";
 	}
+
+
+
+
+	/**
+	* @Desc 收发存汇总表
+	* @author yurh
+	* @create 2018-05-13 15:12:38
+	**/
+	public String transceiversList(){
+		try{
+
+			int pageIndex = getPageIndex();
+			int pageSize = getPageSize();
+			String startMouth = getParameter("startMouth");//开始时间
+			String endMouth = getParameter("endMouth");//结束时间
+
+
+
+			String[] warehouses = getRequest().getParameterValues("xsry");//仓库子集
+			String whUid = "";
+			if(warehouses != null && warehouses.length >0 && !"".equals(warehouses[0])){
+
+				for(int i = 0;i<warehouses.length;i++){
+					String tempcode = warehouses[i];
+//					System.out.println(tempcode);
+					whUid+= "'"+tempcode+"',";
+				}
+				whUid += "'-1'";
+
+			}
+
+
+
+			if(warehouses != null){
+				setRequstAttribute("warehouses",String.join(",",warehouses));
+			}
+
+			setRequstAttribute("startMouth",startMouth);
+			setRequstAttribute("endMouth",endMouth);
+
+			String condition = "";
+			String orgId=getSession().get("OrgId").toString();
+			String sobId=getSession().get("SobId").toString();
+//			condition+=" and owh.sobGid='"+sobId+"' and owh.orgGid='"+orgId+"'";
+			PageBean list = wareHouseService.getTransceiversList(pageIndex, pageSize, condition,startMouth,endMouth,whUid,warehouses,getRequest());
+			setRequstAttribute("data", list);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return "allocationStockListTransc";
+	}
+
+
+
+
 
 	public void getWareHouseList(){
 		List list = wareHouseService.getwarehouseList();
@@ -3589,10 +3646,70 @@ public class WareHouseAction extends BaseAction{
 			this.writeError();
 		}
 
+	}
+
+
+
+	/**
+	* @Desc 收发存汇总导出
+	* @author yurh
+	* @create 2018-05-15 13:00:25
+	**/
+	public void downorprintTansceivers(){
+		String outname=getParameter("outname");
+		String type=getParameter("type");
+//		String serachEm=getParameter("serachEm");
+		String dataname=getParameter("dataname");
+		String titlelist=getParameter("titlelist");
+
+
+
+//		String startMouth = getParameter("startMouth");//开始时间
+//		String endMouth = getParameter("endMouth");//结束时间
+//		String warehouses = getParameter("warehouses");//仓库子集
+
+
+
+		StringBuffer sb = new StringBuffer();
 
 
 
 
+
+		String  condition = sb.toString();
+
+
+
+
+		List<Map> pb =downloadprintdata("",dataname,condition);
+		try {
+			if(type.equals("down")){
+				//生成excel
+				double totalmoney = 0;
+				double discountedtotalPrice = 0;
+				double shouldtotalprice = 0;
+				Map mapforkc = new HashMap();
+				List<Map> classinfo = new ArrayList<Map>();
+				if(dataname.equals("graveWallYear")){
+//					classinfo = reportService.getClassListInfo();
+
+				}
+				HSSFWorkbook workbook=createxcel(outname,JSONObject.fromObject(titlelist),pb,totalmoney,discountedtotalPrice,shouldtotalprice,classinfo,dataname,mapforkc);
+				getResponse().reset();
+				getResponse().setContentType("application/vnd.ms-excel");
+				getResponse().setHeader("Content-Disposition", "attachment;filename="
+						+ URLEncoder.encode(outname + ".xls", "UTF-8"));
+				workbook.write(getResponse().getOutputStream());
+				getResponse().getOutputStream().flush();
+				getResponse().getOutputStream().close();
+
+			}else{
+				getResponse().getWriter().write(JSONObject.fromObject(pb).toString());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			this.writeError();
+		}
 
 	}
 
@@ -3604,6 +3721,10 @@ public class WareHouseAction extends BaseAction{
 		List<Map> pb =null;
 		if(dataname.equals("allocationstock")){
 			pb = wareHouseService.getReportList(0, 0,serachEm,condition);
+		}
+		if(dataname.equals("tansceivers")){
+
+			pb = wareHouseService.getReportListTransceivers(0, 0,serachEm,condition);
 		}
 
 		return pb;
@@ -3779,14 +3900,14 @@ public class WareHouseAction extends BaseAction{
 		}
 
 		int totlerow = 0;
-		Map map = new HashMap();
+//		Map map = new HashMap();
 
-		String tempmouth = "";
-		Double tempshouldprice = 0.00;
-		Double tempdiscountedPrice = 0.00;
-		Double tempprice = 0.00;
+//		String tempmouth = "";
+//		Double tempshouldprice = 0.00;
+//		Double tempdiscountedPrice = 0.00;
+//		Double tempprice = 0.00;
 
-		String tempareaname = "";
+//		String tempareaname = "";
 
 
 
