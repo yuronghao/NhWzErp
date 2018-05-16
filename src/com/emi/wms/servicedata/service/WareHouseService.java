@@ -3,17 +3,10 @@ package com.emi.wms.servicedata.service;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.UnknownHostException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import com.alibaba.fastjson.JSON;
 import com.emi.android.action.Submit;
@@ -6175,7 +6168,7 @@ public class WareHouseService extends EmiPluginService {
 
 
     /**
-     * 获取当前网络ip
+     * 获取当前计算机的mac地址
      * @param request
      * @return
      */
@@ -6185,37 +6178,36 @@ public class WareHouseService extends EmiPluginService {
          * @return
          */
         private  String getIpAdrress(HttpServletRequest request) {
-            String Xip = request.getHeader("X-Real-IP");
-            String XFor = request.getHeader("X-Forwarded-For");
-            if(StringUtils.isNotEmpty(XFor) && !"unKnown".equalsIgnoreCase(XFor)){
-                //多次反向代理后会有多个ip值，第一个ip才是真实ip
-                int index = XFor.indexOf(",");
-                if(index != -1){
-                    return XFor.substring(0,index);
-                }else{
-                    return XFor;
+            try {
+                Enumeration<NetworkInterface> enumeration = NetworkInterface.getNetworkInterfaces();
+                while (enumeration.hasMoreElements()) {
+                    StringBuffer stringBuffer = new StringBuffer();
+                    NetworkInterface networkInterface = enumeration.nextElement();
+                    if (networkInterface != null) {
+                        byte[] bytes = networkInterface.getHardwareAddress();
+                        if (bytes != null) {
+                            for (int i = 0; i < bytes.length; i++) {
+                                if (i != 0) {
+                                    stringBuffer.append("-");
+                                }
+                                int tmp = bytes[i] & 0xff; // 字节转换为整数
+                                String str = Integer.toHexString(tmp);
+                                if (str.length() == 1) {
+                                    stringBuffer.append("0" + str);
+                                } else {
+                                    stringBuffer.append(str);
+                                }
+                            }
+                            String mac = stringBuffer.toString().toUpperCase();
+                            System.out.println(mac);
+                            return mac;
+                        }
+                    }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            XFor = Xip;
-            if(StringUtils.isNotEmpty(XFor) && !"unKnown".equalsIgnoreCase(XFor)){
-                return XFor;
-            }
-            if (StringUtils.isBlank(XFor) || "unknown".equalsIgnoreCase(XFor)) {
-                XFor = request.getHeader("Proxy-Client-IP");
-            }
-            if (StringUtils.isBlank(XFor) || "unknown".equalsIgnoreCase(XFor)) {
-                XFor = request.getHeader("WL-Proxy-Client-IP");
-            }
-            if (StringUtils.isBlank(XFor) || "unknown".equalsIgnoreCase(XFor)) {
-                XFor = request.getHeader("HTTP_CLIENT_IP");
-            }
-            if (StringUtils.isBlank(XFor) || "unknown".equalsIgnoreCase(XFor)) {
-                XFor = request.getHeader("HTTP_X_FORWARDED_FOR");
-            }
-            if (StringUtils.isBlank(XFor) || "unknown".equalsIgnoreCase(XFor)) {
-                XFor = request.getRemoteAddr();
-            }
-            return XFor;
+            return null;
         }
 
     public PageBean getTransceiversList(int pageIndex, int pageSize, String condition, String startMouth, String endMouth, String whUid, String[] warehouses, HttpServletRequest request) {
@@ -6318,8 +6310,10 @@ public class WareHouseService extends EmiPluginService {
     return pageBean;
     }
 
-    public List<Map> getReportListTransceivers(int aa,int bb,String serachEm, String condition) {
-        List list  =  wareHouseDao.getTransceiversListForAll(condition);
+    public List<Map> getReportListTransceivers(int aa, int bb, String serachEm, String condition, HttpServletRequest request) {
+          String macString =  this.getIpAdrress(request);
+          String condition1  = " and owh.ip = '"+macString+"' ";
+        List list  =  wareHouseDao.getTransceiversListForAll(condition1);
 //        if(list != null && list.size()>0) {
 //            for (int i = 0; i < list.size(); i++) {
 //                Map map  = (Map) list.get(i);

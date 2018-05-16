@@ -2,7 +2,6 @@ package com.emi.wms.servicedata.action;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.net.InetAddress;
 import java.net.URLEncoder;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -11,9 +10,7 @@ import java.util.*;
 
 import com.alibaba.fastjson.JSON;
 import com.emi.common.util.Constants;
-import com.emi.sys.core.format.EmiJsonArray;
 import com.emi.wms.bean.*;
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import com.emi.cache.service.CacheCtrlService;
@@ -26,6 +23,8 @@ import com.emi.wms.servicedata.service.WareHouseService;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.hssf.util.CellRangeAddress;
 import org.apache.poi.ss.util.RegionUtil;
+
+import javax.servlet.http.HttpServletRequest;
 
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class WareHouseAction extends BaseAction{
@@ -3616,7 +3615,7 @@ public class WareHouseAction extends BaseAction{
 
 
 
-		List<Map> pb =downloadprintdata("",dataname,condition);
+		List<Map> pb =downloadprintdata("",dataname,condition,getRequest());
 		try {
 			if(type.equals("down")){
 				//生成excel
@@ -3681,7 +3680,7 @@ public class WareHouseAction extends BaseAction{
 
 
 
-		List<Map> pb =downloadprintdata("",dataname,condition);
+		List<Map> pb =downloadprintdata("",dataname,condition, getRequest());
 		try {
 			if(type.equals("down")){
 				//生成excel
@@ -3715,7 +3714,7 @@ public class WareHouseAction extends BaseAction{
 
 
 
-	public List<Map> downloadprintdata(String serachEm, String dataname, String condition){
+	public List<Map> downloadprintdata(String serachEm, String dataname, String condition, HttpServletRequest request){
 
 
 		List<Map> pb =null;
@@ -3724,7 +3723,7 @@ public class WareHouseAction extends BaseAction{
 		}
 		if(dataname.equals("tansceivers")){
 
-			pb = wareHouseService.getReportListTransceivers(0, 0,serachEm,condition);
+			pb = wareHouseService.getReportListTransceivers(0, 0,serachEm,condition,request);
 		}
 
 		return pb;
