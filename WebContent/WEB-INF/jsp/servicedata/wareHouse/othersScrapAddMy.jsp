@@ -609,7 +609,7 @@
 </head>
 <body style="background-color: #FFFFFF;">
 <form id="myform" name="myform" action="" method="post">
-<input type="hidden" name="time" id="time" value="${time }" />
+<%--<input type="hidden" name="time" id="time" value="${time }" />--%>
 <input type="hidden" name="deleteGids" id="deleteGids" />
 <input type="hidden" id="othersScrapgid" name="othersScrapgid" value="${otherScrap['gid']}">
 		 <div class="EMonecontent">
@@ -802,7 +802,7 @@
 			                <%--<td class="note"><input type="text" id="" name="note" class="listword toDealInput" value="${type.notes}" readonly="readonly"></td>--%>
 			                <%--<td class="cfree"><input type="text" id="" name="cfree" class="listword" value="${type.cfree1}" readonly="readonly"></td>--%>
 			                <%--<td class="smallamount"><input type="text" id="" name="smallamount" class="listword" value="<fmt:formatNumber type="number" value="${type.number}" minFractionDigits="2"/>"></td>--%>
-			                <input type="hidden" id="" name="process" class="listword" value="${type.code}">
+			                <%--<input type="hidden" id="" name="process" class="listword" value="${type.code}">--%>
 				 		    </tr>
 				 	        </c:forEach>
 				 			</tbody>
