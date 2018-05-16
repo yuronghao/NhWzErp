@@ -3348,7 +3348,7 @@ public class WareHouseService extends EmiPluginService {
             wmcat.setWhCode(gaIn.getWhcode());
             wmcat.setGoodsuid(good.getGid());
             wmcat.setGoodscode(good.getGoodscode());
-            wmcat.setNumber(new BigDecimal(0).subtract(new BigDecimal(((Map) othersOutC.get(i)).get("number").toString())));
+            wmcat.setNumber(new BigDecimal(((Map) othersOutC.get(i)).get("number").toString()));
 
 //			if (!CommonUtil.isNullObject(((Map) othersOutC.get(i)).get("assistNumber"))) {
 //				wmcat.setAssistnum(new BigDecimal(0).subtract(new BigDecimal(((Map) othersOutC.get(i)).get("assistNumber").toString())));
@@ -5180,6 +5180,8 @@ public class WareHouseService extends EmiPluginService {
             wareHouseDao.updateFollowMovingStatus(type,followmovinggid);
             //把该所有审核节点 审核状态为0的都设置为驳回2
             wareHouseDao.updateFollowMovingStatusBohui(owhGid);
+            //驳回，就设置改单据的isused为1 废弃
+            wareHouseDao.updateIsUsedByBillGid(owhGid);
 
         }
 
@@ -5563,6 +5565,7 @@ public class WareHouseService extends EmiPluginService {
 
         boolean flag = false;
         FollowRule followRule = wareHouseDao.getFollowRule(invoicestype,rdstylegid);
+        wareHouseDao.updateIsUsedByBillGid(billgid);//所有该单据的是否使用设置为1：不使用
         if(followRule != null){
             List<Map>  followRuleNodeUserList= wareHouseDao.getFollowRuleNodeUserList(followRule.getId());
             if(followRuleNodeUserList != null && followRuleNodeUserList.size() >0){
@@ -6054,7 +6057,7 @@ public class WareHouseService extends EmiPluginService {
             wmcat.setWhCode(gaIn.getWhcode());
             wmcat.setGoodsuid(good.getGid());
             wmcat.setGoodscode(good.getGoodscode());
-            wmcat.setNumber(new BigDecimal(0).subtract(new BigDecimal(((Map) othersScrapC.get(i)).get("number").toString())));
+            wmcat.setNumber(new BigDecimal(((Map) othersScrapC.get(i)).get("number").toString()));
 
             wmcat.setOrggid(wmoh.getOrgGid());
             wmcat.setSobgid(wmoh.getSobGid());
@@ -6064,7 +6067,7 @@ public class WareHouseService extends EmiPluginService {
                 wmb.setGoodsUid(good.getGid());
                 wmb.setGoodsAllocationUid(gaIn.getGid());
                 wmb.setBatch(CommonUtil.Obj2String(((Map) othersScrapC.get(i)).get("batch").toString()));
-                wmb.setNumber(new BigDecimal(0).subtract(new BigDecimal(((Map) othersScrapC.get(i)).get("number").toString())));
+                wmb.setNumber(new BigDecimal(((Map) othersScrapC.get(i)).get("number").toString()));
                 if ((new BigDecimal(0).subtract(new BigDecimal(((Map) othersScrapC.get(i)).get("number").toString()))).compareTo(new BigDecimal(0)) >= 0) {
                     wmb.setRedBlueFlag(1);//1、蓝字单据，0、红字单据
                 } else {

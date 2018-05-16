@@ -644,7 +644,7 @@
 							 * @param [div_id] 【非必填】翻页按钮所在的div的id(默认叫emi_page_turning,如有需要可以修改)
 							 */
 							 var cond = "";
-		 					initPageTurning('${ctx }/wms/wareHouse_toAddOthersScrap.emi','WM_OthersOut','gid',"${otherScrap['gid']}",
+		 					initPageTurning('${ctx }/wms/wareHouse_toAddOthersScrapMy.emi','WM_OthersScrap','gid',"${otherScrap['gid']}",
 		 							cond,'otherScrapgid');
 		 				});
 		 			</script>

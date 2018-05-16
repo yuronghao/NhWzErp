@@ -416,7 +416,7 @@ public class WareHouseAction extends BaseAction{
 						wmb.setGoodsUid(goodsUid[i]);
 						wmb.setGoodsAllocationUid(goodsAllocationUid[i]);
 						wmb.setBatch(CommonUtil.Obj2String(batch[i]));
-						wmb.setNumber(new BigDecimal(mainNumber[i]));
+						wmb.setNumber(new BigDecimal(mainNumber[i]).negate());
 //			                if(!CommonUtil.isNullObject(CommonUtil.Obj2String(assistNumber[i]))){
 //			                wmb.setAssistNum(new BigDecimal(assistNumber[i]));}
 //			                wmb.setRedBlueFlag(Integer.parseInt(badge));//1、蓝字单据，0、红字单据
@@ -543,7 +543,7 @@ public class WareHouseAction extends BaseAction{
 
 
 	/**
-	 * 修改其他入库
+	 * 修改其他入库单
 	 * @category
 	 * 2016年7月6日 下午3:16:37
 	 * @author 杨胜
@@ -644,7 +644,7 @@ public class WareHouseAction extends BaseAction{
 
 
 	/**
-	* @Desc 修改其他出库
+	* @Desc 修改其他出库单
 	* @author yurh
 	* @create 2018-03-19 10:55:11
 	**/
@@ -712,7 +712,7 @@ public class WareHouseAction extends BaseAction{
 						wmb.setGoodsUid(goodsUid[i]);
 						wmb.setGoodsAllocationUid(goodsAllocationUid[i]);
 						wmb.setBatch(CommonUtil.Obj2String(batch[i]));
-						wmb.setNumber(new BigDecimal(mainNumber[i]));
+						wmb.setNumber(new BigDecimal(mainNumber[i]).negate());
 //			                if(!CommonUtil.isNullObject(CommonUtil.Obj2String(assistNumber[i]))){
 //			                wmb.setAssistNum(new BigDecimal(assistNumber[i]));}
 //			                wmb.setRedBlueFlag(Integer.parseInt(badge));//1、蓝字单据，0、红字单据
@@ -781,7 +781,7 @@ public class WareHouseAction extends BaseAction{
 					wmohc.setBatch(CommonUtil.Obj2String(batch[i]));
 
 
-					WmAllocationstock wmcat=new WmAllocationstock();////货位现存量入
+					WmAllocationstock wmcat=new WmAllocationstock();////
 					wmcat.setBatch(CommonUtil.Obj2String(batch[i]));
 					AaGoodsallocation gaIn=cacheCtrlService.getGoodsAllocation(goodsAllocationUid[i]);
 					wmcat.setGoodsallocationcode(gaIn.getCode());
@@ -799,7 +799,7 @@ public class WareHouseAction extends BaseAction{
 						wmb.setGoodsUid(goodsUid[i]);
 						wmb.setGoodsAllocationUid(goodsAllocationUid[i]);
 						wmb.setBatch(CommonUtil.Obj2String(batch[i]));
-						wmb.setNumber(new BigDecimal(mainNumber[i]));
+						wmb.setNumber(new BigDecimal(mainNumber[i]).negate());
 
 						wmb.setRecordDate(new Timestamp(new Date().getTime()));
 						wmBatchs.add(wmb);
@@ -1606,9 +1606,11 @@ public class WareHouseAction extends BaseAction{
 						WmAllocationstock wmcat=new WmAllocationstock();////货位现存量入
 						wmcat.setBatch(CommonUtil.Obj2String(batch[i]));
 						AaGoodsallocation gaIn=cacheCtrlService.getGoodsAllocation(goodsAllocationUid[i]);
-						wmcat.setGoodsallocationcode(gaIn.getCode());
-						wmcat.setGoodsallocationuid(gaIn.getGid());
-						wmcat.setWhCode(gaIn.getWhcode());
+						if(gaIn != null){
+                            wmcat.setGoodsallocationcode(gaIn.getCode());
+                            wmcat.setGoodsallocationuid(gaIn.getGid());
+                            wmcat.setWhCode(gaIn.getWhcode());
+                        }
 						wmcat.setGoodsuid(goodsUid[i]);
 						wmcat.setGoodscode(goodsCode[i]);
 						wmcat.setNumber(new BigDecimal(mainNumber[i]));
@@ -1646,7 +1648,11 @@ public class WareHouseAction extends BaseAction{
 			}
 		}
 		
-		//修改采购入库
+		/**
+		* @Desc 修改采购入库单
+		* @author yurh
+		* @create 2018-05-16 14:43:42
+		**/
 		public void updatePoWarehouse(){
 			try{
 				//添加生产入库 主表 子表
@@ -2399,13 +2405,22 @@ public class WareHouseAction extends BaseAction{
 					List materialApplyC = wareHouseService.getMaterApplyList(saleApplyWarehouse.get("gid").toString());
 					for(int i=0;i<materialApplyC.size();i++){
 						AaGoods good = cacheCtrlService.getGoods(((WmMaterialapplyC)materialApplyC.get(i)).getGoodsuid().toString());
-						((WmMaterialapplyC)materialApplyC.get(i)).setGood(good);
+						if(good != null){
+                            ((WmMaterialapplyC)materialApplyC.get(i)).setGood(good);
+                        }
+
 						AaGoodsallocation alocation=cacheCtrlService.getGoodsAllocation(((WmMaterialapplyC)materialApplyC.get(i)).getGoodsallocationuid().toString());
-						((WmMaterialapplyC)materialApplyC.get(i)).setAlocation(alocation.getName());
+						if(alocation != null){
+                            ((WmMaterialapplyC)materialApplyC.get(i)).setAlocation(alocation.getName());
+                        }
+
 						if (!CommonUtil.isNullObject(((WmMaterialapplyC)materialApplyC.get(i)).getGoodName())) {
 							AaGoods goods = cacheCtrlService.getGoods(((WmMaterialapplyC)materialApplyC.get(i)).getGoodName().toString());
-							((WmMaterialapplyC)materialApplyC.get(i)).setGoodName(goods.getGoodsname());
-							((WmMaterialapplyC)materialApplyC.get(i)).setGoodsStandard(goods.getGoodsstandard());
+							if(goods != null){
+                                ((WmMaterialapplyC)materialApplyC.get(i)).setGoodName(goods.getGoodsname());
+                                ((WmMaterialapplyC)materialApplyC.get(i)).setGoodsStandard(goods.getGoodsstandard());
+                            }
+
 						}
 
 					}
@@ -2842,7 +2857,11 @@ public class WareHouseAction extends BaseAction{
 		}
 	}
 
-		//修改材料出库 主表 子表
+	/**
+	* @Desc 修改材料出库 主表 子表
+	* @author yurh
+	* @create 2018-05-16 14:44:42
+	**/
 		public void updateMaterialOutWarehouse(){
 			try{
 				String badge=getParameter("badge");
@@ -3290,7 +3309,12 @@ public class WareHouseAction extends BaseAction{
 		}
 	}
 		
-		//材料出库列表
+		//
+		/**
+		* @Desc 材料出库单列表
+		* @author yurh
+		* @create 2018-05-16 15:34:29
+		**/
 		public String materialOutWarehouseList(){
 			try{
 				//String page=this.getRequest().getParameter("pageIndex");//Integer.valueOf(page);

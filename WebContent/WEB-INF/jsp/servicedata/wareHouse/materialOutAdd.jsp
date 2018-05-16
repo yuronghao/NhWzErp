@@ -29,7 +29,7 @@
 			var trs=$('.serialTr');
 			if(trs.length<=0)
 				{
-					$.dialog.alert_w("销售出库明细不能为空!");
+					$.dialog.alert_w("材料出库明细不能为空!");
 				  	return false;
 				}
 			
@@ -106,7 +106,12 @@
 
 			});
 			//修改
-			$('#revBtn').click(function(){	
+			$('#revBtn').click(function(){
+			    var status = '${saleOutWarehouse['status']}';
+			    if(status >0  && status <3){
+                    $.dialog.alert_e("已提交审核,无法修改");
+                    return false;
+                }
 				if($('#produceWarehousegid').val()==""){
 					return false;
 				}
@@ -132,6 +137,7 @@
 					$('.endDate').attr("onclick","WdatePicker({dateFmt:'yyyy-MM-dd'})");
 					$(".jjjnumric").attr("onclick","clickFlag(this)");
 					$("#customerName").attr("onclick","selectcustomer()");
+                    $("#businessTypeUid").attr("disabled","disabled");
 					revBtn();
 				}
 			});	

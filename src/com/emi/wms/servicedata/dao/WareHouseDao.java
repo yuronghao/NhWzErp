@@ -1099,7 +1099,8 @@ public class WareHouseDao extends BaseDao {
 			match.put("recordPerson", "recordPerson");
 			match.put("departId", "departId");
 			match.put("whUid", "whUid");
-			String sql="SELECT"+CommonUtil.colsFromBean(WmMaterialoutC.class, "wmc")+",owh.gid owhGid,owh.billCode owhCode,owh.recordPerson recordPerson,owh.departmentUid departId,owh.whUid whUid,wpo.billCode produceCode,wpoc.goodsUid goodName FROM WM_MaterialOut owh ";
+			match.put("status", "status");
+			String sql="SELECT"+CommonUtil.colsFromBean(WmMaterialoutC.class, "wmc")+",owh.gid owhGid,owh.billCode owhCode,owh.recordPerson recordPerson,owh.departmentUid departId,owh.whUid whUid,wpo.billCode produceCode,wpoc.goodsUid goodName,owh.status FROM WM_MaterialOut owh ";
 			sql+="LEFT JOIN	WM_MaterialOut_C wmc ON wmc.materialOutUid=owh.gid ";
 			sql+="LEFT JOIN MES_WM_ProduceProcessRouteCGoods mwprcg ON wmc.processRouteCGoodsUid = mwprcg.gid ";
 			sql+="LEFT JOIN MES_WM_ProduceProcessRouteC prcgc ON mwprcg.produceRouteCGid = prcgc.gid ";
@@ -1439,7 +1440,7 @@ public class WareHouseDao extends BaseDao {
 		sql+="			from ( ";
 		sql+="					select * from FollowInfoMoving fm ";
 		sql+="						WHERE ";
-		sql+="						fm.approvaluser = '6C353A55-DFCF-45FA-B45A-2F9745129A53'  AND fm.isused = 0 ";
+		sql+="						fm.approvaluser = '"+userid+"'  AND fm.isused = 0 ";
 		sql+="					AND fm.status = 0 ";
 		sql+="			)x ";
 		sql+="	) as AuctionRecords ";
@@ -1849,5 +1850,10 @@ public class WareHouseDao extends BaseDao {
 		}
 		return this.queryForList(sql);
 
+	}
+
+	public void updateIsUsedByBillGid(String billgid) {
+		String sql = " UPDATE FollowInfoMoving  set isused = 1 where billsgid = '"+billgid+"' ";
+		this.update(sql);
 	}
 }

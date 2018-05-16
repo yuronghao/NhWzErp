@@ -584,7 +584,7 @@
 							 * @param [div_id] 【非必填】翻页按钮所在的div的id(默认叫emi_page_turning,如有需要可以修改)
 							 */
 							 var cond = "";
-		 					initPageTurning('${ctx }/wms/wareHouse_toAddMaterialApply.emi','WM_MaterialApply','gid',"${saleApplyWarehouse['gid']}",
+		 					initPageTurning('${ctx }/wms/wareHouse_toAddMaterialApplyMy.emi','WM_MaterialApply','gid',"${saleApplyWarehouse['gid']}",
 		 							cond,'materialApplygid');
 		 				});
 		 			</script>

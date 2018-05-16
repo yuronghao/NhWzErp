@@ -107,7 +107,14 @@
 				addBtn();
 			});
 			//修改
-			$('#revBtn').click(function(){	
+			$('#revBtn').click(function(){
+                var status = '${otherScrap['status']}';
+                if(status >0 && status <3){
+                    $.dialog.alert_e("已提交审核,无法修改");
+                    return false;
+                }
+
+
 				if($('#othersScrapgid').val()==""){
 					return false;
 				}
@@ -132,6 +139,7 @@
 					$('.startDate').attr("onclick","WdatePicker({dateFmt:'yyyy-MM-dd'})");
 					$('.endDate').attr("onclick","WdatePicker({dateFmt:'yyyy-MM-dd'})");
 					$(".jjjnumric").attr("onclick","clickFlag(this)");
+                    $("#businessTypeUid").attr("disabled","disabled");
 					revBtn();
 				}
 			});	

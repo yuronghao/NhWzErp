@@ -208,7 +208,7 @@
 		
 		
 		function getprocurearrivallist(){
-			window.location.href = '${ctx}/wms/allocation_gtasksMygetAllocationList.emi';
+			window.location.href = '${ctx}/wms/wareHouse_gtasksMygetAllocationList.emi';
 		}
 		
 		function getSerial(){
@@ -649,7 +649,7 @@
 							 * @param [div_id] 【非必填】翻页按钮所在的div的id(默认叫emi_page_turning,如有需要可以修改)
 							 */
 							 var cond = "";
-		 					initPageTurning('${ctx }/wms/wareHouse_toAddCall.emi','WM_Call','gid',"${call['gid']}",
+		 					initPageTurning('${ctx }/wms/wareHouse_toAddCallMy.emi','WM_Call','gid',"${call['gid']}",
 		 							cond,'callgid');
 		 				});
 		 			</script>

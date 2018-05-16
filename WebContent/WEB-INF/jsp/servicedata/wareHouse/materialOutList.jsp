@@ -43,7 +43,8 @@
 								<%--<th>辅单位</th>--%>
 								<%--<th>辅数量</th>--%>
 								<th>货位号</th>
-								<th>条形码</th>
+								<th>审核状态</th>
+								<%--<th>条形码</th>--%>
 								<%--<th>生产订单编号</th>--%>
 								<%--<th>产品名称</th>--%>
 			 				</tr>
@@ -68,9 +69,24 @@
 								<%--<td></td>--%>
 								<%--</c:if>--%>
 								<td>${bean.alocation}</td>
-								<td>${bean.barCode}</td>
-								<td>${bean.produceCode}</td> 	
-								<td>${bean.goodName}</td> 									
+
+								<td>
+									<c:if test="${bean.status == 0}">
+										<span style="color: #0e78c9">未审核</span>
+									</c:if>
+									<c:if test="${bean.status == 1}">
+										<span style="color: #0E2D5F">审核中</span>
+									</c:if>
+									<c:if test="${bean.status == 2}">
+										<span style="color: #00B83F">已通过</span>
+									</c:if>
+									<c:if test="${bean.status == 3}">
+										<span style="color: red">被驳回</span>
+									</c:if>
+								</td>
+								<%--<td>${bean.barCode}</td>--%>
+								<%--<td>${bean.produceCode}</td> 	--%>
+								<%--<td>${bean.goodName}</td>--%>
 								<%-- <td>${bean.recordPersonName}</td>
 								<td>${fn:substring(bean.billdate,0,10)}</td>
 								<td>${bean.notes}</td> --%>

@@ -33,7 +33,7 @@
 			var trs=$('.serialTr');
 			if(trs.length<=0)
 				{
-					$.dialog.alert_w("生产入库明细不能为空!");
+					$.dialog.alert_w("采购入库明细不能为空!");
 				  	return false;
 				}
 			
@@ -221,14 +221,14 @@
 				trs.eq(i).children('.goodsstandard').children().attr('id','goodsstandard'+(i+1));
 				trs.eq(i).children('.mainUnit').children().attr('id','mainUnit'+(i+1));
 				trs.eq(i).children('.mainNumber').children().attr('id','mainNumber'+(i+1));
-				trs.eq(i).children('.assistUnit').children().attr('id','assistUnit'+(i+1));
-				trs.eq(i).children('.assistNumber').children().attr('id','assistNumber'+(i+1));
+				// trs.eq(i).children('.assistUnit').children().attr('id','assistUnit'+(i+1));
+				// trs.eq(i).children('.assistNumber').children().attr('id','assistNumber'+(i+1));
 				trs.eq(i).children('.goodsAllocationName').children().attr('id','goodsAllocationName'+(i+1));
 				trs.eq(i).children('.goodsAllocationUid').children().attr('id','goodsAllocationUid'+(i+1));
 				trs.eq(i).children('.batch').children().attr('id','batch'+(i+1));
-				trs.eq(i).children('.barCode').children().attr('id','barCode'+(i+1));
+				// trs.eq(i).children('.barCode').children().attr('id','barCode'+(i+1));
 				trs.eq(i).children('.note').children().attr('id','note'+(i+1));
-				trs.eq(i).children('.assistUnitcode').children().attr('id','assistUnitcode'+(i+1));
+				// trs.eq(i).children('.assistUnitcode').children().attr('id','assistUnitcode'+(i+1));
 				trs.eq(i).children('.cfree').children().attr('id','cfree'+(i+1));
 			} 
 		}
@@ -279,7 +279,7 @@
 						'<td class="batch"><input type="text" id="" name="batch" class="listword batchInput" value="'+binvbach+'" ></td>'+
 						'<td class="price"><input type="text" id="" name="price" class="listword " value="" onchange="getAmount(this);"></td>'+
 		             	'<td class="amount"><input type="text" id="" name="amount" class="listword " value="" readonly="readonly"></td>'+
-						'<td class="barCode"><input type="text" id="" name="barCode" class="listword "  readonly="readonly"></td>'+
+						// '<td class="barCode"><input type="text" id="" name="barCode" class="listword "  readonly="readonly"></td>'+
 						'<td class="note"><input type="text" id="" name="note" class="listword" value=""></td>'+
 //						'<td class="cfree"><input type="text" id="" name="cfree" class="listword" value="" readonly="readonly"></td>'+
 //						'<td class="smallamount"><input type="text" id="" name="smallamount" class="listword" value="" readonly="readonly"></td>'+
@@ -297,6 +297,67 @@
 				});
 			
 		}
+
+
+        function setIsbatch(){
+            var batchs=$('.batchInput');
+
+            for(var i=0;i<batchs.length;i++){
+                alert(batchs.eq(i).attr("isbatch"))
+                if(batchs.eq(i).attr("isbatch")!=1){
+                    batchs.eq(i).attr('readonly','readonly');
+                }
+                if(batchs.eq(i).attr("isbatch")==1){
+                    var covalue = $("#badge").val();
+                    alert(covalue)
+                    if(covalue ==1){
+                        batchs.eq(i).val($("#time").val());//蓝字，
+					}else if(covalue ==0){
+                        // batchs.eq(i).attr('readonly','readonly');
+                        batchs.eq(i).attr('onclick','getBatch(this)');//红字
+					}
+
+
+                }
+            }
+        }
+
+
+
+        function getBatch(obj){
+            if($('#badge').val()==0){//红字时不弹出批次框
+                return;
+            }
+
+            if($(obj).parent().prev().children().val()=="" || $(obj).parent().prev().children().val() == null){
+                $.dialog.alert_w("货位号不能为空！");
+                return;
+            }
+
+            var goodsUid = $(obj).parent().parent().find("input[name='goodsUid']").val();
+            var goodsAllocationUid=$(obj).parent().parent().find("input[name='goodsAllocationUid']").val();
+
+            var pwdWin = $.dialog({
+                drag: true,
+                lock: true,
+                resize: false,
+                title:'选择批次物料',
+                width: '800px',
+                height: '400px',
+                zIndex:4004,
+                content: 'url:${ctx}/plugin_selectAllocationStockList.emi?goodsUid='+goodsUid+'&goodsAllocationUid='+goodsAllocationUid,
+                okVal:"确定",
+                ok:function(){
+                    var usercheck = $("input:checked",this.content.document);
+                    $(obj).val(usercheck.attr("batch"));
+                },
+                cancelVal:"关闭",
+                cancel:true
+            });
+        }
+
+
+
 		function clickFlag(obj)
 		{
 			var temp=$(obj).attr("id").substr(19);
@@ -743,7 +804,7 @@
 				 					<th>批次</th>
 				 					<th>单价</th>
 				 					<th>金额</th>
-				 					<th style="width: 12%">条形码</th>
+				 					<%--<th style="width: 12%">条形码</th>--%>
 				 					<th>备注</th>
                                     <%--<th>工序</th>--%>
 				 					<%--<th>最小包装量</th>--%>
@@ -775,12 +836,12 @@
 			                
 			                <td class="goodsAllocationName"><input type="text" id="" name="goodsAllocationName" class="listword  jjjnumric" value="${type.goodsAllocationName}" readonly="readonly" ></td>
 			                <td class="goodsAllocationUid" style="display:none"><input type="text" id="" name="goodsAllocationUid" class="listword toDealInput" value="${type.goodsAllocationUid}" readonly="readonly"></td>
-			             	<td class="batch"><input type="text" id="" name="batch" class="listword " value="${type.batchCode}" ></td>
+			             	<td class="batch"><input type="text" id="" name="batch" class="listword " value="${type.batchCode}" readonly="readonly"></td>
 			             	 
 			             	 <td class="price"><input type="text" id="" name="price" class="listword " value="<fmt:formatNumber type="number" value="${type.price}" minFractionDigits="2" groupingUsed="false"/> " onchange="getAmount(this);"></td>
 			             	 <td class="amount"><input type="text" id="" name="amount" class="listword " value="${type.amount}" readonly="readonly"></td>
 			                
-			                <td class="barCode"><input type="text" id="" name="barCode" class="listword " value="${type.barCode}" readonly="readonly"></td>
+			                <%--<td class="barCode"><input type="text" id="" name="barCode" class="listword " value="${type.barCode}" readonly="readonly"></td>--%>
 			                <td class="note"><input type="text" id="" name="note" class="listword toDealInput" value="${type.notes}" readonly="readonly"></td>
 			                <%--<td class="cfree"><input type="text" id="" name="cfree" class="listword" value="${type.cfree1}" readonly="readonly"></td>--%>
 			                <%--<td class="smallamount"><input type="text" id="" name="smallamount" class="listword" value="<fmt:formatNumber type="number" value="${type.number}" minFractionDigits="2"/>"></td>--%>

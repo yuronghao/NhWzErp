@@ -276,7 +276,7 @@
                         <%--'<td class="note"><input type="text" id="" name="note" class="listword" value=""></td>'+--%>
                         <%--'<td class="cfree"><input type="text" id="" name="cfree" class="listword" value="${type.cfree1}" readonly="readonly"></td>'+--%>
 		                <%--'<td class="smallamount"><input type="text" id="" name="smallamount" class="listword" ></td>'+--%>
-		                '<td class="printamount"><input type="text" id="" name="printamount" class="listword" value="1"></td>'+
+		                // '<td class="printamount"><input type="text" id="" name="printamount" class="listword" value="1"></td>'+
                         '<input type="hidden" id="" name="process" class="listword" value="'+chek.eq(i).attr("code")+'">'+
 						'</tr>';
 					
@@ -726,7 +726,7 @@
 				 					<%--<th>备注</th>--%>
                                     <%--<th>工序</th>--%>
 				 					<%--<th>最小包装量</th>--%>
-				 					<th>打印份数</th>
+				 					<%--<th>打印份数</th>--%>
 				 				</tr>
 				 			<c:forEach var="type" items="${othersOutC}" varStatus="stat">
 				 		    <tr class="serialTr">
@@ -759,7 +759,7 @@
 			                <%--<td class="note"><input type="text" id="" name="note" class="listword toDealInput" value="${type.notes}" readonly="readonly"></td>--%>
 			                <%--<td class="cfree"><input type="text" id="" name="cfree" class="listword" value="${type.cfree1}" readonly="readonly"></td>--%>
 			                <%--<td class="smallamount"><input type="text" id="" name="smallamount" class="listword" value="<fmt:formatNumber type="number" value="${type.number}" minFractionDigits="2"/>"></td>--%>
-			                <td class="printamount"><input type="text" id="" name="printamount" class="listword" value="1"></td>
+			                <%--<td class="printamount"><input type="text" id="" name="printamount" class="listword" value="1"></td>--%>
 			                <input type="hidden" id="" name="process" class="listword" value="${type.code}">
 				 		    </tr>
 				 	        </c:forEach>
