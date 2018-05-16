@@ -65,7 +65,7 @@
 			 					<%--</c:forEach>--%>
 								<td>
 
-									<span ><a href="${ctx}/wms/wareHouse_toAddCallMy.emi?callgid=${bean.owhGid}&followmovinggid=${bean.followmovinggid}" style="color: blue">审核</a></span>
+									<span ><a href="${ctx}/wms/wareHouse_toAddCallMy.emi?callgid=${bean.gid}&followmovinggid=${bean.followmovinggid}" style="color: blue">审核</a></span>
 
 								</td>
 							</tr>
