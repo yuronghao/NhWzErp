@@ -33,7 +33,7 @@
             var trs=$('.serialTr');
 			if(trs.length<=0)
 				{
-					$.dialog.alert_w("出库明细不能为空!");
+					$.dialog.alert_w("调拨明细不能为空!");
 				  	return false;
 				}
 			

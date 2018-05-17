@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.sql.Timestamp;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -157,6 +158,9 @@ public class WareHouseAction extends BaseAction{
 			return "toAddOthersOut";
 		}
 	}
+
+
+
 
 
 
@@ -2673,7 +2677,7 @@ public class WareHouseAction extends BaseAction{
 					wmcc.setOutgoodsAllocationUid(outgoodsAllocationUid[i]);//调出货位
 					wmcc.setIngoodsAllocationUid(ingoodsAllocationUid[i]);//调入货位
 					wmcc.setNumber(new BigDecimal(mainNumber[i]));
-					wmcc.setOutnumber(new BigDecimal(mainNumber[i]));
+//					wmcc.setOutnumber(new BigDecimal(mainNumber[i]));//出库数量不再这边填写，审核之后填写
 					wmcc.setNotes(note[i]);
 					clist.add(wmcc);
 
@@ -2816,7 +2820,7 @@ public class WareHouseAction extends BaseAction{
 			wmMaterialapply.setOrggid(getSession().get("OrgId").toString());
 			wmMaterialapply.setBilldate(new Date());
 			wmMaterialapply.setRecorddate(new Date());
-			wmMaterialapply.setBadge(Integer.parseInt(badge));
+//			wmMaterialapply.setBadge(Integer.parseInt(badge));
 			wmMaterialapply.setStatus(0);
 
 
@@ -4664,7 +4668,7 @@ public class WareHouseAction extends BaseAction{
 			int pageIndex = getPageIndex();
 			int pageSize = getPageSize();
 			String keyWord = getParameter("keyWord");//搜索关键字
-			String condition = CommonUtil.combQuerySql("owh.billCode,wpo.billCode", keyWord);
+			String condition = CommonUtil.combQuerySql("owh.billCode", keyWord);
 			String sortCon="";
 			if(!CommonUtil.isNullString(keyWord)){
 				List<AaGoods> goods=cacheCtrlService.setGoods();

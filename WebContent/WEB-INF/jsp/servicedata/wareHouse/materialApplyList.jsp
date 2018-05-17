@@ -37,7 +37,7 @@
 								<th>主单位</th>
 								<th>主数量</th>
 								<th>货位号</th>
-								<th>条形码</th>
+								<%--<th>条形码</th>--%>
 								<th>审核状态</th>
 			 				</tr>
 			 				<c:forEach var="bean" items="${data.list }" varStatus="stat">
@@ -52,7 +52,7 @@
 								<td>${bean.good.unitName}</td>
 								<td><fmt:formatNumber type="number" value="${bean.number }" minFractionDigits="2" groupingUsed="false"/></td>
 								<td>${bean.alocation}</td>
-								<td>${bean.barCode}</td>
+								<%--<td>${bean.barCode}</td>--%>
 								<td>
 									<c:if test="${bean.status == 0}">
 										<span style="color: #0e78c9">未审核</span>

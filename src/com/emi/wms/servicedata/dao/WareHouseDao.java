@@ -1416,7 +1416,7 @@ public class WareHouseDao extends BaseDao {
 	}
 
 	public List getFollowInfoMovingByBillgid(String gid) {
-			String sql = " select * from FollowInfoMoving fm where fm.billsgid = '"+gid+"'  and fm.status <> 0 ";
+			String sql = " select * from FollowInfoMoving fm where fm.billsgid = '"+gid+"'  and fm.status <> 0 and fm.isused = 0 ";
 			return this.queryForList(sql);
 
 	}
@@ -1855,5 +1855,11 @@ public class WareHouseDao extends BaseDao {
 	public void updateIsUsedByBillGid(String billgid) {
 		String sql = " UPDATE FollowInfoMoving  set isused = 1 where billsgid = '"+billgid+"' ";
 		this.update(sql);
+	}
+
+	public void updateOutNumberBynumberCall(String gid, String wm_call_c) {
+		String sql = " UPDATE wm_call_c  set outnumber = number where callUid = '"+gid+"' ";
+		this.update(sql);
+
 	}
 }

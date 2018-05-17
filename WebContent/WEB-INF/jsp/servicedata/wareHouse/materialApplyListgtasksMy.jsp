@@ -37,7 +37,7 @@
 								<th>主单位</th>
 								<th>主数量</th>
 								<th>货位号</th>
-								<th>条形码</th>
+								<%--<th>条形码</th>--%>
 								<th>操作</th>
 			 				</tr>
 			 				<c:forEach var="bean" items="${data.list }" varStatus="stat">
@@ -52,7 +52,7 @@
 								<td>${bean.good.unitName}</td>
 								<td><fmt:formatNumber type="number" value="${bean.number }" minFractionDigits="2" groupingUsed="false"/></td>
 								<td>${bean.alocation}</td>
-								<td>${bean.barCode}</td>
+								<%--<td>${bean.barCode}</td>--%>
 								<td>
 
 									<span ><a href="${ctx}/wms/wareHouse_toAddMaterialApplyMy.emi?materialApplygid=${bean.owhGid}&followmovinggid=${bean.followmovinggid}" style="color: blue">审核</a></span>

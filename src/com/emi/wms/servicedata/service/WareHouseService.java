@@ -4287,6 +4287,19 @@ public class WareHouseService extends EmiPluginService {
     // 删除销售出库信息
     @SuppressWarnings({"rawtypes", "unchecked"})
     public JSONObject deleteMaterialOutWarehouse(WmMaterialout wmMaterialout) {
+        JSONObject jobj = new JSONObject();
+
+
+        //判断是否存在审批记录，如果存在，则无法删除
+        List list = wareHouseDao.getFollowInfoMovingByBillgid(wmMaterialout.getGid());
+        if (list != null && list.size() >0){
+            jobj.put("success", 0);
+            jobj.put("failInfor", "已提交审批，无法删除");
+            return jobj;
+        }
+
+
+
         List<WmAllocationstock> asList = new ArrayList<WmAllocationstock>();
         List<WmBatch> wmBatchs = new ArrayList<WmBatch>();
         List wmMaterialoutC = wareHouseDao.getMaterialOutClist(wmMaterialout.getGid());
@@ -4334,7 +4347,7 @@ public class WareHouseService extends EmiPluginService {
         List<WmAllocationstock> newAsList = getNewCurrentStockList(asList);//去重
         boolean isEnough = isEnoughStock(newAsList);
 
-        JSONObject jobj = new JSONObject();
+
 
         if (!isEnough) {
             jobj.put("success", 0);
@@ -5156,6 +5169,7 @@ public class WareHouseService extends EmiPluginService {
                         case "call"://调拨单
                             System.out.println("开始处理 调拨单审核通过业务");
                             tablename = "WM_Call";
+                            wareHouseDao.updateOutNumberBynumberCall(owhGid,"WM_Call_C");//修改已调出数量，为应调出数量
                             this.updateAuditDateByBillgid(tablename,owhGid,new Date());
                             this.doCallAuditOk(followmovinggid,owhGid,session);
                         case "othersscrap"://报废单
@@ -5663,6 +5677,8 @@ public class WareHouseService extends EmiPluginService {
             //不存在审批规则，则执行后续操作
             String tablename = "WM_Call";
             wareHouseDao.updateauditDateBygidAndTablename(wmc.getGid(),tablename);
+
+            wareHouseDao.updateOutNumberBynumberCall(wmc.getGid(),"WM_Call_C");//修改已调出数量，为应调出数量
             wareHouseDao.updateCallState(wmc.getGid());// 更改调拨单状态
             wareHouseDao.emiInsert(wmoo);// 插入其他入主表
             wareHouseDao.emiInsert(wmooclist);// 插入其他入子表

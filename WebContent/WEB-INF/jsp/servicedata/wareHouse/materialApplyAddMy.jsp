@@ -630,16 +630,16 @@
 		 				<div class="cf"></div> 		 				
 		 			</ul>
 		 			<ul class="wordul">
-					<li class="wordli fl">
-						<div class="wordname fl">入库标志：</div>
-						<div class="wordnameinput fl">
-							<select class="toDealSelect" id="badge" name="badge" onchange="getSelect(this)" disabled="disabled">
-								<option value="1" <c:if test="${saleApplyWarehouse['badge'] == 1}">selected="selected"</c:if>>蓝字</option>
-								<option value="0" <c:if test="${saleApplyWarehouse['badge'] == 0}">selected="selected"</c:if>>红字</option>
-							</select>
-						</div>
-						<div class="cf"></div>
-					  </li>
+					<%--<li class="wordli fl">--%>
+						<%--<div class="wordname fl">入库标志：</div>--%>
+						<%--<div class="wordnameinput fl">--%>
+							<%--<select class="toDealSelect" id="badge" name="badge" onchange="getSelect(this)" disabled="disabled">--%>
+								<%--<option value="1" <c:if test="${saleApplyWarehouse['badge'] == 1}">selected="selected"</c:if>>蓝字</option>--%>
+								<%--<option value="0" <c:if test="${saleApplyWarehouse['badge'] == 0}">selected="selected"</c:if>>红字</option>--%>
+							<%--</select>--%>
+						<%--</div>--%>
+						<%--<div class="cf"></div>--%>
+					  <%--</li>--%>
 		 				<li class="wordli fl">
 							<div class="wordname fl">备注：</div>
 							<div class="wordnameinput fl"><input type="text" value="${saleApplyWarehouse['notes']}" id="notes" name="notes" class="toDealInput"> </div>
