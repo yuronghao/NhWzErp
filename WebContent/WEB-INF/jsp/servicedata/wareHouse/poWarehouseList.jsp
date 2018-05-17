@@ -48,7 +48,7 @@
 								<td><a href="${ctx}/wms/wareHouse_toAddPoWarehouse.emi?poWarehousegid=${bean.gid}">${bean.billcode}</a></td>
 								<td>${bean.goodsName}</td>
 								<td>${bean.goodsCode}</td>
-								<td>${bean.quantity}</td>
+								<td><fmt:formatNumber type="number" value="${bean.quantity}" minFractionDigits="2" groupingUsed="false"/></td>
 								<td>${bean.goodsUnit}</td>
 								<td>${bean.departName}</td>
 								<td>${bean.wareHouseName}</td>

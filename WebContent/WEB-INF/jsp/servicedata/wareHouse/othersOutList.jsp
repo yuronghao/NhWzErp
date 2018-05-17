@@ -39,7 +39,7 @@
 			 					<th>录入人</th>
 			 					<th>日期</th>
 			 					
-			 					<th>备注</th>
+			 					<%--<th>备注</th>--%>
 
 			 				</tr>
 			 				<c:forEach var="bean" items="${data.list }" varStatus="stat">
@@ -54,7 +54,7 @@
 								<td>${bean.wareHouseName}</td>
 								<td>${bean.recordPersonName}</td>
 								<td>${fn:substring(bean.billDate,0,10)}</td>
-								<td>${bean.notes}</td>
+								<%--<td>${bean.notes}</td>--%>
 
 							</tr>
 						</c:forEach>

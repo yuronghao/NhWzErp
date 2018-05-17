@@ -29,7 +29,7 @@
 			var trs=$('.serialTr');
 			if(trs.length<=0)
 				{
-					$.dialog.alert_w("其他入库明细不能为空!");
+					$.dialog.alert_w("其他出库明细不能为空!");
 				  	return false;
 				}
 			

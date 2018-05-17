@@ -272,16 +272,21 @@
 						// 	'<td class="assistNumber"><input type="text" id="" name="assistNumber" class="listword" value="" readonly="readonly"></td>';
 						// 	}
 					strs+='<td class="goodsAllocationName"><input type="text" id="" name="goodsAllocationName" class="listword jjjnumric"  readonly="readonly" onclick="clickFlag(this)"></td>'+
-						'<td class="goodsAllocationUid" style="display:none"><input type="text" id="" name="goodsAllocationUid" class="listword "  readonly="readonly" ></td>'+
-						
-						'<td class="batch" ><input type="text" id="" name="batch" class="listword batchInput" value="'+binvbach+'" ></td>'+
+						'<td class="goodsAllocationUid" style="display:none"><input type="text" id="" name="goodsAllocationUid" class="listword "  readonly="readonly" ></td>';
+
+							if(chek.eq(i).attr("binvbach")=='0'){
+                                strs+= '<td class="batch" ><input type="text" id="" name="batch" class="listword batchInput" value="" readonly="readonly"></td>';
+                            }else if(chek.eq(i).attr("binvbach")=='1'){
+                                strs+= '<td class="batch" ><input type="text" id="" name="batch" class="listword batchInput" value="'+binvbach+'" ></td>';
+                            }
+
 						
                         <%--'<td class="barCode"><input type="text" id="" name="barCode" class="listword "  readonly="readonly"></td>'+--%>
                         <%--'<td class="note"><input type="text" id="" name="note" class="listword" value=""></td>'+--%>
                         <%--'<td class="cfree"><input type="text" id="" name="cfree" class="listword" value="${type.cfree1}" readonly="readonly"></td>'+--%>
 		                <%--'<td class="smallamount"><input type="text" id="" name="smallamount" class="listword" ></td>'+--%>
 		                // '<td class="printamount"><input type="text" id="" name="printamount" class="listword" value="1"></td>'+
-                        '<input type="hidden" id="" name="process" class="listword" value="'+chek.eq(i).attr("code")+'">'+
+                        strs+= '<input type="hidden" id="" name="process" class="listword" value="'+chek.eq(i).attr("code")+'">'+
 						'</tr>';
 					
 						$("#contr").append(strs);

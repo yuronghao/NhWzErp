@@ -274,10 +274,17 @@
 //							'<td class="assistNumber"><input type="text" id="" name="assistNumber" class="listword" value="" readonly="readonly"></td>';
 //							}
 					strs+='<td class="goodsAllocationName"><input type="text" id="" name="goodsAllocationName" class="listword jjjnumric"  readonly="readonly" onclick="clickFlag(this)"></td>'+
-						'<td class="goodsAllocationUid" style="display:none"><input type="text" id="" name="goodsAllocationUid" class="listword "  readonly="readonly" onclick="clickFlag(this)"></td>'+
-						
-						'<td class="batch"><input type="text" id="" name="batch" class="listword batchInput" value="'+binvbach+'" ></td>'+
-						'<td class="price"><input type="text" id="" name="price" class="listword " value="" onchange="getAmount(this);"></td>'+
+						'<td class="goodsAllocationUid" style="display:none"><input type="text" id="" name="goodsAllocationUid" class="listword "  readonly="readonly" onclick="clickFlag(this)"></td>';
+
+
+                        if(chek.eq(i).attr("binvbach")=='0'){
+                            strs+= '<td class="batch" ><input type="text" id="" name="batch" class="listword batchInput" value="" readonly="readonly"></td>';
+                        }else if(chek.eq(i).attr("binvbach")=='1'){
+                            strs+= '<td class="batch" ><input type="text" id="" name="batch" class="listword batchInput" value="'+binvbach+'" ></td>';
+                        }
+
+
+                        strs+= '<td class="price"><input type="text" id="" name="price" class="listword " value="" onchange="getAmount(this);"></td>'+
 		             	'<td class="amount"><input type="text" id="" name="amount" class="listword " value="" readonly="readonly"></td>'+
 						// '<td class="barCode"><input type="text" id="" name="barCode" class="listword "  readonly="readonly"></td>'+
 						'<td class="note"><input type="text" id="" name="note" class="listword" value=""></td>'+

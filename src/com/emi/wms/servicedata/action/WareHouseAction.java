@@ -1684,7 +1684,7 @@ public class WareHouseAction extends BaseAction{
 					String[] goodsAllocationUid = getRequest().getParameterValues("goodsAllocationUid");	//货位号的Gid
 					String[] note = getRequest().getParameterValues("note");	// 备注
 					String[] gid = getRequest().getParameterValues("gid");	// 备注
-					String[] barCode = getRequest().getParameterValues("barCode");
+//					String[] barCode = getRequest().getParameterValues("barCode");
 					String[] price = getRequest().getParameterValues("price");	// 单价
 					String[] amount = getRequest().getParameterValues("amount");	// 金额
 					for(int i=0;i<goodsUid.length;i++){
@@ -1695,9 +1695,9 @@ public class WareHouseAction extends BaseAction{
 						wmohc.setPowhuid(poWarehousegid);
 						wmohc.setMaterialuid(goodsUid[i]);
 						wmohc.setQuantity(new BigDecimal(mainNumber[i]));
-						if(!CommonUtil.isNullObject(barCode[i])){ 
-							wmohc.setBarcode(barCode[i]);
-						}
+//						if(!CommonUtil.isNullObject(barCode[i])){
+//							wmohc.setBarcode(barCode[i]);
+//						}
 						
 						/*wmohc.setCallCuid(wmcc.getGid());*/
 						wmohc.setGoodsallocationuid(goodsAllocationUid[i]);
