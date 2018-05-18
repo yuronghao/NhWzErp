@@ -5122,7 +5122,7 @@ public class WareHouseService extends EmiPluginService {
 
 //        List wmMaterialapplyC = wareHouseDao.getMaterialOutClist(wmMaterialapply.getGid());
 
-        wareHouseDao.deleteMaterialOutC(wmMaterialapply.getGid());
+        wareHouseDao.deleteMaterialApplyC(wmMaterialapply.getGid());
         boolean suc = wareHouseDao.emiUpdate(wmMaterialapply);//
         if (suc) {
             suc = wareHouseDao.emiInsert(wmohclist);//
@@ -6015,32 +6015,32 @@ public class WareHouseService extends EmiPluginService {
     public JSONObject deleteOthersScrap(WmOthersscrap wmoh, boolean flag) {
         List<WmAllocationstock> asList = new ArrayList<WmAllocationstock>();
         List<WmBatch> wmBatchs = new ArrayList<WmBatch>();
-        List othersScrapC = wareHouseDao.getOthersScrapClist(wmoh.getGid());
+        List<WmOthersscrapC> othersScrapC = wareHouseDao.getOthersScrapClist(wmoh.getGid());
         for (int i = 0; i < othersScrapC.size(); i++) {
-            AaGoods good = cacheCtrlService.getGoods(String.valueOf(((Map) othersScrapC.get(i)).get("goodsUid")));
+            WmOthersscrapC wmOthersscrapC = othersScrapC.get(i);
+            AaGoods good = cacheCtrlService.getGoods(wmOthersscrapC.getGoodsUid());
             WmAllocationstock wmcat = new WmAllocationstock();// //货位现存量入
-            wmcat.setBatch(CommonUtil.Obj2String(((Map) othersScrapC.get(i)).get("batch").toString()));
+            wmcat.setBatch(CommonUtil.Obj2String(wmOthersscrapC.getBatch().toString()));
             AaGoodsallocation gaIn = cacheCtrlService
-                    .getGoodsAllocation(((Map) othersScrapC.get(i)).get(
-                            "goodsAllocationUid").toString());
+                    .getGoodsAllocation(wmOthersscrapC.getGoodsAllocationUid().toString());
             wmcat.setGoodsallocationcode(gaIn.getCode());
             wmcat.setGoodsallocationuid(gaIn.getGid());
             wmcat.setWhCode(gaIn.getWhcode());
             wmcat.setGoodsuid(good.getGid());
             wmcat.setGoodscode(good.getGoodscode());
-            wmcat.setNumber(new BigDecimal(((Map) othersScrapC.get(i)).get("number").toString()));
+            wmcat.setNumber(new BigDecimal(wmOthersscrapC.getNumber().toString()));
 
             wmcat.setOrggid(wmoh.getOrgGid());
             wmcat.setSobgid(wmoh.getSobGid());
-            if (!CommonUtil.isNullObject(((Map) othersScrapC.get(i)).get("batch"))) { // 判断是否有批次，有则添加到批次表
+            if (!CommonUtil.isNullObject(wmOthersscrapC.getBatch())) { // 判断是否有批次，有则添加到批次表
                 WmBatch wmb = new WmBatch();
                 wmb.setGid(UUID.randomUUID().toString());
                 wmb.setGoodsUid(good.getGid());
                 wmb.setGoodsAllocationUid(gaIn.getGid());
-                wmb.setBatch(CommonUtil.Obj2String(((Map) othersScrapC.get(i)).get("batch").toString()));
-                wmb.setNumber(new BigDecimal(0).subtract(new BigDecimal(((Map) othersScrapC.get(i)).get("number").toString())));
+                wmb.setBatch(CommonUtil.Obj2String(wmOthersscrapC.getBatch().toString()));
+                wmb.setNumber(new BigDecimal(0).subtract(new BigDecimal(wmOthersscrapC.getNumber().toString())));
 
-                if ((new BigDecimal(0).subtract(new BigDecimal(((Map) othersScrapC.get(i)).get("number").toString()))).compareTo(new BigDecimal(0)) >= 0) {//1、蓝字单据，0、红字单据
+                if ((new BigDecimal(0).subtract(new BigDecimal(wmOthersscrapC.getNumber().toString()))).compareTo(new BigDecimal(0)) >= 0) {//1、蓝字单据，0、红字单据
                     wmb.setRedBlueFlag(1);
                 } else {
                     wmb.setRedBlueFlag(0);
@@ -6064,6 +6064,7 @@ public class WareHouseService extends EmiPluginService {
 
             //判断是否存在已审批记录，如果存在，则无法删除
             List list = wareHouseDao.getFollowInfoMovingByBillgid(wmoh.getGid());
+
             if (list != null && list.size() >0){
                 jobj.put("success", 0);
                 jobj.put("failInfor", "已提交审批，无法删除");

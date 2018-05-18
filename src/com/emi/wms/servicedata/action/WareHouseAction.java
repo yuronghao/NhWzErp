@@ -3014,9 +3014,7 @@ public class WareHouseAction extends BaseAction{
 					wmMaterialapplyC.setGoodsallocationuid(goodsAllocationUid[i]);
 					wmMaterialapplyC.setBatchcode(CommonUtil.Obj2String(batch[i]));
 					wmMaterialapplyC.setNotes(note[i]);
-
-
-
+					wmohclist.add(wmMaterialapplyC);
 				}
 			}
 			JSONObject jobj=wareHouseService.updateMaterialApplyWarehouse(wmMaterialapply, wmohclist);
