@@ -119,7 +119,7 @@
 	 	<!--按钮部分-->
 	 	<div class="toolbar">
 	 		<ul>
-	 			<!-- <li class="fl"><input type="button" class="addBtn" value="新增"></li> -->
+	 			<li class="fl"><input type="button" class="addBtn" value="新增"></li>
 	 			<!-- <li class="fl"><input type="button" id="Emsearch" class="searchBtn " value="查询"> </li> -->
 	 			<li class="fl"><input type="button" class="editBtn" value="编辑"></li>
 	 			<!-- <li class="fl"><input type="button" class="delBtn" value="停用"> </li> -->

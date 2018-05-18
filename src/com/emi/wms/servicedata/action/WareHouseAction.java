@@ -760,8 +760,12 @@ public class WareHouseAction extends BaseAction{
 			wmoh.setNotes(getParameter("notes"));
 			wmoh.setRecordPersonUid(getParameter("recordPersonUid"));
 			wmoh.setBillCode(billCode);
-			if(getParameter("businessTypeUid") != null && !"".equals(getParameter("businessTypeUid"))){
-				wmoh.setBusinessTypeUid(getParameter("businessTypeUid"));
+			if(getParameter("businessTypeUid2") != null && !"".equals(getParameter("businessTypeUid2"))){
+				wmoh.setBusinessTypeUid(getParameter("businessTypeUid2"));
+			}
+
+			if(getParameter("status") != null && !"".equals(getParameter("status"))){
+				wmoh.setStatus(Integer.parseInt(getParameter("status")));
 			}
 
 //			wmoh.setBadge(Integer.parseInt(badge));
@@ -2815,6 +2819,7 @@ public class WareHouseAction extends BaseAction{
 			wmMaterialapply.setDepartmentuid(depUid);
 			wmMaterialapply.setNotes(getParameter("notes"));
 			wmMaterialapply.setRdstylegid(getParameter("rdstylegid"));
+			wmMaterialapply.setBusinesstypeuid(getParameter("businessTypeUid"));
 			wmMaterialapply.setRecordperson(getParameter("recordPersonUid"));//录入人
 			wmMaterialapply.setSobgid(getSession().get("SobId").toString());
 			wmMaterialapply.setOrggid(getSession().get("OrgId").toString());
@@ -2879,6 +2884,10 @@ public class WareHouseAction extends BaseAction{
 				wmMaterialout.setWhuid(whUid);
 				wmMaterialout.setNotes(getParameter("notes"));
 				wmMaterialout.setBadge(Integer.parseInt(badge));
+				if(getParameter("status") != null && !"".equals(getParameter("status"))){
+					wmMaterialout.setStatus(Integer.parseInt(getParameter("status")));
+				}
+				wmMaterialout.setBusinesstypeuid(getParameter("businessTypeUid2"));
 				
 				List<WmAllocationstock> asList=new ArrayList<WmAllocationstock>();
 				List<WmMaterialoutC> wmohclist=new ArrayList<WmMaterialoutC>();                    //生产入库子记录表
@@ -2966,7 +2975,7 @@ public class WareHouseAction extends BaseAction{
 	**/
 	public void updateMaterialApplyWarehouse(){
 		try{
-			String badge=getParameter("badge");
+//			String badge=getParameter("badge");
 			String materialOutWarehousegid=getParameter("materialApplygid");
 			String whUid=getParameter("whUid"); //仓库号
 			String depUid=getParameter("depUid"); //部门
@@ -2977,7 +2986,12 @@ public class WareHouseAction extends BaseAction{
 			wmMaterialapply.setGid(materialOutWarehousegid);
 			wmMaterialapply.setWhuid(whUid);
 			wmMaterialapply.setNotes(getParameter("notes"));
-			wmMaterialapply.setBadge(Integer.parseInt(badge));
+			if(getParameter("status") != null && !"".equals(getParameter("status"))){
+				wmMaterialapply.setStatus(Integer.parseInt(getParameter("status")));
+			}
+			wmMaterialapply.setBusinesstypeuid(getParameter("businessTypeUid2"));
+
+//			wmMaterialapply.setBadge(Integer.parseInt(badge));
 
 			List<WmMaterialapplyC> wmohclist=new ArrayList<WmMaterialapplyC>();
 			String[] goodsUid = getRequest().getParameterValues("goodsUid");
@@ -3042,9 +3056,11 @@ public class WareHouseAction extends BaseAction{
 			wmc.setRecordPersonUid(getParameter("recordPersonUid"));
 			wmc.setRecordDate(new Date());
 			wmc.setNotes(getParameter("notes"));
-			if(getParameter("businessTypeUid") != null && !"".equals(getParameter("businessTypeUid"))){
-				wmc.setBusinessTypeUid(getParameter("businessTypeUid"));
-				wmc.setStatus(0);
+			if(getParameter("businessTypeUid2") != null && !"".equals(getParameter("businessTypeUid2"))){
+				wmc.setBusinessTypeUid(getParameter("businessTypeUid2"));
+			}
+			if(getParameter("status") != null && !"".equals(getParameter("status"))){
+				wmc.setStatus(Integer.parseInt(getParameter("status")));
 			}
 
 			wmc.setBillDate(getParameter("billDate").length()>0?new Timestamp(DateUtil.stringtoDate(getParameter("billDate"), "yyyy-MM-dd").getTime()):null);

@@ -1338,9 +1338,9 @@ public class WareHouseDao extends BaseDao {
 	public Map findMaterialApply(String gid, String orgId, String sobId) {
 		String sql="";
 		if(CommonUtil.isNullString(gid)){
-			sql="SELECT TOP 1 wowh.gid,wowh.billCode,wowh.billDate,wowh.badge,wowh.departmentUid,wowh.whUid,wowh.notes ,wowh.recordDate,ymuser.userName recordpersonName,wowh.recordPerson,wowh.status FROM WM_MaterialApply wowh LEFT JOIN YM_User ymuser ON ymuser.gid = wowh.recordPerson WHERE	1 = 1  AND wowh.sobGid = '" + sobId + "' AND wowh.orgGid = '" + orgId + "' ORDER BY	wowh.pk DESC ";
+			sql="SELECT TOP 1 wowh.gid,wowh.billCode,wowh.billDate,wowh.badge,wowh.departmentUid,wowh.whUid,wowh.notes ,wowh.recordDate,ymuser.userName recordpersonName,wowh.recordPerson,wowh.status,wowh.businessTypeUid FROM WM_MaterialApply wowh LEFT JOIN YM_User ymuser ON ymuser.gid = wowh.recordPerson WHERE	1 = 1  AND wowh.sobGid = '" + sobId + "' AND wowh.orgGid = '" + orgId + "' ORDER BY	wowh.pk DESC ";
 		}else{
-			sql="SELECT  wowh.gid,wowh.billCode,wowh.billDate,wowh.badge,wowh.departmentUid,wowh.whUid,wowh.notes ,wowh.recordDate,ymuser.userName recordpersonName,wowh.recordPerson,wowh.status FROM	WM_MaterialApply wowh LEFT JOIN YM_User ymuser ON ymuser.gid = wowh.recordPerson WHERE	1 = 1 AND wowh.gid='"+gid+"' AND wowh.sobGid = '" + sobId + "' AND wowh.orgGid = '" + orgId + "' ORDER BY	wowh.pk DESC ";
+			sql="SELECT  wowh.gid,wowh.billCode,wowh.billDate,wowh.badge,wowh.departmentUid,wowh.whUid,wowh.notes ,wowh.recordDate,ymuser.userName recordpersonName,wowh.recordPerson,wowh.status,wowh.businessTypeUid FROM	WM_MaterialApply wowh LEFT JOIN YM_User ymuser ON ymuser.gid = wowh.recordPerson WHERE	1 = 1 AND wowh.gid='"+gid+"' AND wowh.sobGid = '" + sobId + "' AND wowh.orgGid = '" + orgId + "' ORDER BY	wowh.pk DESC ";
 		}
 
 		return  this.queryForMap(sql);
@@ -1416,7 +1416,7 @@ public class WareHouseDao extends BaseDao {
 	}
 
 	public List getFollowInfoMovingByBillgid(String gid) {
-			String sql = " select * from FollowInfoMoving fm where fm.billsgid = '"+gid+"'  and fm.status <> 0 and fm.isused = 0 ";
+			String sql = " select * from FollowInfoMoving fm where fm.billsgid = '"+gid+"'  and fm.status > 0  and fm.isused = 0 ORDER BY  fm.status DESC";
 			return this.queryForList(sql);
 
 	}

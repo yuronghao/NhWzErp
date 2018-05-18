@@ -30,6 +30,10 @@
 			}
 			return true;
 		}
+
+
+
+
 	
 	</script>
 
@@ -46,16 +50,34 @@
 		 		<input type="hidden" name="type" id="type" value="${type }">
 		 		<input type="hidden" name="gid" id="gid" value="${ymuser.gid }">
 		 			<ul>
-		 				<li>
-		 					<div class="fl mainaddword_name">用户编码：</div>
-		 					<div class="fl mainaddword_word"><input type="text" class="addwordinput"  id="userCode" name="userCode" readonly="readonly" value="${ymuser.userCode }"><span style="color: red;">*</span></div>
-		 					<div class="cf"></div>
-		 				</li>
-		 				<li>
-		 					<div class="fl mainaddword_name">用户名称：</div>
-		 					<div class="fl mainaddword_word"><input type="text" class="addwordinput" id="userName" name="userName" readonly="readonly" value="${ymuser.userName }"><span style="color: red;">*</span></div>
-		 					<div class="cf"></div>
-		 				</li>
+						<c:if test="${empty ymuser.gid}">
+							<li>
+								<div class="fl mainaddword_name">用户编码：</div>
+								<div class="fl mainaddword_word"><input type="text" class="addwordinput"  id="userCode" name="userCode"  value="${ymuser.userCode }"><span style="color: red;">*</span></div>
+								<div class="cf"></div>
+							</li>
+							<li>
+								<div class="fl mainaddword_name">用户名称：</div>
+								<div class="fl mainaddword_word"><input type="text" class="addwordinput" id="userName" name="userName"  value="${ymuser.userName }"><span style="color: red;">*</span></div>
+								<div class="cf"></div>
+							</li>
+
+						</c:if>
+
+						<c:if test="${!empty ymuser.gid }">
+
+							<li>
+								<div class="fl mainaddword_name">用户编码：</div>
+								<div class="fl mainaddword_word"><input type="text" class="addwordinput"  id="userCode" name="userCode" readonly="readonly" value="${ymuser.userCode }"><span style="color: red;">*</span></div>
+								<div class="cf"></div>
+							</li>
+							<li>
+								<div class="fl mainaddword_name">用户名称：</div>
+								<div class="fl mainaddword_word"><input type="text" class="addwordinput" id="userName" name="userName" readonly="readonly" value="${ymuser.userName }"><span style="color: red;">*</span></div>
+								<div class="cf"></div>
+							</li>
+						</c:if>
+
 		 				<li>
 		 					<div class="fl mainaddword_name"><c:if test="${type=='edit' }">新</c:if>密码：</div>
 		 					<div class="fl mainaddword_word"><input type="password" class="addwordinput" id="passWord" name="passWord" value="" <c:if test="${type=='edit' }">placeholder="输入需要重置的密码"</c:if>><span style="color: red;">*</span></div>

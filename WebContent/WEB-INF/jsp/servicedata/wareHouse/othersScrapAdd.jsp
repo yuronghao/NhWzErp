@@ -716,7 +716,10 @@
 						</li>
 
 
-						<li class="wordli fl">
+							<input type="hidden" name="status" value="${otherScrap['status']}"/>
+							<input  type="hidden" name="businessTypeUid2" value="${otherScrap.businessTypeUid}"/>
+
+							<li class="wordli fl">
 							<div class="wordname fl">类型：</div>
 							<div class="wordnameinput fl">
 								<select class="toDealSelect" id="businessTypeUid" name="businessTypeUid"  disabled="disabled">

@@ -713,6 +713,11 @@
 		 				</li>
 
 
+
+
+						<input type="hidden" name="status" value="${call['status']}"/>
+						<input  type="hidden" name="businessTypeUid2" value="${call.businessTypeUid}"/>
+
 						<li class="wordli fl">
 							<div class="wordname fl">类型：</div>
 							<div class="wordnameinput fl">

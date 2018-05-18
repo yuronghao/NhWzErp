@@ -655,13 +655,14 @@
 							<div class="wordnameinput fl"><input type="text" value="${saleApplyWarehouse['notes']}" id="notes" name="notes" class="toDealInput"> </div>
 							<div class="cf"></div> 
 		 				</li>
-
+						<input type="hidden" name="status" value="${saleApplyWarehouse['status']}"/>
+						<input  type="hidden" name="businessTypeUid2" value="${saleApplyWarehouse.businessTypeUid}"/>
 						<li class="wordli fl">
 							<div class="wordname fl">类型</div>
 							<div class="wordnameinput fl">
-								<select class="toDealSelect" id="rdstylegid" name="rdstylegid"  disabled="disabled">
+								<select class="toDealSelect" id="businessTypeUid" name="businessTypeUid"  disabled="disabled">
 									<c:forEach items="${rdstylelist}" var="rdstyle" varStatus="status">
-										<option value="${rdstyle.gid}" <c:if test="${saleApplyWarehouse['rdstylegid'] == rdstyle.gid}">selected="selected"</c:if>>${rdstyle.crdName}</option>
+										<option value="${rdstyle.gid}" <c:if test="${saleApplyWarehouse['businessTypeUid'] == rdstyle.gid}">selected="selected"</c:if>>${rdstyle.crdName}</option>
 									</c:forEach>
 								</select>
 

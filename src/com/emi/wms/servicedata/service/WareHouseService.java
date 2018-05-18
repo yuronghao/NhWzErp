@@ -4263,6 +4263,16 @@ public class WareHouseService extends EmiPluginService {
             return jobj;
         }
 
+        //判断是否需要重新审批  0：未审核  1:审核中  2：已通过 3:驳回
+        if(wmMaterialout.getStatus()!= null && wmMaterialout.getStatus() == 3){
+            int invoicestype = 2; //1：领用申请单  2：材料出库单     3：调拨单  4：报废单
+            String rdstylegid = wmMaterialout.getBusinesstypeuid();
+            String billgid =wmMaterialout.getGid();
+            boolean flag = this.postAudit(invoicestype,rdstylegid,billgid);
+            wmMaterialout.setStatus(0);
+        }
+
+
         wareHouseDao.deleteMaterialOutC(wmMaterialout.getGid());
         boolean suc = wareHouseDao.emiUpdate(wmMaterialout);// 更新销售出库主表
         if (suc) {
@@ -5075,7 +5085,7 @@ public class WareHouseService extends EmiPluginService {
             suc = wareHouseDao.emiInsert(wmohclist);// 插入领用申请表子表
         }
         int invoicestype = 1; //1：领用申请单  2：材料出库单     3：调拨单  4：报废单
-        String rdstylegid = wmMaterialapply.getRdstylegid();
+        String rdstylegid = wmMaterialapply.getBusinesstypeuid();
         String billgid =wmMaterialapply.getGid();
         boolean flag = this.postAudit(invoicestype,rdstylegid,billgid);
         //.....
@@ -5097,7 +5107,20 @@ public class WareHouseService extends EmiPluginService {
             return jobj;
         }
 
-        List wmMaterialapplyC = wareHouseDao.getMaterialOutClist(wmMaterialapply.getGid());
+        //判断是否需要重新审批  0：未审核  1:审核中  2：已通过 3:驳回
+        if(wmMaterialapply.getStatus() != null && wmMaterialapply.getStatus() == 3){
+            int invoicestype = 1; //1：领用申请单  2：材料出库单     3：调拨单  4：报废单
+            String rdstylegid = wmMaterialapply.getBusinesstypeuid();
+            String billgid =wmMaterialapply.getGid();
+            boolean flag = this.postAudit(invoicestype,rdstylegid,billgid);
+//            wareHouseDao.updateBillStatus(0,billgid,"WM_MaterialApply");
+            wmMaterialapply.setStatus(0);
+        }
+
+
+
+
+//        List wmMaterialapplyC = wareHouseDao.getMaterialOutClist(wmMaterialapply.getGid());
 
         wareHouseDao.deleteMaterialOutC(wmMaterialapply.getGid());
         boolean suc = wareHouseDao.emiUpdate(wmMaterialapply);//
@@ -5580,6 +5603,8 @@ public class WareHouseService extends EmiPluginService {
         boolean flag = false;
         FollowRule followRule = wareHouseDao.getFollowRule(invoicestype,rdstylegid);
         wareHouseDao.updateIsUsedByBillGid(billgid);//所有该单据的是否使用设置为1：不使用
+
+
         if(followRule != null){
             List<Map>  followRuleNodeUserList= wareHouseDao.getFollowRuleNodeUserList(followRule.getId());
             if(followRuleNodeUserList != null && followRuleNodeUserList.size() >0){
@@ -5777,12 +5802,27 @@ public class WareHouseService extends EmiPluginService {
             //存在审批的情况
             //判断是否存在已审批记录，如果存在，则无法删除
             List list = wareHouseDao.getFollowInfoMovingByBillgid(wmc.getGid());
-            if (list != null && list.size() >0){
+            int statustemp = 1;
+            if(list != null && list.size() > 0 ){
+                Map map = (Map) list.get(0);
+                 statustemp = Integer.parseInt(map.get("status").toString());
+            }
+
+
+            if (list != null && list.size() >0 && statustemp != 2){
                 jobj.put("success", 0);
                 jobj.put("failInfor", "已提交审批，无法修改");
                 return jobj;
             }else{
                 //因为存在审批，审批后的数据没有到其他表中，所以不用处理
+
+                if(wmc.getStatus() != null && wmc.getStatus() == 3){
+                    int invoicestype = 3; //1：领用申请单  2：材料出库单     3：调拨单  4：报废单
+                    String rdstylegid = wmc.getBusinessTypeUid();
+                    String billgid =wmc.getGid();
+                    this.postAudit(invoicestype,rdstylegid,billgid);
+                    wmc.setStatus(0);
+                }
                 wareHouseDao.deleteCallC(wmc.getGid());//删除调拨单子表
                 wareHouseDao.emiInsert(clist);//新增调拨单子表
                 wareHouseDao.emiUpdate(wmc);// 更新调拨单主表
@@ -6062,29 +6102,30 @@ public class WareHouseService extends EmiPluginService {
     }
 
     public JSONObject updateOthersScrap(WmOthersscrap wmoh, List<WmOthersscrapC> wmohclist, List<WmBatch> wmBatchs, List<WmAllocationstock> asList, boolean flag) {
-        List othersScrapC = wareHouseDao.getOthersScrapClist(wmoh.getGid());
+        List<WmOthersscrapC> othersScrapC = wareHouseDao.getOthersScrapClist(wmoh.getGid());
         for (int i = 0; i < othersScrapC.size(); i++) {
-            AaGoods good = cacheCtrlService.getGoods(((Map) othersScrapC.get(i)).get("goodsUid").toString());
+            WmOthersscrapC wmOthersscrapC  = othersScrapC.get(i);
+            AaGoods good = cacheCtrlService.getGoods(wmOthersscrapC.getGoodsUid().toString());
             WmAllocationstock wmcat = new WmAllocationstock();// //货位现存量入
-            wmcat.setBatch(CommonUtil.Obj2String(((Map) othersScrapC.get(i)).get("batch").toString()));
-            AaGoodsallocation gaIn = cacheCtrlService.getGoodsAllocation(((Map) othersScrapC.get(i)).get("goodsAllocationUid").toString());
+            wmcat.setBatch(CommonUtil.Obj2String(wmOthersscrapC.getBatch().toString()));
+            AaGoodsallocation gaIn = cacheCtrlService.getGoodsAllocation(wmOthersscrapC.getGoodsAllocationUid().toString());
             wmcat.setGoodsallocationcode(gaIn.getCode());
             wmcat.setGoodsallocationuid(gaIn.getGid());
             wmcat.setWhCode(gaIn.getWhcode());
             wmcat.setGoodsuid(good.getGid());
             wmcat.setGoodscode(good.getGoodscode());
-            wmcat.setNumber(new BigDecimal(((Map) othersScrapC.get(i)).get("number").toString()));
+            wmcat.setNumber(new BigDecimal(wmOthersscrapC.getNumber().toString()));
 
             wmcat.setOrggid(wmoh.getOrgGid());
             wmcat.setSobgid(wmoh.getSobGid());
-            if (!CommonUtil.isNullObject(((Map) othersScrapC.get(i)).get("batch"))) { // 判断是否有批次，有则添加到批次表
+            if (!CommonUtil.isNullObject(wmOthersscrapC.getBatch())) { // 判断是否有批次，有则添加到批次表
                 WmBatch wmb = new WmBatch();
                 wmb.setGid(UUID.randomUUID().toString());
                 wmb.setGoodsUid(good.getGid());
                 wmb.setGoodsAllocationUid(gaIn.getGid());
-                wmb.setBatch(CommonUtil.Obj2String(((Map) othersScrapC.get(i)).get("batch").toString()));
-                wmb.setNumber(new BigDecimal(((Map) othersScrapC.get(i)).get("number").toString()));
-                if ((new BigDecimal(0).subtract(new BigDecimal(((Map) othersScrapC.get(i)).get("number").toString()))).compareTo(new BigDecimal(0)) >= 0) {
+                wmb.setBatch(CommonUtil.Obj2String(wmOthersscrapC.getBatch().toString()));
+                wmb.setNumber(new BigDecimal(wmOthersscrapC.getNumber().toString()));
+                if ((new BigDecimal(0).subtract(new BigDecimal(wmOthersscrapC.getNumber().toString()))).compareTo(new BigDecimal(0)) >= 0) {
                     wmb.setRedBlueFlag(1);//1、蓝字单据，0、红字单据
                 } else {
                     wmb.setRedBlueFlag(0);
@@ -6106,16 +6147,30 @@ public class WareHouseService extends EmiPluginService {
             //存在审批的情况
             //判断是否存在已审批记录，如果存在，则无法删除
             List list = wareHouseDao.getFollowInfoMovingByBillgid(wmoh.getGid());
-            if (list != null && list.size() >0){
+            int statustemp = 1;
+            if(list != null && list.size() > 0 ){
+                Map map = (Map) list.get(0);
+                statustemp = Integer.parseInt(map.get("status").toString());
+            }
+
+            if (list != null && list.size() >0 && statustemp != 2){
                 jobj.put("success", 0);
                 jobj.put("failInfor", "已提交审批，无法修改");
                 return jobj;
             }
             else{
                 //因为存在审批，审批后的数据没有到其他表中，所以不用处理
+                if(wmoh.getStatus() != null && wmoh.getStatus() == 3){
+                    int invoicestype = 4; //1：领用申请单  2：材料出库单     3：调拨单  4：报废单
+                    String rdstylegid = wmoh.getBusinessTypeUid();
+                    String billgid =wmoh.getGid();
+                    this.postAudit(invoicestype,rdstylegid,billgid);
+                    wmoh.setStatus(0);
+                }
                 wareHouseDao.deleteOthersScrapC(wmoh.getGid());
                 boolean suc = wareHouseDao.emiUpdate(wmoh);// 更新其他入主表
                 wareHouseDao.emiInsert(wmohclist);// 插入其他入子表
+
             }
         }else{
             //不存在审批的情况

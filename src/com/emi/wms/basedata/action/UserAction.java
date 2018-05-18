@@ -83,6 +83,8 @@ public class UserAction extends BaseAction {
 	 *宋银海
 	 */
 	public String toAddUser(){
+
+
 		return "toAddUser";
 	}
 

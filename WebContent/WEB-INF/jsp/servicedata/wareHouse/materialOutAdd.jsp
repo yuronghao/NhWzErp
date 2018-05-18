@@ -622,7 +622,7 @@
 		 			</ul>
 		 			<ul class="wordul">
 					<li class="wordli fl">
-						<div class="wordname fl">入库标志：</div>
+						<div class="wordname fl">出库标志：</div>
 						<div class="wordnameinput fl">
 							<select class="toDealSelect" id="badge" name="badge" onchange="getSelect(this)" disabled="disabled">
 								<option value="1" <c:if test="${saleOutWarehouse['badge'] == 1}">selected="selected"</c:if>>蓝字</option>
@@ -636,7 +636,8 @@
 							<div class="wordnameinput fl"><input type="text" value="${saleOutWarehouse['notes']}" id="notes" name="notes" class="toDealInput"> </div>
 							<div class="cf"></div> 
 		 				</li>
-
+                        <input type="hidden" name="status" value="${saleOutWarehouse['status']}"/>
+                        <input  type="hidden" name="businessTypeUid2" value="${saleOutWarehouse.businessTypeUid}"/>
 
 						<li class="wordli fl">
 							<div class="wordname fl">类型：</div>
