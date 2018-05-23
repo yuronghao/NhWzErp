@@ -713,9 +713,9 @@ public class WareHouseDao extends BaseDao {
 	public Map findOtherWarehouse(String gid,String orgId,String sobId) {
 		String sql="";
 		if(CommonUtil.isNullString(gid)){
-			sql="SELECT TOP 1 wowh.gid,wowh.billCode,wowh.billDate,wowh.badge,wowh.depUid,wowh.whUid,wowh.notes ,wowh.recordDate,ymuser.userName recordpersonName,wowh.recordPersonId FROM	WM_OtherWarehouse wowh LEFT JOIN YM_User ymuser ON ymuser.gid = wowh.recordPersonId WHERE	1 = 1  AND wowh.sobGid = '" + sobId + "' AND wowh.orgGid = '" + orgId + "' ORDER BY	wowh.pk DESC ";
+			sql="SELECT TOP 1 wowh.gid,wowh.billCode,wowh.billDate,wowh.badge,wowh.depUid,wowh.whUid,wowh.notes ,wowh.recordDate,ymuser.userName recordpersonName,wowh.recordPersonId FROM	WM_OtherWarehouse wowh LEFT JOIN YM_User ymuser ON ymuser.gid = wowh.recordPersonId WHERE	1 = 1 and wowh.isdel = 0 AND wowh.sobGid = '" + sobId + "' AND wowh.orgGid = '" + orgId + "' ORDER BY	wowh.pk DESC ";
 		}else{
-			sql="SELECT  wowh.gid,wowh.billCode,wowh.billDate,wowh.badge,wowh.depUid,wowh.whUid,wowh.notes ,wowh.recordDate,ymuser.userName recordpersonName,wowh.recordPersonId FROM	WM_OtherWarehouse wowh LEFT JOIN YM_User ymuser ON ymuser.gid = wowh.recordPersonId WHERE	1 = 1 AND wowh.gid='"+gid+"' AND wowh.sobGid = '" + sobId + "' AND wowh.orgGid = '" + orgId + "' ORDER BY	wowh.pk DESC ";
+			sql="SELECT  wowh.gid,wowh.billCode,wowh.billDate,wowh.badge,wowh.depUid,wowh.whUid,wowh.notes ,wowh.recordDate,ymuser.userName recordpersonName,wowh.recordPersonId FROM	WM_OtherWarehouse wowh LEFT JOIN YM_User ymuser ON ymuser.gid = wowh.recordPersonId WHERE	1 = 1 and wowh.isdel = 0 AND wowh.gid='"+gid+"' AND wowh.sobGid = '" + sobId + "' AND wowh.orgGid = '" + orgId + "' ORDER BY	wowh.pk DESC ";
 		}
 		
 		return  this.queryForMap(sql);

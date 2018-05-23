@@ -439,9 +439,18 @@ public void printbarcode(){
 			strMonth = String.valueOf(month);
 		}
 
+		String stringDay;
+		int day = DateUtil.getDay(new Date());
+		if (String.valueOf(day).length() == 1) {
+			stringDay = "0" + String.valueOf(day);
+		} else {
+			stringDay = String.valueOf(day);
+		}
+
+
 		String currentId = saleService.getBillId(billType, year + strMonth);
 
-		String billId = billType + year + strMonth + currentId;
+		String billId = year + strMonth + stringDay + currentId;
 
 		String nowDate = DateUtil.dateToString(new Date(), "yyyy-MM-dd");
 		String userId = getSession().get("UserId").toString();
@@ -463,6 +472,9 @@ public void printbarcode(){
 		}
 
 	}
+
+
+
 	
 	   public void auditsaleOrder(){
 			try {
