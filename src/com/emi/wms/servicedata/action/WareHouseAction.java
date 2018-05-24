@@ -12,6 +12,7 @@ import java.util.*;
 import com.alibaba.fastjson.JSON;
 import com.emi.common.util.Constants;
 import com.emi.wms.bean.*;
+import freemarker.ext.beans.HashAdapter;
 import net.sf.json.JSONObject;
 
 import com.emi.cache.service.CacheCtrlService;
@@ -4743,6 +4744,34 @@ public class WareHouseAction extends BaseAction{
 			e.printStackTrace();
 		}
 		return "materialApplyListDetail";//跳转到主弹窗上半部分领用申请 列表
+
+	}
+
+
+
+	/**
+	* @Desc 获取仓库现存量数据 根据商品id和仓库id
+	* @author yurh
+	* @create 2018-05-24 15:51:48
+	**/
+	public void getCKXCL(){
+
+		String whuid = getParameter("whuid");
+		String gooduid = getParameter("gooduid");
+		try{
+			Map map = wareHouseService.getCKXCL(whuid,gooduid);
+			String ckxcl ="";
+			if(map != null){
+				ckxcl = map.get("ckxcl").toString();
+			}
+			Map map1 = new HashMap();
+			map1.put("success",1);
+			map1.put("ckxcl",ckxcl);
+			getResponse().getWriter().write(JSON.toJSONString(map1));
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+
 
 	}
 

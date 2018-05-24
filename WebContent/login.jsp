@@ -19,7 +19,7 @@
 
 <style>
 	body{
-		background: url('${ctx }/img/loginbg.png') no-repeat center/cover;
+		background: url('${ctx }/img/logobg20180524.png') no-repeat center/cover;
 	}
 
 
@@ -27,12 +27,14 @@
 		width: 900px;
 		height: 440px;
 		margin: 0 auto;
+		box-shadow: 0 0 30px rgba(0,0,0,0.4);
 	}
 
 
 	#loginWrap>.loginLeft{
 		width: 60%;
-		background: rgba(0,154,122, 0.5);
+		/*background: rgba(0,154,122, 0.5);*/
+		background: url('${ctx }/img/2.png') no-repeat center/110% 120%;
 	}
 	#loginWrap>.loginLeft>header{
 		top: 20px;

@@ -6413,4 +6413,8 @@ public class WareHouseService extends EmiPluginService {
     }
 
 
+    public Map getCKXCL(String whuid, String gooduid) {
+        Map map = wareHouseDao.getCKXCL(whuid,gooduid);
+        return map;
+    }
 }

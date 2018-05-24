@@ -38,10 +38,10 @@
 			    	  $.dialog.alert('主数量不能为空');
 			    	  return false;
 			      }
-			      if($('.jjjnumric').eq(i).val()==''){
-			    	  $.dialog.alert('货位号不能为空');
-			    	  return false;
-			      }
+			      // if($('.jjjnumric').eq(i).val()==''){
+			    	//   $.dialog.alert('货位号不能为空');
+			    	//   return false;
+			      // }
 			      if(typeof($('.jnumric').eq(i).val())!= "undefined"  && $('.jnumric').eq(i).val()!='' )
 			       {
 			    	  console.log($('.jjnumric').eq(i))
@@ -69,6 +69,11 @@
 			var toDeal=$('.toDealInput');
 			inputCannotUse(toDeal);
 			var isSave=true;//新增保存、修改保存标识
+
+            //设置仓库现存量
+            setCKXCL();
+
+
 			//新增 
 			$('#addBtn').click(function(){					
 				$('.wordul').children().children().children('input').val("");//清理文本框内容
@@ -283,7 +288,9 @@
 						'<td class="goodsAllocationUid" style="display:none"><input type="text" id="" name="goodsAllocationUid" class="listword "  readonly="readonly" onclick="clickFlag(this)"></td>'+
 						
 						'<td class="batch"><input type="text" id="" name="batch" class="listword batchInput" value="" isbatch="'+binvbach+'"></td>'+
-						
+
+                        '<td class="ckxcl"><input type="text" id="" name="ckxcl" class="listword" value="" readonly="readonly"></td>'+
+
 //						'<td class="barCode"><input type="text" id="" name="barCode" class="listword "  readonly="readonly"></td>'+
 						'<td class="note"><input type="text" id="" name="note" class="listword" value="" ></td>'+
 //						'<td class="produceCode"><input type="text" id="" name="produceCode" class="listword "  readonly="readonly"></td>'+
@@ -294,13 +301,52 @@
 						getSerial();
 						$(".numric").numeral(6);
 						setIsbatch();
+						//设置仓库现存量
+                        setCKXCL();
 					}
+
+
+
+
+
 				},
 				cancelVal:"关闭",
 				cancel:true
 				
 				});
+
+
 			
+		}
+
+
+
+
+		function setCKXCL(){
+            var whuid = $("#whUid").val();
+            if(whuid != ""){
+                var goodsUids=$('.goodsUid');
+                for(var i=0;i<goodsUids.length;i++){
+                    var gooduid =goodsUids.eq(i).find("input[name='goodsUid']").val();
+                    $.ajax({
+                        url:'${ctx}/wms/wareHouse_getCKXCL.emi',
+                        type:"post",
+                        async:false,
+                        data:{'whuid':whuid,'gooduid':gooduid},
+                        success:function(da){
+                            var obj=eval("("+da+")");
+                            if(obj.success == 1){
+                                goodsUids.eq(i).parent().find("input[name='ckxcl']").val(obj.ckxcl);
+                            }
+
+                        }
+                    });
+                }
+
+
+
+            }
+
 		}
 		
 		
@@ -377,6 +423,10 @@
 							var chek = $('.goodsSelected:checked',this.content.document); 
 							document.getElementById('goodsAllocationName'+temp).value=chek.eq(0).attr("allocationName");
 							document.getElementById('goodsAllocationUid'+temp).value=chek.eq(0).val();
+
+                            // //设置仓库现存量
+                            // setCKXCL();
+
 						},
 						cancelVal:"关闭",
 						cancel:true
@@ -552,6 +602,9 @@
 						 temp[i].value='';
 						 temps[i].value='';
 						 }
+
+                    //设置仓库现存量
+                    setCKXCL();
 				},
 				cancelVal:"关闭",
 				cancel:true
@@ -712,6 +765,7 @@
 				 					<%--<th>辅数量</th>--%>
 				 					<th>货位号</th>
 				 					<th>批次</th>
+									<th>仓库现存量</th>
 				 					<%--<th style="width: 12%">条形码</th>--%>
 				 					<th>备注</th>
 
@@ -746,8 +800,10 @@
 			                <td class="goodsAllocationName"><input type="text" id="" name="goodsAllocationName" class="listword  jjjnumric" value="${type.alocation}" readonly="readonly" ></td>
 			                <td class="goodsAllocationUid" style="display:none"><input type="text" id="" name="goodsAllocationUid" class="listword toDealInput" value="${type.goodsallocationuid}" readonly="readonly"></td>
 			             	<td class="batch"><input type="text" id="" name="batch" class="listword " value="${type.batchcode}" readonly="readonly"></td>
-			                <%--<td class="barCode"><input type="text" id="" name="barCode" class="listword " value="${type.barCode}" readonly="readonly"></td>--%>
+								<td class="ckxcl"><input type="text" id="" name="ckxcl" class="listword" value="" readonly="readonly"></td>
+									<%--<td class="barCode"><input type="text" id="" name="barCode" class="listword " value="${type.barCode}" readonly="readonly"></td>--%>
 			                <td class="note"><input type="text" id="" name="note" class="listword toDealInput" value="${type.notes}" readonly="readonly"></td>
+
 				 		    <%--<td class="produceCode"><input type="text" id="" name="produceCode" class="listword toDealInput" value="${type.produceCode}" readonly="readonly"></td>--%>
 				 		    <%--<td class="goodName"><input type="text" id="" name="goodName" class="listword toDealInput" value="${type.goodName}" readonly="readonly"></td>--%>
 				 		    </tr>

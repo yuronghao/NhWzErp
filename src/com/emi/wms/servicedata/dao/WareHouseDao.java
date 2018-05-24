@@ -1868,4 +1868,14 @@ public class WareHouseDao extends BaseDao {
 		return (FollowRule) this.emiQuery(sql,FollowRule.class);
 
 	}
+
+	public Map getCKXCL(String whuid, String gooduid) {
+		String sql = "select ISNULL(SUM(wa.number), 0) as ckxcl from WM_AllocationStock  wa " +
+				"where wa.whCode = " +
+				" (" +
+				" select aw.whCode from AA_WareHouse aw where aw.gid = '"+whuid+"' " +
+				" ) " +
+				" and wa.goodsUid = '"+gooduid+"' ";
+		return this.queryForMap(sql);
+	}
 }
