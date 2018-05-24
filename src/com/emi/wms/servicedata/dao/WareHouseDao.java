@@ -1862,4 +1862,10 @@ public class WareHouseDao extends BaseDao {
 		this.update(sql);
 
 	}
+
+	public FollowRule getFollowRuleDB(int invoicestype, String rdstylegid, String coutwarehousegid, String cinwarehousegid) {
+		String sql ="select * from FollowRule  fr where fr.invoicestype = '"+invoicestype+"' and fr.rdstylegid = '"+rdstylegid+"' and fr.coutwarehousegid = '"+coutwarehousegid+"' and fr.cinwarehousegid = '"+cinwarehousegid+"' and fr.isdel = 0";
+		return (FollowRule) this.emiQuery(sql,FollowRule.class);
+
+	}
 }

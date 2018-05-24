@@ -29,6 +29,28 @@ public class FollowRule {
     @EmiColumn(name="rdstylegid" )
     private String rdstylegid;
 
+    @EmiColumn(name="coutwarehousegid" )
+    private String coutwarehousegid;
+
+    @EmiColumn(name="cinwarehousegid" )
+    private String cinwarehousegid;
+
+
+    public String getCoutwarehousegid() {
+        return coutwarehousegid;
+    }
+
+    public void setCoutwarehousegid(String coutwarehousegid) {
+        this.coutwarehousegid = coutwarehousegid;
+    }
+
+    public String getCinwarehousegid() {
+        return cinwarehousegid;
+    }
+
+    public void setCinwarehousegid(String cinwarehousegid) {
+        this.cinwarehousegid = cinwarehousegid;
+    }
 
     public int getId() {
         return id;

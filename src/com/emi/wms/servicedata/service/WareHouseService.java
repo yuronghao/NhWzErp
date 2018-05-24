@@ -2,9 +2,7 @@ package com.emi.wms.servicedata.service;
 
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
-import java.net.InetAddress;
 import java.net.NetworkInterface;
-import java.net.UnknownHostException;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -34,7 +32,6 @@ import com.emi.wms.servicedata.dao.WareHouseDao;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.apache.commons.lang.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -4189,7 +4186,7 @@ public class WareHouseService extends EmiPluginService {
         int invoicestype = 2; //1：领用申请单  2：材料出库单     3：调拨单  4：报废单
         String rdstylegid = wmMaterialout.getBusinesstypeuid();
         String billgid =wmMaterialout.getGid();
-        boolean flag = this.postAudit(invoicestype,rdstylegid,billgid);
+        boolean flag = this.postAudit(invoicestype,rdstylegid,billgid, null, null);
         if(!flag){
             //不存在审批规则，则执行后续操作
             String tablename = "WM_MaterialOut";
@@ -4268,7 +4265,7 @@ public class WareHouseService extends EmiPluginService {
             int invoicestype = 2; //1：领用申请单  2：材料出库单     3：调拨单  4：报废单
             String rdstylegid = wmMaterialout.getBusinesstypeuid();
             String billgid =wmMaterialout.getGid();
-            boolean flag = this.postAudit(invoicestype,rdstylegid,billgid);
+            boolean flag = this.postAudit(invoicestype,rdstylegid,billgid, null, null);
             wmMaterialout.setStatus(0);
         }
 
@@ -5087,7 +5084,7 @@ public class WareHouseService extends EmiPluginService {
         int invoicestype = 1; //1：领用申请单  2：材料出库单     3：调拨单  4：报废单
         String rdstylegid = wmMaterialapply.getBusinesstypeuid();
         String billgid =wmMaterialapply.getGid();
-        boolean flag = this.postAudit(invoicestype,rdstylegid,billgid);
+        boolean flag = this.postAudit(invoicestype,rdstylegid,billgid, null, null);
         //.....
         jobj.put("success", 1);
         jobj.put("failInfor", "");
@@ -5112,7 +5109,7 @@ public class WareHouseService extends EmiPluginService {
             int invoicestype = 1; //1：领用申请单  2：材料出库单     3：调拨单  4：报废单
             String rdstylegid = wmMaterialapply.getBusinesstypeuid();
             String billgid =wmMaterialapply.getGid();
-            boolean flag = this.postAudit(invoicestype,rdstylegid,billgid);
+            boolean flag = this.postAudit(invoicestype,rdstylegid,billgid, null, null);
 //            wareHouseDao.updateBillStatus(0,billgid,"WM_MaterialApply");
             wmMaterialapply.setStatus(0);
         }
@@ -5595,17 +5592,26 @@ public class WareHouseService extends EmiPluginService {
      * @param  invoicestype 单据类型
      * @param  rdstylegid 审批类型 （单据里面选择，例：出库类型）
      * @param  billgid 单据id
-    * @create 2018-05-04 10:54:25
+    * @param coutwarehousegid
+     * @param cinwarehousegid
+     * @create 2018-05-04 10:54:25
     **/
-    public boolean postAudit(int invoicestype,String rdstylegid,String billgid){
+    public boolean postAudit(int invoicestype, String rdstylegid, String billgid, String coutwarehousegid, String cinwarehousegid){
         //提交审核：
 
         boolean flag = false;
-        FollowRule followRule = wareHouseDao.getFollowRule(invoicestype,rdstylegid);
-        wareHouseDao.updateIsUsedByBillGid(billgid);//所有该单据的是否使用设置为1：不使用
+        FollowRule followRule = new FollowRule();
+        if(invoicestype == 3){
+            //单独处理调拨单
+            followRule = wareHouseDao.getFollowRuleDB(invoicestype,rdstylegid,coutwarehousegid,cinwarehousegid);
+        }else{
+            followRule = wareHouseDao.getFollowRule(invoicestype,rdstylegid);
+        }
 
 
         if(followRule != null){
+            wareHouseDao.updateIsUsedByBillGid(billgid);//所有该单据的是否使用设置为1：不使用
+
             List<Map>  followRuleNodeUserList= wareHouseDao.getFollowRuleNodeUserList(followRule.getId());
             if(followRuleNodeUserList != null && followRuleNodeUserList.size() >0){
                 //插入审核节点数据
@@ -5697,7 +5703,9 @@ public class WareHouseService extends EmiPluginService {
         int invoicestype = 3; //1：领用申请单  2：材料出库单     3：调拨单  4：报废单
         String rdstylegid = wmc.getBusinessTypeUid();
         String billgid =wmc.getGid();
-        boolean flag = this.postAudit(invoicestype,rdstylegid,billgid);
+        String coutwarehousegid = wmc.getOutWhUid();//调出仓库
+        String cinwarehousegid = wmc.getInWhUid();//入库仓库
+        boolean flag = this.postAudit(invoicestype,rdstylegid,billgid,coutwarehousegid,cinwarehousegid);
         if(!flag){
             //不存在审批规则，则执行后续操作
             String tablename = "WM_Call";
@@ -5820,7 +5828,7 @@ public class WareHouseService extends EmiPluginService {
                     int invoicestype = 3; //1：领用申请单  2：材料出库单     3：调拨单  4：报废单
                     String rdstylegid = wmc.getBusinessTypeUid();
                     String billgid =wmc.getGid();
-                    this.postAudit(invoicestype,rdstylegid,billgid);
+                    this.postAudit(invoicestype,rdstylegid,billgid, null, null);
                     wmc.setStatus(0);
                 }
                 wareHouseDao.deleteCallC(wmc.getGid());//删除调拨单子表
@@ -6165,7 +6173,7 @@ public class WareHouseService extends EmiPluginService {
                     int invoicestype = 4; //1：领用申请单  2：材料出库单     3：调拨单  4：报废单
                     String rdstylegid = wmoh.getBusinessTypeUid();
                     String billgid =wmoh.getGid();
-                    this.postAudit(invoicestype,rdstylegid,billgid);
+                    this.postAudit(invoicestype,rdstylegid,billgid, null, null);
                     wmoh.setStatus(0);
                 }
                 wareHouseDao.deleteOthersScrapC(wmoh.getGid());
@@ -6217,7 +6225,7 @@ public class WareHouseService extends EmiPluginService {
         int invoicestype = 4; //1：领用申请单  2：材料出库单     3：调拨单  4：报废单
         String rdstylegid = wmoh.getBusinessTypeUid();
         String billgid =wmoh.getGid();
-        boolean flag = this.postAudit(invoicestype,rdstylegid,billgid);
+        boolean flag = this.postAudit(invoicestype,rdstylegid,billgid, null, null);
         if(!flag){
             //不存在审批规则，则执行后续操作
             //更新主表单据的审批时间为单据时间 billDate->auditDate

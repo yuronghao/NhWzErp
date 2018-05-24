@@ -470,7 +470,7 @@ public class WareHouseAction extends BaseAction
 			String tasktype=jboj.getString("tasktype");
 			String condition=" and iRdFlag='"+flag+"'and brdend='1' ";
 			List<YmRdStyle> result=wareHouseService.getRdstyleEntity(condition,tasktype);
-//			System.out.println(JSONArray.fromObject(result).toString());
+			System.out.println(JSONArray.fromObject(result).toString());
 			getResponse().getWriter().print(JSONArray.fromObject(result).toString());
 			
 		} catch (IOException e) {
