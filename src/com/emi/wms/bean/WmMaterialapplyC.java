@@ -156,11 +156,19 @@ public class WmMaterialapplyC implements Serializable{
 	private String recordPerson;
 	private String departId;
 	private String whUid;
+	private String whName;
 	private String recordPersonName;
 	private String departName;
 	private String wareHouseName;
-	
-	
+
+	public String getWhName() {
+		return whName;
+	}
+
+	public void setWhName(String whName) {
+		this.whName = whName;
+	}
+
 	public Timestamp getDmadeDate() {
 		return dmadeDate;
 	}

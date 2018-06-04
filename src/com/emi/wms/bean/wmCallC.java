@@ -57,6 +57,18 @@ public class wmCallC implements Serializable{
 	@EmiColumn(name="notes")
 	private String notes;
 
+	@EmiColumn(name="materialapplycgid")
+	private String materialapplycgid;
+
+
+	public String getMaterialapplycgid() {
+		return materialapplycgid;
+	}
+
+	public void setMaterialapplycgid(String materialapplycgid) {
+		this.materialapplycgid = materialapplycgid;
+	}
+
 	public String getNotes() {
 		return notes;
 	}

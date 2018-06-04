@@ -55,7 +55,7 @@
 				 					
 					 				<tr>
 					 					<td style="width: 50px;">
-					 						<input type="checkbox" id="" class="goodsSelected" name="lyzj_chose" value="${type.goodsuid }" goodsCode="${type.good.goodscode}" goodsName="${type.good.goodsname}" goodsstandard="${type.good.goodsstandard}" unitName="${type.good.unitName}" binvbach="${type.binvbach }" materialapplygid="${type.materialapplyuid}" materialapplycgid="${type.gid}" mainNumber="${type.number}" receivednumber="${type.receivednumber}" needoutnum="${type.needoutnum}"/>
+					 						<input type="checkbox" id="" class="goodsSelected" name="lyzj_chose" value="${type.goodsuid }" goodsCode="${type.good.goodscode}" goodsName="${type.good.goodsname}" goodsstandard="${type.good.goodsstandard}" unitName="${type.good.unitName}" binvbach="${type.binvbach }" materialapplygid="${type.materialapplyuid}" materialapplycgid="${type.gid}" mainNumber="${type.number}" receivednumber="${type.receivednumber}" needoutnum="${type.needoutnum}" alocation="${type.alocation}" goodsallocationuid="${type.goodsallocationuid}" whUid="${type.whUid}" whName="${type.whName}" batchcode="${type.batchcode}"/>
 					 					</td>
 										<td class="gid" style="display:none"><input type="hidden" id="" name="gid" class="listword" value="${type.gid}" /></td>
 

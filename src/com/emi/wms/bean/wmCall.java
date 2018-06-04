@@ -86,6 +86,18 @@ public class wmCall implements Serializable{
 	@EmiColumn(name="departmentUid")
 	private String departmentUid;
 
+
+	@EmiColumn(name="materialapplygid")
+	private String materialapplygid;
+
+	public String getMaterialapplygid() {
+		return materialapplygid;
+	}
+
+	public void setMaterialapplygid(String materialapplygid) {
+		this.materialapplygid = materialapplygid;
+	}
+
 	public String getDepartmentUid() {
 		return departmentUid;
 	}

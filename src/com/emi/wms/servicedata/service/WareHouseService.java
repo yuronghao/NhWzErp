@@ -4196,6 +4196,19 @@ public class WareHouseService extends EmiPluginService {
                 wareHouseDao.addWmBatch(wmBatchs);
             }
 
+            //没有审核直接回填申请数量
+
+            //修改领用申请表实际领用数量
+            List<WmMaterialapplyC> applyList = new ArrayList<WmMaterialapplyC>();//修改领用申请表数量
+            for(int i = 0 ;i<wmohclist.size();i++){
+                WmMaterialoutC wm = wmohclist.get(i);
+                WmMaterialapplyC wmMaterialapplyC = new WmMaterialapplyC();
+                wmMaterialapplyC.setGid(wm.getMaterialapplycgid());
+                wmMaterialapplyC.setReceivednumber(wm.getNumber());
+                applyList.add(wmMaterialapplyC);//需要更新已出库数量到申请表中
+            }
+
+            wareHouseDao.updateReciveNumberByApplyCGid(applyList);
         }
         jobj.put("success", 1);
         jobj.put("failInfor", "");
@@ -5333,7 +5346,7 @@ public class WareHouseService extends EmiPluginService {
         List<WmOtherwarehouseC> wmohclist = new ArrayList(); //其他入子表集合
         List<WmOthersoutC> wmooclist = new ArrayList(); //其他出子表集合
 
-
+        List<WmMaterialapplyC> applyList = new ArrayList<WmMaterialapplyC>();//修改领用申请表数量
         wmCall wmc = wareHouseDao.getWmCallByGid(owhGid);
         List<wmCallC> list = wareHouseDao.getWmCallDetailByWMS(owhGid);
         String[] sqls = new String[list.size()];
@@ -5464,6 +5477,15 @@ public class WareHouseService extends EmiPluginService {
                     + wmcc.getNumber()
                     + "' where gid='" + wmcc.getGid() + "'   ";
 
+
+
+
+            WmMaterialapplyC wmMaterialapplyC = new WmMaterialapplyC();
+            wmMaterialapplyC.setGid(wmcc.getMaterialapplycgid());
+            wmMaterialapplyC.setReceivednumber(wmcc.getNumber());
+            applyList.add(wmMaterialapplyC);//需要更新已出库数量到申请表中
+
+
         }
 
 
@@ -5478,6 +5500,10 @@ public class WareHouseService extends EmiPluginService {
         }
 
 
+        //修改领用申请表实际领用数量
+        if(applyList != null && applyList.size() >0){
+            wareHouseDao.updateReciveNumberByApplyCGid(applyList);
+        }
 
         wareHouseDao.updateCallState(owhGid);
         wareHouseDao.emiInsert(wmoo);// 插入其他入主表
@@ -5723,6 +5749,17 @@ public class WareHouseService extends EmiPluginService {
             if (wmBatchs.size() > 0) { // 增加批次
                 wareHouseDao.addWmBatch(wmBatchs);
             }
+
+            //修改领用申请表实际领用数量
+            List<WmMaterialapplyC> applyList = new ArrayList<WmMaterialapplyC>();//修改领用申请表数量
+            for(int i = 0 ;i<clist.size();i++){
+                wmCallC wm = clist.get(i);
+                WmMaterialapplyC wmMaterialapplyC = new WmMaterialapplyC();
+                wmMaterialapplyC.setGid(wm.getMaterialapplycgid());
+                wmMaterialapplyC.setReceivednumber(wm.getNumber());
+                applyList.add(wmMaterialapplyC);//需要更新已出库数量到申请表中
+            }
+            wareHouseDao.updateReciveNumberByApplyCGid(applyList);
         }
 
         jobj.put("success", 1);

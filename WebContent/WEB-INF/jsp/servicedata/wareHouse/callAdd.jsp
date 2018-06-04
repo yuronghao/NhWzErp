@@ -339,8 +339,8 @@
 				return;
 			}
 			
-			if($(obj).parent().prev().children().val()=="" || $(obj).parent().prev().children().val() == null){
-				$.dialog.alert_w("货位号不能为空！");
+			if($(obj).parent().parent().find("input[name='outgoodsAllocationUid']").val()=="" || $(obj).parent().parent().find("input[name='outgoodsAllocationUid']").val() == null){
+				$.dialog.alert_w("调出货位号不能为空！");
 				return;
 			}
 
@@ -640,6 +640,7 @@
 		 			<li class="fl" style="display:none"><input type="button" class="btns" value="审核"> </li>
 			 		<li class="fl" style="display:none"><input type="button" class="btns" value="弃审"> </li>
 		 			<li class="fl"><input type="button" class="btns" value="列表" id="tableBtn" onclick="getprocurearrivallist()"></li>
+					<li class="fl"><input type="button" class="btns" value="参照" id="canzhao"></li>
 					<%--<li class="fl"><input type="button" class="btns" value="参照" id="canzhao"></li>--%>
 		 			<li class="fl">
 	 				<!-- 单据翻页begin -->
@@ -883,6 +884,131 @@
 
 	</body>
 </html>
+
+<script>
+    $('#canzhao')[0].onclick = canzhao;
+    var magid;//定义一个全局的参照单据id，全局只能有一个相同的参照单据id，如果不同，则不可以新增不同的单据id
+
+    function canzhao(){
+        //判断列表里存不存在手动新增出库明细的数据。如果有，则不可以参照
+        var trs=$('.serialTr');
+        if(trs.length > 0)
+        {
+            trs.eq(0).children('.needoutnum').children().val();
+            var length = trs.eq(0).children('.needoutnum').length;
+            if(length == 0){
+                $.dialog.alert_w("存在物料，不能参照领料申请单出库");
+                return false;
+            }
+
+        }
+
+
+        $('.addrow').hide();
+        $.dialog({
+            drag: true,
+            lock: true,
+            resize: false,
+            title:'领料申请列表',
+            width: '1100px',
+            height: '590px',
+            content: 'url:${ctx}/wms/wareHouse_getApplyHelp.emi',
+            okVal:"确定",
+            ok:function(){
+                var trs=$('.serialTr');
+
+                var chek = $('.goodsSelected:checked',this.content.document.getElementById("rtframe").contentDocument);
+                if(trs.length == 0){
+                    magid = chek.eq(0).attr("materialapplygid");
+                }
+                if(trs.length > 0){
+                    var aid =  chek.eq(0).attr("materialapplygid");
+                    if(aid != magid){
+                        $.dialog.alert_w("同一个调拨单，参照单据只能选择一个");
+                        return false;
+                    }
+                }
+
+                for (var i = 0; i < chek.length; i++) {
+                    var strs='<tr class="serialTr">'+
+                        '<td><div class="delrow delno" name = "deleteButton" value=""  style="margin-left:15px;" gid=""></div></td>'+
+                        '<td class="gid" style="display:none"><input type="hidden" id="" name="gid" class="listword" value=""></td>'+
+                        '<td class="materialapplygid" style="display:none"><input type="hidden" id="" name="materialapplygid" class="listword" value="'+chek.eq(i).attr("materialapplygid")+'"></td>'+
+                        '<td class="materialapplycgid" style="display:none"><input type="hidden" id="" name="materialapplycgid" class="listword" value="'+chek.eq(i).attr("materialapplycgid")+'"></td>'+
+
+                        '<td class="goodsUid" style="display:none"><input type="text" id="" name="goodsUid" class="listword" value="'+chek.eq(i).val()+'"></td>'+
+                        '<td class="goodsCode"><input type="text" id="" name="goodsCode" class="listword" value="'+chek.eq(i).attr("goodsCode")+'" readonly="readonly"></td>'+
+                        '<td class="goodsName"><input type="text" id="" name="goodsName" class="listword" value="'+chek.eq(i).attr("goodsName")+'" readonly="readonly"></td>'+
+                        '<td class="goodsstandard"><input type="text" id="" name="goodsstandard" class="listword" value="'+chek.eq(i).attr("goodsstandard")+'" readonly="readonly"></td>'+
+                        '<td class="mainUnit"><input type="text" id="" name="mainUnit" class="listword" value="'+chek.eq(i).attr("unitName")+'" readonly="readonly"></td>'+
+                        // '<td class="needoutnum" style="display:none"><input type="hidden" id="" name="needoutnum" class="listword" value="'+chek.eq(i).attr("needoutnum")+'"></td>'+
+                        '<td class="mainNumber"><input type="text" id="" name="mainNumber" class="listword numric" value="'+chek.eq(i).attr("needoutnum")+'" onchange="changeneednum(this)"></td>';
+                    var binvbach=chek.eq(i).attr("binvbach");
+                    var goodsallocationuid =  chek.eq(i).attr("goodsallocationuid");
+                    var alocation =  chek.eq(i).attr("alocation");
+                    // var batchcode = chek.eq(i).attr("batchcode");
+                    strs+='<td class="outgoodsAllocationName"><input type="text" id="" name="outgoodsAllocationName" class="listword  outjjjnumric" value="'+alocation+'" readonly="readonly" onclick="clickFlagout(this)"></td>'+
+                        '<td class="outgoodsAllocationUid" style="display:none"><input type="text" id="" name="outgoodsAllocationUid" class="listword toDealInput" value="'+goodsallocationuid+'" readonly="readonly" onclick="clickFlagout(this)"></td>'+
+
+                        '<td class="ingoodsAllocationName"><input type="text" id="" name="ingoodsAllocationName" class="listword  injjjnumric" value="" readonly="readonly" onclick="clickFlagin(this)"></td>'+
+                        '<td class="ingoodsAllocationUid" style="display:none"><input type="text" id="" name="ingoodsAllocationUid" class="listword toDealInput" value="" readonly="readonly" onclick="clickFlagin(this)"></td>'+
+                        '<td class="batch"><input type="text" id="" name="batch" class="listword batchInput" value="" isbatch="'+binvbach+'"></td>'+
+                        '<td class="note"><input type="text" id="" name="note" class="listword" value="" ></td>'+
+                        '</tr>';
+                    var macgid = chek.eq(i).attr("materialapplycgid");
+                    var gmaclist = $('.serialTr').find(".materialapplycgid").children();
+                    var flag =1;
+                    gmaclist.each(function(i,t){
+                        var tempgmacgid = $(t).val();
+                        if(tempgmacgid == macgid){
+                            flag = 2;
+                        }
+                    })
+
+                    if(flag == 2){
+                        //不新增该行，继续执行下一行循环
+                        continue;
+                    }
+
+                    $("#contr").append(strs);
+                    getSerial();
+                    $(".numric").numeral(6);
+                    setIsbatch();
+
+                    var whUid =  chek.eq(i).attr("whUid");
+                    var whName =  chek.eq(i).attr("whName");
+
+                    $("#outwhName").val(whName);
+                    $("#outwhUid").val(whUid);
+
+
+
+
+                }
+            },
+            cancelVal:"关闭",
+            cancel:true
+
+        });
+    }
+
+
+    function changeneednum(obj){
+        var num = $(obj).val();
+        var neednum = $(obj).parent().parent().find("input[name='needoutnum']").val();
+        if(parseFloat(num) > parseFloat(neednum)){
+            $.dialog.alert_w("出库数量不能大于申请数量");
+            $(obj).val(neednum);
+            return false;
+        }
+        return true;
+
+    }
+
+</script>
+
+
+
 
 
 

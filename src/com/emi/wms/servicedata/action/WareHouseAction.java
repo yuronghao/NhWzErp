@@ -2616,6 +2616,11 @@ public class WareHouseAction extends BaseAction{
 			wmc.setBillDate(getParameter("billDate").length()>0?new Timestamp(DateUtil.stringtoDate(getParameter("billDate"), "yyyy-MM-dd").getTime()):null);
 			wmc.setDepartmentUid(depUid);
 
+			String[] materialapplygid = getRequest().getParameterValues("materialapplygid");
+			if(materialapplygid != null && materialapplygid.length >0){
+				wmc.setMaterialapplygid(materialapplygid[0]);//如果存在参照申请表主表id，则添加
+			}
+
 
 			// 其他出主表
 			String wmoouid = UUID.randomUUID().toString();
@@ -2684,6 +2689,12 @@ public class WareHouseAction extends BaseAction{
 					wmcc.setNumber(new BigDecimal(mainNumber[i]));
 //					wmcc.setOutnumber(new BigDecimal(mainNumber[i]));//出库数量不再这边填写，审核之后填写
 					wmcc.setNotes(note[i]);
+
+					if(materialapplycgid != null && materialapplycgid.length >0){
+						wmcc.setMaterialapplycgid(materialapplycgid[i]);////如果存在参照申请表子表id，则添加
+					}
+
+
 					clist.add(wmcc);
 
 					WmAllocationstock wmcat=new WmAllocationstock();////货位现存量出
@@ -4731,7 +4742,13 @@ public class WareHouseAction extends BaseAction{
 				AaGoods good = cacheCtrlService.getGoods(((WmMaterialapplyC)materialApplyC.get(i)).getGoodsuid().toString());
 				((WmMaterialapplyC)materialApplyC.get(i)).setGood(good);
 				AaGoodsallocation alocation=cacheCtrlService.getGoodsAllocation(((WmMaterialapplyC)materialApplyC.get(i)).getGoodsallocationuid().toString());
+				AaWarehouse aaWarehouse = cacheCtrlService.getWareHouse(alocation.getWhuid());//仓库
+
 				((WmMaterialapplyC)materialApplyC.get(i)).setAlocation(alocation.getName());
+
+				((WmMaterialapplyC)materialApplyC.get(i)).setWhUid(aaWarehouse.getGid());
+				((WmMaterialapplyC)materialApplyC.get(i)).setWhName(aaWarehouse.getWhname());
+
 				if (!CommonUtil.isNullObject(((WmMaterialapplyC)materialApplyC.get(i)).getGoodName())) {
 					AaGoods goods = cacheCtrlService.getGoods(((WmMaterialapplyC)materialApplyC.get(i)).getGoodName().toString());
 					((WmMaterialapplyC)materialApplyC.get(i)).setGoodName(goods.getGoodsname());
