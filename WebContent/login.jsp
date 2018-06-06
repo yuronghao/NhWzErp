@@ -18,13 +18,18 @@
 </head>
 
 <style>
+	html,body{
+		height: 100%;
+	}
 	body{
-		background: url('${ctx }/img/logobg20180524.png') no-repeat center/cover;
+		background: url('${ctx }/img/logobg20180605.png') no-repeat center/cover fixed;
+		overflow: hidden;
 	}
 
 
 	#loginWrap{
-		width: 900px;
+		/*width: 900px;*/
+		width: 500px;
 		height: 440px;
 		margin: 0 auto;
 		box-shadow: 0 0 30px rgba(0,0,0,0.4);
@@ -53,7 +58,8 @@
 
 
 	#loginWrap>.loginRight{
-		width: 40%;
+		/*width: 40%;*/
+		width: 100%;
 	}
 	#loginWrap>.loginRight>div{
 		padding: 40px 60px;
@@ -114,18 +120,43 @@
 	#loginWrap>.loginRight>div>footer>.btn-default:hover{
 		color :#FFF;
 	}
+
+
+	.logo{
+		top: 20px;
+		left: 20px;
+		width: 200px;
+	}
+	.logoCont{
+		top: 80px;
+		left: 0;
+		width: 100%;
+	}
+	.logoCont>img{
+		width: 360px;
+	}
+	#loginform{
+		margin-top: 200px;
+	}
+
 </style>
 
 <body onkeydown="loginSubmit(event);">
+<img class="logo pa" src="${ctx }/img/logo20180606.png" alt="">
+<div class="logoCont pa tc">
+	<img src="${ctx }/img/wuzifont20180606.png" alt="">
+</div>
+
+
 <form action="${ctx}/login_toIndex.emi" id="loginform" method="post">
 	<div class="h100">
 		<input type="hidden" name="sysName" id="sysName" value="<%=Constants.SYSNAME_WMS%>">
 		<div id="loginWrap" class=-"clearfix">
-			<div class="loginLeft h100 fl pr">
-				<header class="pa"></header>
-				<footer class="pa"></footer>
-			</div>
-			<div class="loginRight h100 fr bgw" style="padding: 40px 40px 0;">
+			<%--<div class="loginLeft h100 fl pr">--%>
+				<%--<header class="pa"></header>--%>
+				<%--<footer class="pa"></footer>--%>
+			<%--</div>--%>
+			<div class="loginRight h100 fr bgw" style="padding: 40px 80px 0;">
 				<div class="h100">
 					<header class="tc">
 						<span class="size20">用户登录</span>
