@@ -321,9 +321,15 @@
 						okVal:"确定",
 						ok:function(){
 							
-							var chek = $('.goodsSelected:checked',this.content.document); 
-							document.getElementById('goodsAllocationName'+temp).value=chek.eq(0).attr("allocationName");
-							document.getElementById('goodsAllocationUid'+temp).value=chek.eq(0).val();
+							var chek = $('.goodsSelected:checked',this.content.document);
+                            if(chek.eq(0).val() != null && chek.eq(0).val() != "undefined"){
+                                document.getElementById('goodsAllocationName'+temp).value=chek.eq(0).attr("allocationName");
+                                document.getElementById('goodsAllocationUid'+temp).value=chek.eq(0).val();
+                            }
+
+
+
+
 						},
 						cancelVal:"关闭",
 						cancel:true

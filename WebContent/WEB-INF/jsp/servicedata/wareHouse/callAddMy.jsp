@@ -359,6 +359,7 @@
 		
 		function clickFlagout(obj)
 		{
+		    alert(1)
 			var temp=$(obj).attr("id").substr(22);
 			if($("#outwhUid").val()=="")
 				{
@@ -378,9 +379,12 @@
 						okVal:"确定",
 						ok:function(){
 							
-							var chek = $('.goodsSelected:checked',this.content.document); 
-							document.getElementById('outgoodsAllocationName'+temp).value=chek.eq(0).attr("allocationName");
-							document.getElementById('outgoodsAllocationUid'+temp).value=chek.eq(0).val();
+							var chek = $('.goodsSelected:checked',this.content.document);
+							if(chek.eq(0).val() != null && chek.eq(0).val() != "undefined"){
+                                document.getElementById('outgoodsAllocationName'+temp).value=chek.eq(0).attr("allocationName");
+                                document.getElementById('outgoodsAllocationUid'+temp).value=chek.eq(0).val();
+                            }
+
 						},
 						cancelVal:"关闭",
 						cancel:true
@@ -413,8 +417,11 @@
                     ok:function(){
 
                         var chek = $('.goodsSelected:checked',this.content.document);
-                        document.getElementById('ingoodsAllocationName'+temp).value=chek.eq(0).attr("allocationName");
-                        document.getElementById('ingoodsAllocationUid'+temp).value=chek.eq(0).val();
+                        if(chek.eq(0).val() != null && chek.eq(0).val() != "undefined"){
+                            document.getElementById('ingoodsAllocationName'+temp).value=chek.eq(0).attr("allocationName");
+                            document.getElementById('ingoodsAllocationUid'+temp).value=chek.eq(0).val();
+                        }
+
                     },
                     cancelVal:"关闭",
                     cancel:true

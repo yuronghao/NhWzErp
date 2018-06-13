@@ -33,7 +33,7 @@
 			var trs=$('.serialTr');
 			if(trs.length<=0)
 				{
-					$.dialog.alert_w("采购入库明细不能为空!");
+					$.dialog.alert_w("明细不能为空!");
 				  	return false;
 				}
 			
@@ -386,9 +386,12 @@
 						okVal:"确定",
 						ok:function(){
 							
-							var chek = $('.goodsSelected:checked',this.content.document); 
-							document.getElementById('goodsAllocationName'+temp).value=chek.eq(0).attr("allocationName");
-							document.getElementById('goodsAllocationUid'+temp).value=chek.eq(0).val();
+							var chek = $('.goodsSelected:checked',this.content.document);
+                            if(chek.eq(0).val() != null && chek.eq(0).val() != "undefined"){
+                                document.getElementById('goodsAllocationName'+temp).value=chek.eq(0).attr("allocationName");
+                                document.getElementById('goodsAllocationUid'+temp).value=chek.eq(0).val();
+                            }
+
 						},
 						cancelVal:"关闭",
 						cancel:true
@@ -773,7 +776,7 @@
 					  </li>
 		 			
 					<li class="wordli fl">
-						<div class="wordname fl">入库标志：</div>
+						<div class="wordname fl">标志：</div>
 						<div class="wordnameinput fl">
 							<select class="toDealSelect" id="badge" name="badge" onchange="getSelect(this)" disabled="disabled">
 								<%--<option value="1" <c:if test="${produceWarehouse['badge'] == 1}">selected="selected"</c:if>>蓝字</option>--%>

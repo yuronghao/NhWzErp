@@ -1842,7 +1842,7 @@ public class WareHouseDao extends BaseDao {
 	}
 
 	public List getTransceiversListForAll(String condition) {
-		String sql ="select "+CommonUtil.colsFromBean(WmTransceiversPage.class,"owh")+" ,ag.goodsCode as goodsCode1,u.unitName as  goodsUnit1,ag.goodsStandard as  goodsStandard1 from WM_Transceivers_Page owh  WITH (NoLock)  ";
+		String sql ="select owh.pk,owh.goodsUid,owh.serchDate,owh.whUid,Convert(decimal(18,2),owh.topTotalNumber) topTotalNumber, Convert(decimal(18,2),owh.mouthInNumber) mouthInNumber,Convert(decimal(18,2),owh.mouthOutNumber) mouthOutNumber,Convert(decimal(18,2),owh.endTotalNumber) endTotalNumber,owh.ip,owh.goodsName ,ag.goodsCode as goodsCode1,u.unitName as  goodsUnit1,ag.goodsStandard as  goodsStandard1 from WM_Transceivers_Page owh  WITH (NoLock)  ";
 		sql+= " left join AA_Goods ag on ag.gid = owh.goodsUid " +
 				" left join unit u on u.gid = ag.goodsUnit where 1=1 ";
 		if(!CommonUtil.isNullString(condition)){
