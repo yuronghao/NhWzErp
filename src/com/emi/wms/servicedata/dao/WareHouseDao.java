@@ -713,9 +713,9 @@ public class WareHouseDao extends BaseDao {
 	public Map findOtherWarehouse(String gid,String orgId,String sobId) {
 		String sql="";
 		if(CommonUtil.isNullString(gid)){
-			sql="SELECT TOP 1 wowh.gid,wowh.billCode,wowh.billDate,wowh.badge,wowh.depUid,wowh.whUid,wowh.notes ,wowh.recordDate,ymuser.userName recordpersonName,wowh.recordPersonId FROM	WM_OtherWarehouse wowh LEFT JOIN YM_User ymuser ON ymuser.gid = wowh.recordPersonId WHERE	1 = 1 and wowh.isdel = 0 AND wowh.sobGid = '" + sobId + "' AND wowh.orgGid = '" + orgId + "' ORDER BY	wowh.pk DESC ";
+			sql="SELECT TOP 1 wowh.gid,wowh.billCode,wowh.billDate,wowh.badge,wowh.depUid,wowh.whUid,wowh.notes ,wowh.recordDate,ymuser.userName recordpersonName,wowh.recordPersonId FROM	WM_OtherWarehouse wowh LEFT JOIN YM_User ymuser ON ymuser.gid = wowh.recordPersonId WHERE	1 = 1  AND wowh.sobGid = '" + sobId + "' AND wowh.orgGid = '" + orgId + "' ORDER BY	wowh.pk DESC ";
 		}else{
-			sql="SELECT  wowh.gid,wowh.billCode,wowh.billDate,wowh.badge,wowh.depUid,wowh.whUid,wowh.notes ,wowh.recordDate,ymuser.userName recordpersonName,wowh.recordPersonId FROM	WM_OtherWarehouse wowh LEFT JOIN YM_User ymuser ON ymuser.gid = wowh.recordPersonId WHERE	1 = 1 and wowh.isdel = 0 AND wowh.gid='"+gid+"' AND wowh.sobGid = '" + sobId + "' AND wowh.orgGid = '" + orgId + "' ORDER BY	wowh.pk DESC ";
+			sql="SELECT  wowh.gid,wowh.billCode,wowh.billDate,wowh.badge,wowh.depUid,wowh.whUid,wowh.notes ,wowh.recordDate,ymuser.userName recordpersonName,wowh.recordPersonId FROM	WM_OtherWarehouse wowh LEFT JOIN YM_User ymuser ON ymuser.gid = wowh.recordPersonId WHERE	1 = 1  AND wowh.gid='"+gid+"' AND wowh.sobGid = '" + sobId + "' AND wowh.orgGid = '" + orgId + "' ORDER BY	wowh.pk DESC ";
 		}
 		
 		return  this.queryForMap(sql);
@@ -1823,7 +1823,7 @@ public class WareHouseDao extends BaseDao {
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
 		String formatDate = df.format(date);
-		String sql = " UPDATE "+tablename+"  set auditDate = "+formatDate+" where gid  = '"+gid+"' ";
+		String sql = " UPDATE "+tablename+"  set auditDate = GETDATE() where gid  = '"+gid+"' ";
 		this.update(sql);
 	}
 
@@ -1876,6 +1876,210 @@ public class WareHouseDao extends BaseDao {
 				" select aw.whCode from AA_WareHouse aw where aw.gid = '"+whuid+"' " +
 				" ) " +
 				" and wa.goodsUid = '"+gooduid+"' ";
+		return this.queryForMap(sql);
+	}
+
+	public FollowInfoMoving getFollowMovingNowByBillid(String gid) {
+		Map match = new HashMap();
+		match.put("userName", "userName");
+		String sql = " select top 1 fm.*,yu.userName from FollowInfoMoving fm  " +
+				"left JOIN YM_User yu on yu.gid = fm.approvaluser " +
+				"where fm.isused = 0 and fm.billsgid  = '"+gid+"'  " +
+				"ORDER BY fm.currentnodeindex DESC ";
+		return (FollowInfoMoving) this.emiQuery(sql,FollowInfoMoving.class,match);
+
+	}
+
+	public Map getlysqcount(String userid, String orgId, String sobId) {
+		String sql  =  " select count(*) lysqcount from ( " +
+				" SELECT " +
+				" 	owh.gid owhGid, " +
+				" 	owh.billCode owhCode, " +
+				" 	owh.recordPerson recordPerson, " +
+				" 	owh.departmentUid departId, " +
+				" 	owh.whUid whUid, " +
+				" 	owh.status, " +
+				" 	y.id AS followmovinggid " +
+				" FROM " +
+				" 	WM_MaterialApply owh " +
+				" INNER JOIN ( " +
+				" 	SELECT " +
+				" 		* " +
+				" 	FROM " +
+				" 		( " +
+				" 			SELECT " +
+				" 				ROW_NUMBER () OVER ( " +
+				" 					partition BY x.billsgid " +
+				" 					ORDER BY " +
+				" 						x.currentnodeindex ASC " +
+				" 				) rowId ,* " +
+				" 			FROM " +
+				" 				( " +
+				" 					SELECT " +
+				" 						* " +
+				" 					FROM " +
+				" 						FollowInfoMoving fm " +
+				" 					WHERE " +
+				" 						fm.approvaluser = '"+userid+"' " +
+				" 					AND fm.isused = 0 " +
+				" 					AND fm.status = 0 " +
+				" 				) x " +
+				" 		) AS AuctionRecords " +
+				" 	WHERE " +
+				" 		rowId = 1 " +
+				" ) y ON y.billsgid = owh.gid " +
+				" WHERE " +
+				" 	1 = 1 " +
+				" AND owh.sobGid = '"+sobId+"' " +
+				" AND owh.orgGid = '"+orgId+"' " +
+				" )aa " ;
+		return this.queryForMap(sql);
+
+	}
+
+	public Map getclckcount(String userid, String orgId, String sobId) {
+		String sql =  " select count(*) clckcount from ( " +
+				" SELECT " +
+				" 	owh.gid owhGid, " +
+				" 	owh.billCode owhCode, " +
+				" 	owh.recordPerson recordPerson, " +
+				" 	owh.departmentUid departId, " +
+				" 	owh.whUid whUid, " +
+				" 	owh.status, " +
+				" 	y.id AS followmovinggid " +
+				" FROM " +
+				" 	WM_MaterialOut owh " +
+				" INNER JOIN ( " +
+				" 	SELECT " +
+				" 		* " +
+				" 	FROM " +
+				" 		( " +
+				" 			SELECT " +
+				" 				ROW_NUMBER () OVER ( " +
+				" 					partition BY x.billsgid " +
+				" 					ORDER BY " +
+				" 						x.currentnodeindex ASC " +
+				" 				) rowId ,* " +
+				" 			FROM " +
+				" 				( " +
+				" 					SELECT " +
+				" 						* " +
+				" 					FROM " +
+				" 						FollowInfoMoving fm " +
+				" 					WHERE " +
+				" 						fm.approvaluser = '"+userid+"' " +
+				" 					AND fm.isused = 0 " +
+				" 					AND fm.status = 0 " +
+				" 				) x " +
+				" 		) AS AuctionRecords " +
+				" 	WHERE " +
+				" 		rowId = 1 " +
+				" ) y ON y.billsgid = owh.gid " +
+				" WHERE " +
+				" 	1 = 1 " +
+				" AND owh.sobGid = '"+sobId+"' " +
+				" AND owh.orgGid = '"+orgId+"' " +
+				" )aa " ;
+		return this.queryForMap(sql);
+	}
+
+	public Map getdbdcount(String userid, String orgId, String sobId) {
+		String sql =  " select count(*) dbdcount from ( " +
+				" SELECT " +
+				" 	wmcall.gid, " +
+				" 	wmcall.pk, " +
+				" 	wmcall.billCode, " +
+				" 	wmcall.billDate, " +
+				" 	wmcall.outWhUid, " +
+				" 	wmcall.inWhUid, " +
+				" 	wmcallc.goodsUid, " +
+				" 	wmcallc.number, " +
+				" 	wmcallc.outgoodsAllocationUid, " +
+				" 	wmcallc.ingoodsAllocationUid, " +
+				" 	wmcallc.outnumber, " +
+				" 	wmcallc.outassistNumber, " +
+				" 	wmcallc.cfree1, " +
+				" 	wmcallc.cfree2, " +
+				" 	y.id AS followmovinggid " +
+				" FROM " +
+				" 	WM_Call wmcall " +
+				" INNER JOIN ( " +
+				" 	SELECT " +
+				" 		* " +
+				" 	FROM " +
+				" 		( " +
+				" 			SELECT " +
+				" 				ROW_NUMBER () OVER ( " +
+				" 					partition BY x.billsgid " +
+				" 					ORDER BY " +
+				" 						x.currentnodeindex ASC " +
+				" 				) rowId ,* " +
+				" 			FROM " +
+				" 				( " +
+				" 					SELECT " +
+				" 						* " +
+				" 					FROM " +
+				" 						FollowInfoMoving fm " +
+				" 					WHERE " +
+				" 						fm.approvaluser = '"+userid+"' " +
+				" 					AND fm.isused = 0 " +
+				" 					AND fm.status = 0 " +
+				" 				) x " +
+				" 		) AS AuctionRecords " +
+				" 	WHERE " +
+				" 		rowId = 1 " +
+				" ) y ON y.billsgid = wmcall.gid " +
+				" LEFT JOIN WM_Call_C wmcallc ON wmcallc.callUid = wmcall.gid " +
+				" WHERE " +
+				" 	1 = 1 " +
+				" AND wmcall.sobGid = '"+sobId+"' " +
+				" AND wmcall.orgGid = '"+orgId+"' " +
+				" )aa " ;
+
+		return this.queryForMap(sql);
+
+	}
+
+	public Map getbfdcount(String userid, String orgId, String sobId) {
+		String sql =  " select count(*) bfdcount from ( " +
+				" 	SELECT " +
+				" 	owh.*, wowc.goodsUid goodsUid, " +
+				" 	wowc.number, " +
+				" 	y.id AS followmovinggid " +
+				" FROM " +
+				" 	WM_OthersScrap owh " +
+				" INNER JOIN ( " +
+				" 	SELECT " +
+				" 		* " +
+				" 	FROM " +
+				" 		( " +
+				" 			SELECT " +
+				" 				ROW_NUMBER () OVER ( " +
+				" 					partition BY x.billsgid " +
+				" 					ORDER BY " +
+				" 						x.currentnodeindex ASC " +
+				" 				) rowId ,* " +
+				" 			FROM " +
+				" 				( " +
+				" 					SELECT " +
+				" 						* " +
+				" 					FROM " +
+				" 						FollowInfoMoving fm " +
+				" 					WHERE " +
+				" 						fm.approvaluser = '"+userid+"' " +
+				" 					AND fm.isused = 0 " +
+				" 					AND fm.status = 0 " +
+				" 				) x " +
+				" 		) AS AuctionRecords " +
+				" 	WHERE " +
+				" 		rowId = 1 " +
+				" ) y ON y.billsgid = owh.gid " +
+				" LEFT JOIN WM_OthersScrap_C wowc ON wowc.othersScrapUid = owh.gid " +
+				" WHERE " +
+				" 	1 = 1 " +
+				" AND owh.sobGid = '"+sobId+"' " +
+				" AND owh.orgGid = '"+orgId+"' " +
+				" )aa " ;
 		return this.queryForMap(sql);
 	}
 }

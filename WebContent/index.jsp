@@ -15,6 +15,7 @@
 	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath() %>/css/common.css">
 <%-- 	<script type="text/javascript" src="<%=contextPath %>/scripts/plugins/jquery.cycle.all.js"></script> --%>
 	<script type="text/javascript" src="<%=contextPath %>/scripts/websjy.js"></script>
+	<script type="text/javascript" src="${ctx}/scripts/lhgdialog.js"></script>
 	<!--自动调整宽度\高度-->
 	<script type="text/javascript">
 		function getHeight(){
@@ -385,6 +386,12 @@
 			.list ul li ul li ul li { background-color:rgba(210,210,250,0.2); border-color:#286eb3; }
 			.last{ background-color:background-color:rgba(210,210,250,0.2); border-color:#286eb3; }
 			.list ul li ul li ul li a{ 	 padding-left:30px;}
+
+		.ui_title{
+			background: #58967B;
+			border-bottom:1px solid #58967B;
+		}
+
 	</style>	
 
 </head>
@@ -563,6 +570,52 @@ $(".changeimg").click(function(){
     $(".changeimg>img").toggle();
 });
 
+
+    $(function () {
+        isexitnopayment();
+    })
+
+
+    function isexitnopayment(){
+        //ajax判断是
+        $.ajax({
+            type: 'POST',
+            url: '${ctx}/wms/wareHouse_getNoticeInfo.emi',
+            success: function(req){
+                var jsonO =  eval('(' + req + ')');
+                if(jsonO.success== 1){
+                    var  a = jsonO.datamap.lysqcount;
+                    var  b = jsonO.datamap.clckcount;
+                    var  c = jsonO.datamap.dbdcount;
+                    var  d = jsonO.datamap.bfdcount;
+                    var html = "" ;
+                    if(a >0){
+                        html+="<a href=\"javaScript:void(0)\" onclick=\"CreateDiv('erp_04_01_01','/erp/wms/wareHouse_gtasksMymaterialApplyWarehouseList.emi','领用申请单列表',true)\" >您有"+a+"个领用申请单待处理</a><br> ";
+                    }
+                    if(b >0){
+                        html+=" <a href=\"javaScript:void(0)\" onclick=\"CreateDiv('erp_04_01_02','/erp/wms/wareHouse_gtasksMymaterialOutWarehouseList.emi','材料出库单列表',true)\" >您有"+b+"个材料出库单待处理</a><br> ";
+                    }
+                    if(c >0){
+                        html+=" <a href=\"javaScript:void(0)\" onclick=\"CreateDiv('erp_04_01_03','/erp/wms/wareHouse_gtasksMygetAllocationList.emi','调拨单列表',true)\" >您有"+c+"个调拨单待处理</a><br> ";
+                    }
+                    if(d >0){
+                        html+=" <a href=\"javaScript:void(0)\" onclick=\"CreateDiv('erp_04_01_04','/erp/wms/wareHouse_gtasksMyothersOutList.emi','报废单列表',true)\" >您有"+d+"个报废单待处理</a><br> ";
+                    }
+                    $.dialog.notice({
+                        title: '缴费提醒',
+                        width: 220,
+                        max: false,
+                        content: ''+html+'',
+                        time: null
+
+                    });
+
+                }else{
+
+                }
+            }
+        });
+    }
 
 
 </script>

@@ -222,6 +222,9 @@ public class WareHouseAction extends BaseAction{
 				}
 			}
 
+			FollowInfoMoving followInfoMoving = wareHouseService.getFollowMovingNowByBillid(otherScrap.get("gid").toString());
+			setRequstAttribute("followInfoMoving", followInfoMoving);
+
 
 			String time = DateUtil.dateToString(new Date(), "yyMMdd");
 			setRequstAttribute("time", time);
@@ -261,7 +264,9 @@ public class WareHouseAction extends BaseAction{
 			wmoh.setDepUid(depUid);
 			wmoh.setNotes(getParameter("notes"));
 			wmoh.setBillState("0");
-			wmoh.setBillDate(new Date());
+			SimpleDateFormat sm = new SimpleDateFormat("yyyy-MM-dd");
+			wmoh.setBillDate(sm.parse(getParameter("billDate")));
+
 			wmoh.setRecordDate(new Date());
 			wmoh.setRecordPersonId(getParameter("recordPersonUid"));
 			wmoh.setSobGid(getSession().get("SobId").toString());
@@ -364,7 +369,9 @@ public class WareHouseAction extends BaseAction{
 			wmoh.setDepartmentUid(depUid);
 			wmoh.setNotes(getParameter("notes"));
 			wmoh.setBillState("0");
-			wmoh.setBillDate(new Date());
+			SimpleDateFormat sm = new SimpleDateFormat("yyyy-MM-dd");
+			wmoh.setBillDate(sm.parse(getParameter("billDate")));
+//			wmoh.setBillDate(new Date());
 			wmoh.setRecordDate(new Date());
 			wmoh.setRecordPersonUid(getParameter("recordPersonUid"));
 			wmoh.setSobGid(getSession().get("SobId").toString());
@@ -467,7 +474,9 @@ public class WareHouseAction extends BaseAction{
 			wmoh.setDepartmentUid(depUid);
 			wmoh.setNotes(getParameter("notes"));
 			wmoh.setBillState("0");
-			wmoh.setBillDate(new Date());
+			SimpleDateFormat sm = new SimpleDateFormat("yyyy-MM-dd");
+			wmoh.setBillDate(sm.parse(getParameter("billDate")));
+//			wmoh.setBillDate(new Date());
 			wmoh.setRecordDate(new Date());
 			wmoh.setRecordPersonUid(getParameter("recordPersonUid"));
 			wmoh.setSobGid(getSession().get("SobId").toString());
@@ -567,6 +576,8 @@ public class WareHouseAction extends BaseAction{
 			wmoh.setWhUid(whUid);
 			wmoh.setDepUid(depUid);
 			wmoh.setRecordDate(new Date());
+			SimpleDateFormat sm = new SimpleDateFormat("yyyy-MM-dd");
+			wmoh.setBillDate(sm.parse(getParameter("billDate")));
 //			wmoh.setNotes(getParameter("notes"));
 			wmoh.setRecordPersonId(getParameter("recordPersonUid"));
 			wmoh.setBillCode(billCode);
@@ -667,6 +678,8 @@ public class WareHouseAction extends BaseAction{
 			wmoh.setWarehouseUid(whUid);
 			wmoh.setDepartmentUid(depUid);
 			wmoh.setRecordDate(new Date());
+			SimpleDateFormat sm = new SimpleDateFormat("yyyy-MM-dd");
+			wmoh.setBillDate(sm.parse(getParameter("billDate")));
 //			wmoh.setNotes(getParameter("notes"));
 			wmoh.setRecordPersonUid(getParameter("recordPersonUid"));
 			wmoh.setBillCode(billCode);
@@ -758,6 +771,9 @@ public class WareHouseAction extends BaseAction{
 			wmoh.setWarehouseUid(whUid);
 			wmoh.setDepartmentUid(depUid);
 			wmoh.setRecordDate(new Date());
+			SimpleDateFormat sm = new SimpleDateFormat("yyyy-MM-dd");
+			wmoh.setBillDate(sm.parse(getParameter("billDate")));
+			wmoh.setAuditDate(wmoh.getBillDate());
 			wmoh.setNotes(getParameter("notes"));
 			wmoh.setRecordPersonUid(getParameter("recordPersonUid"));
 			wmoh.setBillCode(billCode);
@@ -1551,6 +1567,65 @@ public class WareHouseAction extends BaseAction{
 			}
 			return "poWarehouseAdd";
 		}
+
+
+
+
+		/** 跳转 采购入库/材料入库 退货 新增界面 ，红蓝字分开成两个列表
+		* @Desc
+		* @author yurh
+		* @create 2018-06-11 09:16:20
+		**/
+	public String toAddPoWarehouseSalesReturn(){
+		try{
+			String poWarehousegid = getParameter("poWarehousegid");
+			String orgId=getSession().get("OrgId").toString();
+			String sobId=getSession().get("SobId").toString();
+			Map poWarehouseWarehouse = wareHouseService.findPoWarehouse(poWarehousegid,orgId,sobId);
+			if(!CommonUtil.isNullObject(poWarehouseWarehouse)){
+				if(!CommonUtil.isNullObject(poWarehouseWarehouse.get("departmentUid"))){
+					AaDepartment department = cacheCtrlService.getDepartment(poWarehouseWarehouse.get("departmentUid").toString());
+					setRequstAttribute("department", department);
+				}
+
+				if(!CommonUtil.isNullObject(poWarehouseWarehouse.get("providerUid"))){
+					AaProviderCustomer customer = cacheCtrlService.getProviderCustomer(poWarehouseWarehouse.get("providerUid").toString());
+					setRequstAttribute("customer", customer);
+				}
+
+				if(!CommonUtil.isNullObject(poWarehouseWarehouse.get("whUid"))){
+					AaWarehouse warehouse = cacheCtrlService.getWareHouse(poWarehouseWarehouse.get("whUid").toString());
+					setRequstAttribute("warehouse", warehouse);
+				}
+				if(!CommonUtil.isNullObject(poWarehouseWarehouse.get("recordPersonId"))){
+					AaPerson aaperson = cacheCtrlService.getPerson(poWarehouseWarehouse.get("recordPersonId").toString());
+					setRequstAttribute("aaperson", aaperson);
+				}
+				if(!CommonUtil.isNullObject(poWarehouseWarehouse.get("gid"))){
+					List produceWarehouseC = wareHouseService.getPoWarehouseClist(poWarehouseWarehouse.get("gid").toString());
+					for(int i=0;i<produceWarehouseC.size();i++){
+						AaGoods good = cacheCtrlService.getGoods(((Map)produceWarehouseC.get(i)).get("materialUid").toString());
+						((Map)produceWarehouseC.get(i)).put("good", good);
+						AaGoodsallocation alocation=cacheCtrlService.getGoodsAllocation(((Map)produceWarehouseC.get(i)).get("goodsAllocationUid").toString());
+						((Map)produceWarehouseC.get(i)).put("goodsAllocationName", alocation.getName());
+					}
+					setRequstAttribute("produceWarehouseC", produceWarehouseC);
+				}
+			}
+			String time = DateUtil.dateToString(new Date(), "yyMMdd");
+			setRequstAttribute("time", time);
+			setRequstAttribute("produceWarehouse", poWarehouseWarehouse);
+			setRequstAttribute("lhg_self", "false");//lhgdialog参数，使之基于整个浏览器弹出
+
+
+
+
+
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return "poWarehouseAddSalesReturn";
+	}
 	
 		/**
 		 * 新增材料入库单/采购入库单
@@ -1579,7 +1654,10 @@ public class WareHouseAction extends BaseAction{
 				whouse.setRecordpersonid(getParameter("recordPersonUid"));//录入人
 				whouse.setSobgid(getSession().get("SobId").toString());
 				whouse.setOrggid(getSession().get("OrgId").toString());
-				whouse.setBilldate(new Date());
+
+				SimpleDateFormat sm = new SimpleDateFormat("yyyy-MM-dd");
+				whouse.setBilldate(sm.parse(getParameter("billDate")));
+
 				whouse.setRecorddate(new Date());
 				whouse.setNotes(getParameter("notes"));
 				whouse.setProvideruid(getParameter("providerUid"));
@@ -1680,6 +1758,10 @@ public class WareHouseAction extends BaseAction{
 				wmoh.setBillcode(billCode);
 				wmoh.setBadge(Integer.parseInt(badge));
 				wmoh.setProvideruid(getParameter("providerUid"));
+				SimpleDateFormat sm = new SimpleDateFormat("yyyy-MM-dd");
+				wmoh.setBilldate(sm.parse(getParameter("billDate")));
+				wmoh.setAuditdate(wmoh.getBilldate());
+
 //					List otherC = wareHouseService.getProduceWarehouseClist(produceWarehousegid);
 				List<WmAllocationstock> asList=new ArrayList<WmAllocationstock>();
 				List<WmPowarehouseC> wmohclist=new ArrayList<WmPowarehouseC>();                    //生产入库子记录表
@@ -1777,9 +1859,76 @@ public class WareHouseAction extends BaseAction{
 				e.printStackTrace();
 			}
 		}
+
+
+		/**
+		* @Desc 采购入库列表
+		* @author yurh
+		* @create 2018-06-11 10:19:20
+		**/
+	public String powarehouseList(){
+		try{
+			int pageIndex = getPageIndex();
+			int pageSize = getPageSize();
+			String keyWord = getParameter("keyWord");//搜索关键字
+			String condition = CommonUtil.combQuerySql("wpw.billCode", keyWord);
+			setRequstAttribute("keyWord",keyWord);
+			String orgId=getSession().get("OrgId").toString();
+			String sobId=getSession().get("SobId").toString();
+			condition+=" and wpw.sobGid='"+sobId+"' and wpw.orgGid='"+orgId+"' and wpw.badge =  1 ";
+			if(!CommonUtil.isNullString(keyWord)){
+				List<AaGoods> goods=cacheCtrlService.setGoods();
+				for (AaGoods aaGoods : goods) {
+					String gid="";
+					if (aaGoods.getGoodsname().equals(keyWord)||aaGoods.getGoodscode().equals(keyWord)) {
+						gid+=aaGoods.getGid();
+						condition+="or wpwc.materialUid like '%"+gid+"%'";
+					}
+				}
+			}
+			PageBean list = wareHouseService.getPoWarehouseList(pageIndex, pageSize, condition);
+			for(int i=0;i<list.getList().size();i++){
+				if(!CommonUtil.isNullString(((WmPowarehouse)list.getList().get(i)).getRecordpersonid())){
+					YmUser ymuser = cacheCtrlService.getUser(((WmPowarehouse)list.getList().get(i)).getRecordpersonid().toString());
+					if(!CommonUtil.isNullObject(ymuser)){
+						((WmPowarehouse)list.getList().get(i)).setRecordPersonName(ymuser.getUserName());
+					}
+				}
+				if(!CommonUtil.isNullString(((WmPowarehouse)list.getList().get(i)).getDepartmentuid())){
+					AaDepartment department = cacheCtrlService.getDepartment(((WmPowarehouse)list.getList().get(i)).getDepartmentuid().toString());
+					if(!CommonUtil.isNullObject(department)){
+						((WmPowarehouse)list.getList().get(i)).setDepartName(department.getDepname());
+					}
+				}
+				if(!CommonUtil.isNullString(((WmPowarehouse)list.getList().get(i)).getWhuid())){
+					AaWarehouse warehouse  = cacheCtrlService.getWareHouse(((WmPowarehouse)list.getList().get(i)).getWhuid().toString());
+					if(!CommonUtil.isNullObject(warehouse)){
+						((WmPowarehouse)list.getList().get(i)).setWareHouseName(warehouse.getWhname());
+					}
+				}
+				if (!CommonUtil.isNullString(((WmPowarehouse)list.getList().get(i)).getGoodsGid())) {
+					AaGoods goods=cacheCtrlService.getGoods(((WmPowarehouse)list.getList().get(i)).getGoodsGid());
+					if(goods != null){
+						((WmPowarehouse)list.getList().get(i)).setGoodsName(goods.getGoodsname());
+						((WmPowarehouse)list.getList().get(i)).setGoodsCode(goods.getGoodscode());
+						Unit  unit = cacheCtrlService.getUnit(goods.getGoodsunit());
+						if(unit!= null){
+							((WmPowarehouse)list.getList().get(i)).setGoodsUnit(unit.getUnitname());//计量单位
+						}
+
+					}
+
+				}
+			}
+			setRequstAttribute("data", list);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return "poWarehouseList";
+	}
 		
-		//入库列表
-		public String powarehouseList(){
+		//采购入库 退货列表
+		public String powarehouseSalesReturnList(){
 			try{
 				int pageIndex = getPageIndex();
 				int pageSize = getPageSize();
@@ -1788,7 +1937,7 @@ public class WareHouseAction extends BaseAction{
 				setRequstAttribute("keyWord",keyWord);
 				String orgId=getSession().get("OrgId").toString();
 				String sobId=getSession().get("SobId").toString();
-				condition+=" and wpw.sobGid='"+sobId+"' and wpw.orgGid='"+orgId+"'";
+				condition+=" and wpw.sobGid='"+sobId+"' and wpw.orgGid='"+orgId+"' and wpw.badge =  0 ";
 				if(!CommonUtil.isNullString(keyWord)){
 					List<AaGoods> goods=cacheCtrlService.setGoods();
 					for (AaGoods aaGoods : goods) {
@@ -1837,7 +1986,7 @@ public class WareHouseAction extends BaseAction{
 			}catch(Exception e){
 				e.printStackTrace();
 			}
-			return "poWarehouseList";
+			return "poWarehouseSalesReturnList";
 		}
 			
 	//...................................................销售出库操作。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。//	
@@ -1977,6 +2126,9 @@ public class WareHouseAction extends BaseAction{
 					setRequstAttribute("sp", 0);
 				}
 			}
+
+			FollowInfoMoving followInfoMoving = wareHouseService.getFollowMovingNowByBillid(call.get("gid").toString());
+			setRequstAttribute("followInfoMoving", followInfoMoving);
 
 
 			String time = DateUtil.dateToString(new Date(), "yyMMdd");
@@ -2357,6 +2509,8 @@ public class WareHouseAction extends BaseAction{
 				}else{
 					setRequstAttribute("sp", 0);
 				}
+				FollowInfoMoving followInfoMoving = wareHouseService.getFollowMovingNowByBillid(saleOutWarehouse.get("gid").toString());
+				setRequstAttribute("followInfoMoving", followInfoMoving);
 
 				String time = DateUtil.dateToString(new Date(), "yyMMdd");
 				setRequstAttribute("time", time);
@@ -2437,6 +2591,9 @@ public class WareHouseAction extends BaseAction{
 				}
 			}
 
+			FollowInfoMoving followInfoMoving = wareHouseService.getFollowMovingNowByBillid(saleApplyWarehouse.get("gid").toString());
+			setRequstAttribute("followInfoMoving", followInfoMoving);
+
 			//类型
 			String condition=" ";
 			List<YmRdStyle> result=wareHouseService.getRdstyleEntity(condition, Constants.TASKTYPE_LYSQ);
@@ -2478,7 +2635,8 @@ public class WareHouseAction extends BaseAction{
 				wmMaterialout.setRecordperson(getParameter("recordPersonUid"));//录入人
 				wmMaterialout.setSobgid(getSession().get("SobId").toString());
 				wmMaterialout.setOrggid(getSession().get("OrgId").toString());
-				wmMaterialout.setBilldate(new Date());
+				SimpleDateFormat sm = new SimpleDateFormat("yyyy-MM-dd");
+				wmMaterialout.setBilldate(sm.parse(getParameter("billDate")));
 				wmMaterialout.setRecorddate(new Date());
 				wmMaterialout.setBadge(Integer.parseInt(badge));
 				wmMaterialout.setStatus(0);//添加状态为0
@@ -2630,7 +2788,7 @@ public class WareHouseAction extends BaseAction{
 			wmoo.setWarehouseUid(wmc.getOutWhUid());
 			wmoo.setBillCode(wareHouseService.getBillId(Constants.TASKTYPE_QTCK));
 			wmoo.setBillState("0");
-			wmoo.setBillDate(new Date());
+			wmoo.setBillDate(wmc.getBillDate());
 			wmoo.setRecordPersonUid(getParameter("recordPersonUid"));
 			wmoo.setRecordDate(new Date());
 			wmoo.setSobGid(getSession().get("SobId").toString());
@@ -2645,7 +2803,7 @@ public class WareHouseAction extends BaseAction{
 			wmoh.setWhUid(wmc.getInWhUid());
 			wmoh.setBillCode(wareHouseService.getBillId(Constants.TASKTYPE_QTRK));
 			wmoh.setBillState("0");
-			wmoh.setBillDate(new Date());
+			wmoh.setBillDate(wmc.getBillDate());
 			wmoh.setRecordDate(new Date());
 			wmoh.setRecordPersonId(getParameter("recordPersonUid"));
 			wmoh.setSobGid(getSession().get("SobId").toString());
@@ -2896,6 +3054,9 @@ public class WareHouseAction extends BaseAction{
 				wmMaterialout.setWhuid(whUid);
 				wmMaterialout.setNotes(getParameter("notes"));
 				wmMaterialout.setBadge(Integer.parseInt(badge));
+				SimpleDateFormat sm = new SimpleDateFormat("yyyy-MM-dd");
+				wmMaterialout.setBilldate(sm.parse(getParameter("billDate")));
+
 				if(getParameter("status") != null && !"".equals(getParameter("status"))){
 					wmMaterialout.setStatus(Integer.parseInt(getParameter("status")));
 				}
@@ -3074,6 +3235,7 @@ public class WareHouseAction extends BaseAction{
 			}
 
 			wmc.setBillDate(getParameter("billDate").length()>0?new Timestamp(DateUtil.stringtoDate(getParameter("billDate"), "yyyy-MM-dd").getTime()):null);
+			wmc.setAuditDate(wmc.getBillDate());
 			wmc.setDepartmentUid(depUid);
 
 
@@ -4551,7 +4713,8 @@ public class WareHouseAction extends BaseAction{
 					setRequstAttribute("sp", 0);
 				}
 			}
-
+			FollowInfoMoving followInfoMoving = wareHouseService.getFollowMovingNowByBillid(call.get("gid").toString());
+			setRequstAttribute("followInfoMoving", followInfoMoving);
 
 			String time = DateUtil.dateToString(new Date(), "yyMMdd");
 			setRequstAttribute("time", time);
@@ -4632,6 +4795,9 @@ public class WareHouseAction extends BaseAction{
 					setRequstAttribute("sp", 0);
 				}
 			}
+
+			FollowInfoMoving followInfoMoving = wareHouseService.getFollowMovingNowByBillid(otherScrap.get("gid").toString());
+			setRequstAttribute("followInfoMoving", followInfoMoving);
 
 
 			String time = DateUtil.dateToString(new Date(), "yyMMdd");
@@ -4791,6 +4957,29 @@ public class WareHouseAction extends BaseAction{
 
 
 	}
+
+
+	/**
+	 * @Desc 催缴右下角弹出提醒
+	 * @author yurh
+	 * @create 2017-12-29 13:40:56
+	 **/
+	public void getNoticeInfo() {
+		try{
+			Map map = new HashMap();
+			map.put("success",1);
+			map.put("data","");
+			String orgId=getSession().get("OrgId").toString();
+			String sobId=getSession().get("SobId").toString();
+			String userid = CommonUtil.Obj2String(getSession().get("UserId"));//当前登陆人id
+			Map datamap = wareHouseService.getALLCount(userid,orgId,sobId);
+			map.put("datamap",datamap);
+			getResponse().getWriter().write(JSON.toJSONString(map));
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+
 
 
 

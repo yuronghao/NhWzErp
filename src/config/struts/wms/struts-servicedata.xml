@@ -106,7 +106,9 @@
 		<!-- 采购入库单 -->
 	    <result name="poWarehouseAdd">/WEB-INF/jsp/servicedata/wareHouse/poWarehouseAdd.jsp</result>
 	    <result name="poWarehouseList">/WEB-INF/jsp/servicedata/wareHouse/poWarehouseList.jsp</result>
-	    
+		<result name="poWarehouseAddSalesReturn">/WEB-INF/jsp/servicedata/wareHouse/poWarehouseAddSalesReturn.jsp</result>
+		<result name="poWarehouseSalesReturnList">/WEB-INF/jsp/servicedata/wareHouse/poWarehouseSalesReturnList.jsp</result>
+
      <!-- 材料出库单 -->
 	    <result name="materialOutAdd">/WEB-INF/jsp/servicedata/wareHouse/materialOutAdd.jsp</result>
 	    <result name="materialOutList">/WEB-INF/jsp/servicedata/wareHouse/materialOutList.jsp</result>

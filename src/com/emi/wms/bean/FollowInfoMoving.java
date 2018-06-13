@@ -26,6 +26,17 @@ public class FollowInfoMoving {
     @EmiColumn(name ="ctime")
     private Date ctime;
 
+
+    private String userName;
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
     public Date getCtime() {
         return ctime;
     }

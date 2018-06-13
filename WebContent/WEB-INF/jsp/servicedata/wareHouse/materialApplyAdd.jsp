@@ -731,13 +731,13 @@
 										<input style="color: #0e78c9" type="text" value="未审核" id="zhuangtai" name="zhuangtai" class="" disabled>
 									</c:if>
 									<c:if test="${saleApplyWarehouse['status'] == 1}">
-										<input style="color: #0E2D5F" type="text" value="审核中" id="zhuangtai" name="zhuangtai" class="" disabled>
+										<input style="color: #0E2D5F" type="text" value="审核中(${followInfoMoving.userName})" id="zhuangtai" name="zhuangtai" class="" disabled>
 									</c:if>
 									<c:if test="${saleApplyWarehouse['status'] == 2}">
-										<input style="color: #00B83F" type="text" value="已通过" id="zhuangtai" name="zhuangtai" class="" disabled>
+										<input style="color: #00B83F" type="text" value="已通过(${followInfoMoving.userName})" id="zhuangtai" name="zhuangtai" class="" disabled>
 									</c:if>
 									<c:if test="${saleApplyWarehouse['status'] == 3}">
-										<input style="color: red" type="text" value="被驳回" id="zhuangtai" name="zhuangtai" class="" disabled>
+										<input style="color: red" type="text" value="被驳回(${followInfoMoving.userName})" id="zhuangtai" name="zhuangtai" class="" disabled>
 									</c:if>
 
 

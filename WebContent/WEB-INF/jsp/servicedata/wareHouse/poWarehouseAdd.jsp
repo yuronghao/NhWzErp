@@ -777,7 +777,7 @@
 						<div class="wordnameinput fl">
 							<select class="toDealSelect" id="badge" name="badge" onchange="getSelect(this)" disabled="disabled">
 								<option value="1" <c:if test="${produceWarehouse['badge'] == 1}">selected="selected"</c:if>>蓝字</option>
-								<option value="0" <c:if test="${produceWarehouse['badge'] == 0}">selected="selected"</c:if>>红字</option>
+								<%--<option value="0" <c:if test="${produceWarehouse['badge'] == 0}">selected="selected"</c:if>>红字</option>--%>
 							</select>
 						</div>
 						<div class="cf"></div>

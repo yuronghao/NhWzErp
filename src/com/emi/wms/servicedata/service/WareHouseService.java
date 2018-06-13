@@ -5722,6 +5722,7 @@ public class WareHouseService extends EmiPluginService {
             jobj.put("failInfor", "存在库存不满足的记录");
             return jobj;
         }
+        wmc.setAuditDate(wmc.getBillDate());
         wareHouseDao.emiInsert(wmc);//调拨单主表
         wareHouseDao.emiInsert(clist);//调拨单子表
 
@@ -5739,8 +5740,11 @@ public class WareHouseService extends EmiPluginService {
 
             wareHouseDao.updateOutNumberBynumberCall(wmc.getGid(),"WM_Call_C");//修改已调出数量，为应调出数量
             wareHouseDao.updateCallState(wmc.getGid());// 更改调拨单状态
+            wmoo.setAuditDate(wmoo.getBillDate());
             wareHouseDao.emiInsert(wmoo);// 插入其他入主表
             wareHouseDao.emiInsert(wmooclist);// 插入其他入子表
+
+            wmoh.setAuditDate(wmoh.getBillDate());
             wareHouseDao.emiInsert(wmoh);// 插入其他出主表
             wareHouseDao.emiInsert(wmohclist);// 插入其他出子表
             wareHouseDao.batchUpdate(sqls);// 回填调拨单已出库数量
@@ -6254,7 +6258,7 @@ public class WareHouseService extends EmiPluginService {
             return jobj;
         }
 
-
+        wmoh.setAuditDate(wmoh.getBillDate());
         boolean suc = wareHouseDao.emiInsert(wmoh);
         suc = wareHouseDao.emiInsert(wmohclist);//报废单
 
@@ -6335,7 +6339,7 @@ public class WareHouseService extends EmiPluginService {
         String ip = this.getIpAdrress(request);
         System.out.println(ip);
 
-        String sql = "";
+        String sql = " EXEC getTransceivers  ; ";
         sql+=" DECLARE @MyTable TypeWhUidList ";
         sql+=" INSERT INTO @MyTable(whUid) ";
         sql+="     VALUES ('-1')";
@@ -6347,7 +6351,7 @@ public class WareHouseService extends EmiPluginService {
             }
 
         }
-        sql+=" EXEC getTransceiversRealToPage '"+startMouth+"','"+endMouth+"',@MyTable, '"+ip+"'";
+        sql+="  EXEC getTransceiversRealToPage '"+startMouth+"','"+endMouth+"',@MyTable, '"+ip+"'";
 
 
         wareHouseDao.execute(sql);
@@ -6453,5 +6457,33 @@ public class WareHouseService extends EmiPluginService {
     public Map getCKXCL(String whuid, String gooduid) {
         Map map = wareHouseDao.getCKXCL(whuid,gooduid);
         return map;
+    }
+
+    public FollowInfoMoving getFollowMovingNowByBillid(String gid) {
+        FollowInfoMoving followInfoMoving = wareHouseDao.getFollowMovingNowByBillid(gid);
+        return followInfoMoving;
+    }
+
+    public Map getALLCount(String userid, String orgId, String sobId) {
+        Map map = new HashMap();
+
+        Map map1 = wareHouseDao.getlysqcount(userid,orgId,sobId);//领用申请
+        Map map2 = wareHouseDao.getclckcount(userid,orgId,sobId);//材料出库
+        Map map3 = wareHouseDao.getdbdcount(userid,orgId,sobId);//调拨单
+        Map map4 = wareHouseDao.getbfdcount(userid,orgId,sobId);//报废单
+//
+        int lysqcount  = Integer.parseInt(String.valueOf(map1.get("lysqcount")));
+        int clckcount  = Integer.parseInt(String.valueOf(map2.get("clckcount")));
+        int dbdcount  = Integer.parseInt(String.valueOf(map3.get("dbdcount")));
+        int bfdcount  = Integer.parseInt(String.valueOf(map4.get("bfdcount")));
+        map.put("lysqcount",lysqcount);
+        map.put("clckcount",clckcount);
+        map.put("dbdcount",dbdcount);
+        map.put("bfdcount",bfdcount);
+
+
+        return map;
+
+
     }
 }

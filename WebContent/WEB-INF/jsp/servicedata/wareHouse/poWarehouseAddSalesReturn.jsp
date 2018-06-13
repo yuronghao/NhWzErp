@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>报废单</title>
+<title>生产订单</title>
 <link rel="stylesheet" type="text/css" href="${ctx}/css/common.css">
 <link rel="stylesheet" type="text/css" href="${ctx}/css/emicom.css">
 <script type="text/javascript"	src="${ctx }/scripts/emiwms.js"></script> 
@@ -26,10 +26,14 @@
 				$.dialog.alert_w("仓库不能为空!");
 			  	return false;
 			} 
+		   if(document.getElementById('providerUid').value==""){
+				$.dialog.alert_w("供应商不能为空!");
+			  	return false;
+			}
 			var trs=$('.serialTr');
 			if(trs.length<=0)
 				{
-					$.dialog.alert_w("其他入库明细不能为空!");
+					$.dialog.alert_w("采购入库明细不能为空!");
 				  	return false;
 				}
 			
@@ -86,9 +90,8 @@
 				$("#depName").attr("onclick","selectdep()");
 				$("#whName").attr("onclick","selectmanager()");
 				$('#billDate').attr("onclick","WdatePicker({dateFmt:'yyyy-MM-dd'})");
-				$(".jjjnumric").attr("onclick","clickFlag(this)");
 				$.ajax({
-					data:{billType:'0030'},
+					data:{billType:'0010'},
 					url:'${ctx}/wms/saleOrder_getBillId.emi',
 					type:"post",
 					dataType:"json",
@@ -106,7 +109,7 @@
 			});
 			//修改
 			$('#revBtn').click(function(){	
-				if($('#othersScrapgid').val()==""){
+				if($('#poWarehousegid').val()==""){
 					return false;
 				}
 				else{
@@ -138,14 +141,13 @@
 				if(checkForm()){
 				if(isSave){//新增保存			
 					$.ajax({
-						url:'${ctx}/wms/wareHouse_addOthersScrap.emi',
+						url:'${ctx}/wms/wareHouse_addPoWarehouse.emi',
 						type:"post",
 						data:$('#myform').serialize(),
 						success:function(da){				
-							
 							var obj=eval("("+da+")");
 							if(obj.success==1){
-								window.location.href = '${ctx}/wms/wareHouse_toAddOthersScrap.emi';
+								window.location.href = '${ctx}/wms/wareHouse_toAddPoWarehouseSalesReturn.emi';
 							}else{
 								$.dialog.alert_e(obj.failInfor);
 							}
@@ -153,14 +155,14 @@
 					});
 				}else{//修改保存			
 					$.ajax({
-						url:'${ctx}/wms/wareHouse_updateOthersScrap.emi',
+						url:'${ctx}/wms/wareHouse_updatePoWarehouse.emi',
 						type:"post",
 						data:$('#myform').serialize(),
 						success:function(da){					
 							
 							var obj=eval("("+da+")");
 							if(obj.success==1){
-								window.location.href = '${ctx}/wms/wareHouse_toAddOthersScrap.emi';
+								window.location.href = '${ctx}/wms/wareHouse_toAddPoWarehouseSalesReturn.emi';
 							}else{
 								$.dialog.alert_e(obj.failInfor);
 							}
@@ -177,17 +179,17 @@
 		function deletesob(gid) {
 			if (confirm("是否确定删除?")) {
 				$.ajax({
-							url : '${ctx}/wms/wareHouse_deleteOthersScrap.emi',
+							url : '${ctx}/wms/wareHouse_deleteWarehouse.emi',
 							type : 'post',
 							data : {gid : gid},
 							success : function(da) {	
+								
 								var obj=eval("("+da+")");
 								if(obj.success==1){
-									window.location.href = '${ctx}/wms/wareHouse_toAddOthersScrap.emi';
+									window.location.href = '${ctx}/wms/wareHouse_toAddPoWarehouseSalesReturn.emi';
 								}else{
 									$.dialog.alert_e(obj.failInfor);
 								}
-								
 							},
 							error : function() {
 								alert("服务器异常");
@@ -198,12 +200,12 @@
 		
 		//放弃
 		function giveup() {
-			location.href = '${ctx}/wms/wareHouse_toAddOthersScrap.emi';
+			location.href = '${ctx}/wms/wareHouse_toAddPoWarehouseSalesReturn.emi';
 		}
 		
 		
 		function getprocurearrivallist(){
-			window.location.href = '${ctx}/wms/wareHouse_othersScrapList.emi';
+			window.location.href = '${ctx}/wms/wareHouse_powarehouseSalesReturnList.emi';
 		}
 		
 		function getSerial(){
@@ -225,9 +227,9 @@
 				trs.eq(i).children('.goodsAllocationUid').children().attr('id','goodsAllocationUid'+(i+1));
 				trs.eq(i).children('.batch').children().attr('id','batch'+(i+1));
 				// trs.eq(i).children('.barCode').children().attr('id','barCode'+(i+1));
-				// trs.eq(i).children('.note').children().attr('id','note'+(i+1));
+				trs.eq(i).children('.note').children().attr('id','note'+(i+1));
 				// trs.eq(i).children('.assistUnitcode').children().attr('id','assistUnitcode'+(i+1));
-				// trs.eq(i).children('.cfree').children().attr('id','cfree'+(i+1));
+				trs.eq(i).children('.cfree').children().attr('id','cfree'+(i+1));
 			} 
 		}
 		
@@ -253,40 +255,47 @@
 						'<td class="goodsName"><input type="text" id="" name="goodsName" class="listword" value="'+chek.eq(i).attr("goodsName")+'" readonly="readonly"></td>'+
 						'<td class="goodsstandard"><input type="text" id="" name="goodsstandard" class="listword" value="'+chek.eq(i).attr("goodsstandard")+'" readonly="readonly"></td>'+
 						'<td class="mainUnit"><input type="text" id="" name="mainUnit" class="listword" value="'+chek.eq(i).attr("unitName")+'" readonly="readonly"></td>'+
-						'<td class="mainNumber"><input type="text" id="" name="mainNumber" class="listword numric" value="" onchange="changeFlag(this)"></td>';
+						'<td class="mainNumber"><input type="text" id="" name="mainNumber" class="listword numric" value="" onchange="changeFlag(this);getAmount(this)"></td>';
 						
-						// '<td class="assistUnit"><input type="text" id="" name="assistUnit" class="listword" value="'+chek.eq(i).attr("cstComUnitName")+'" readonly="readonly"></td>';
-                        var binvbach=chek.eq(i).attr("binvbach");
-						// if(chek.eq(i).attr("binvbach")=='1')
-						// {
-						// 	binvbach=$("#time").val();
-						// }
-						// if(chek.eq(i).attr("cstcomunitcode")!='')
-						// 	{
-						// 	strs+='<td class="assistUnitcode" style="display:none"><input type="text" id="" name="assistUnitcode" class="listword jnumric" value="'+chek.eq(i).attr("cstcomunitcode")+'" readonly="readonly"></td>'+
-						// 	'<td class="assistNumber"><input type="text" id="" name="assistNumber" class="listword jjnumric" value="" onchange="changeFlag(this)"></td>';
-						// 	}
-						// else
-						// 	{
-						// 	strs+='<td class="assistUnitcode" style="display:none"><input type="text" id="" name="assistUnitcode" class="listword" value="'+chek.eq(i).attr("cstcomunitcode")+'" readonly="readonly"></td>'+
-						// 	'<td class="assistNumber"><input type="text" id="" name="assistNumber" class="listword" value="" readonly="readonly"></td>';
-						// 	}
+//						'<td class="assistUnit"><input type="text" id="" name="assistUnit" class="listword" value="'+chek.eq(i).attr("cstComUnitName")+'" readonly="readonly"></td>';
+						var binvbach='';
+						if(chek.eq(i).attr("binvbach")=='1')
+						{
+							binvbach=$("#time").val();
+						}
+//						if(chek.eq(i).attr("cstcomunitcode")!='')
+//							{
+//							strs+='<td class="assistUnitcode" style="display:none"><input type="text" id="" name="assistUnitcode" class="listword jnumric" value="'+chek.eq(i).attr("cstcomunitcode")+'" readonly="readonly"></td>'+
+//							'<td class="assistNumber"><input type="text" id="" name="assistNumber" class="listword jjnumric" value="" onchange="changeFlag(this)"></td>';
+//							}
+//						else
+//							{
+//							strs+='<td class="assistUnitcode" style="display:none"><input type="text" id="" name="assistUnitcode" class="listword" value="'+chek.eq(i).attr("cstcomunitcode")+'" readonly="readonly"></td>'+
+//							'<td class="assistNumber"><input type="text" id="" name="assistNumber" class="listword" value="" readonly="readonly"></td>';
+//							}
 					strs+='<td class="goodsAllocationName"><input type="text" id="" name="goodsAllocationName" class="listword jjjnumric"  readonly="readonly" onclick="clickFlag(this)"></td>'+
-						'<td class="goodsAllocationUid" style="display:none"><input type="text" id="" name="goodsAllocationUid" class="listword "  readonly="readonly" ></td>'+
-						
-						'<td class="batch" ><input type="text" id="" name="batch" class="listword batchInput" value="" isbatch="'+binvbach+'"></td>'+
-						
-                        <%--'<td class="barCode"><input type="text" id="" name="barCode" class="listword "  readonly="readonly"></td>'+--%>
-                        <%--'<td class="note"><input type="text" id="" name="note" class="listword" value=""></td>'+--%>
-                        <%--'<td class="cfree"><input type="text" id="" name="cfree" class="listword" value="${type.cfree1}" readonly="readonly"></td>'+--%>
-		                <%--'<td class="smallamount"><input type="text" id="" name="smallamount" class="listword" ></td>'+--%>
-                        '<input type="hidden" id="" name="process" class="listword" value="'+chek.eq(i).attr("code")+'">'+
+						'<td class="goodsAllocationUid" style="display:none"><input type="text" id="" name="goodsAllocationUid" class="listword "  readonly="readonly" onclick="clickFlag(this)"></td>';
+
+
+                        if(chek.eq(i).attr("binvbach")=='0'){
+                            strs+= '<td class="batch" ><input type="text" id="" name="batch" class="listword batchInput" value="" readonly="readonly"></td>';
+                        }else if(chek.eq(i).attr("binvbach")=='1'){
+                            strs+= '<td class="batch" ><input type="text" id="" name="batch" class="listword batchInput" value="'+binvbach+'" ></td>';
+                        }
+
+
+                        strs+= '<td class="price"><input type="text" id="" name="price" class="listword " value="" onchange="getAmount(this);"></td>'+
+		             	'<td class="amount"><input type="text" id="" name="amount" class="listword " value="" readonly="readonly"></td>'+
+						// '<td class="barCode"><input type="text" id="" name="barCode" class="listword "  readonly="readonly"></td>'+
+						'<td class="note"><input type="text" id="" name="note" class="listword" value=""></td>'+
+//						'<td class="cfree"><input type="text" id="" name="cfree" class="listword" value="" readonly="readonly"></td>'+
+//						'<td class="smallamount"><input type="text" id="" name="smallamount" class="listword" value="" readonly="readonly"></td>'+
+//		                '<td class="printamount"><input type="text" id="" name="printamount" class="listword" value="" readonly="readonly"></td>'+
 						'</tr>';
 					
 						$("#contr").append(strs);
 						getSerial();
 						$(".numric").numeral(6);
-                        setIsbatch();
 					}
 				},
 				cancelVal:"关闭",
@@ -301,22 +310,28 @@
             var batchs=$('.batchInput');
 
             for(var i=0;i<batchs.length;i++){
+                alert(batchs.eq(i).attr("isbatch"))
                 if(batchs.eq(i).attr("isbatch")!=1){
                     batchs.eq(i).attr('readonly','readonly');
                 }
                 if(batchs.eq(i).attr("isbatch")==1){
+                    var covalue = $("#badge").val();
+                    alert(covalue)
+                    if(covalue ==1){
+                        batchs.eq(i).val($("#time").val());//蓝字，
+					}else if(covalue ==0){
+                        // batchs.eq(i).attr('readonly','readonly');
+                        batchs.eq(i).attr('onclick','getBatch(this)');//红字
+					}
 
-                    batchs.eq(i).attr('onclick','getBatch(this)');
+
                 }
             }
         }
 
 
 
-
-        /*获得批次信息*/
         function getBatch(obj){
-
             if($('#badge').val()==0){//红字时不弹出批次框
                 return;
             }
@@ -347,6 +362,7 @@
                 cancel:true
             });
         }
+
 
 
 		function clickFlag(obj)
@@ -381,7 +397,6 @@
 		}
 		function changeFlag(obj)
 		{
-			
 			if(isNaN(obj.value)){
 				alert("请输入数字");
 				obj.value="";
@@ -405,6 +420,29 @@
 			}
 			
 		}
+		
+		//修改数量、单价获得金额
+		function getAmount(obj){
+			var mainNumber=$(obj).parent().parent().find(".mainNumber").children().val();//数量
+			if(mainNumber=="" || mainNumber==null || isNaN(mainNumber)){
+				alert("请输入主数量");
+				$(obj).parent().parent().find(".mainNumber").children().val("");
+				return;
+			}
+			
+			var price=$(obj).parent().parent().find(".price").children().val();//单价
+			if(price=="" || price==null || isNaN(price)){
+				$(obj).parent().parent().find(".price").children().val("");
+				price=0;
+			}
+			
+			var amount=(parseFloat(mainNumber)*parseFloat(price)).toFixed(2);
+			
+			$(obj).parent().parent().find(".amount").children().val(amount);
+			
+		}
+		
+		
 		function getSelect(obj)
 		{
 			
@@ -448,7 +486,10 @@
 							 tems[j].value=-tems[j].value;
 						}
 					}
+					
 				}
+				
+				getAmount(tems[j]);//获得金额
 			}
 
 		}
@@ -522,6 +563,13 @@
 					
 					document.getElementById('whName').value=usercheck[0].whname;
 					document.getElementById('whUid').value=usercheck[0].gid;
+					 var temp=document.getElementsByName("goodsAllocationName");
+					 var temps=document.getElementsByName("goodsAllocationUid");
+					 for(var i=0;i<temp.length;i++)
+						 {
+						 temp[i].value='';
+						 temps[i].value='';
+						 }
 				},
 				cancelVal:"关闭",
 				cancel:true
@@ -536,7 +584,7 @@
 			title:'打印服务',
 		    width: '300px',
 			height: '150px',
-			content: 'url:wms/purchaseArrival_toopenprintpage.emi',
+			content: 'url:wms/purchase_toopenprintpage.emi',
 			okVal:"打印",
 			ok:function(){
 				var printmodel = this.content.document.getElementById('printmodel').value;
@@ -546,7 +594,7 @@
 				} */
 				if(printmodel=='0'){
 					$.ajax({
-						url:'${ctx}/wms/purchaseArrival_printbarcode.emi?printservice='+printservice,
+						url:'${ctx}/wms/purchase_printbarcode.emi?printservice='+printservice,
 						type:"post",
 						data:$('#myform').serialize(),
 						success:function(da){				
@@ -605,28 +653,50 @@
 			cancel:true
 		});	
 	}
+		
+	 	function selectproviderName(){
+	 		$.dialog({ 
+				drag: true,
+				lock: false,
+				resize: false,
+				title:'选择供应商',
+			    width: '800px',
+				height: '500px',
+				zIndex:3000,
+				content: 'url:${ctx}/plugin_selectMain.emi?treeType=<%=TreeType.PROVIDERCUSTOMER%>&multi=0&showTree=0', 
+				okVal:"确定",
+				ok:function(){
+					var returnArray = this.content.window.jsonArray;
+					if(returnArray.length>0){
+						$('#providerUid').val(returnArray[0].gid);
+						$('#providerName').val(returnArray[0].pcname);
+					}
+				},
+				cancelVal:"关闭",
+				cancel:true
+			});
+	 	}
+		
+		
 	</script>
 </head>
 <body style="background-color: #FFFFFF;">
 <form id="myform" name="myform" action="" method="post">
-<%--<input type="hidden" name="time" id="time" value="${time }" />--%>
-<input type="hidden" name="deleteGids" id="deleteGids" />
-<input type="hidden" id="othersScrapgid" name="othersScrapgid" value="${otherScrap['gid']}">
+<input type="hidden" name="time" id="time" value="${time }" />
+<input type="hidden" id="poWarehousegid" name="poWarehousegid" value="${produceWarehouse['gid']}">
 		 <div class="EMonecontent">
 		 	<div style="width: 100%;height: 15px;"></div>
 		 	<!--按钮部分-->
 		 	<div class="toolbar">
 		 		<ul>
 		 			<!--<li class="fl"><a href="AttributeProjectClass.html"><input type="button" class="backBtn" value="返回"></a></li>-->
-		 			<%--<li class="fl"><input type="button" class="btns" value="新增" id="addBtn"> </li>--%>
-		 			<%--<li class="fl"><input type="button" class="btns" value="修改" id="revBtn"> </li>--%>
-		 			<%--<li class="fl"><input type="button" class="btns" value="删除" id="delBtn" onclick="deletesob('${otherScrap['gid']}')"> </li>--%>
-		 			<%--<li class="fl"><input type="button" class="btns" value="保存" id="saveBtn"> </li>--%>
-		 			<%--<li class="fl"><input type="button" class="btns" value="放弃" id="giveUpBtn" onclick="giveup()"> </li>--%>
-		 			<%--<li class="fl" style="display:none"><input type="button" class="btns" value="审核"> </li>--%>
-			 		<%--<li class="fl" style="display:none"><input type="button" class="btns" value="弃审"> </li>--%>
-					<li class="fl"><input type="button"  style="background-color: #0e76a8" class="btns" value="同意" onclick="tongyi('${otherScrapgid}','${followmovinggid}')"> </li>
-					<li class="fl"><input type="button" style="background-color: red" class="btns" value="驳回" onclick="bohui('${otherScrapgid}','${followmovinggid}')"> </li>
+		 			<li class="fl"><input type="button" class="btns" value="新增" id="addBtn"> </li>
+		 			<li class="fl"><input type="button" class="btns" value="修改" id="revBtn" > </li>
+		 			<li class="fl"><input type="button" class="btns" value="删除" id="delBtn" onclick="deletesob('${produceWarehouse['gid']}')"> </li>
+		 			<li class="fl"><input type="button" class="btns" value="保存" id="saveBtn"> </li>
+		 			<li class="fl"><input type="button" class="btns" value="放弃" id="giveUpBtn" onclick="giveup()"> </li>
+		 			<li class="fl" style="display:none"><input type="button" class="btns" value="审核"> </li>
+			 		<li class="fl" style="display:none"><input type="button" class="btns" value="弃审"> </li>
 		 			<li class="fl"><input type="button" class="btns" value="列表" id="tableBtn" onclick="getprocurearrivallist()"></li>
 		 			<li class="fl">
 	 				<!-- 单据翻页begin -->
@@ -644,8 +714,8 @@
 							 * @param [div_id] 【非必填】翻页按钮所在的div的id(默认叫emi_page_turning,如有需要可以修改)
 							 */
 							 var cond = "";
-		 					initPageTurning('${ctx }/wms/wareHouse_toAddOthersScrapMy.emi','WM_OthersScrap','gid',"${otherScrap['gid']}",
-		 							cond,'otherScrapgid');
+		 					initPageTurning('${ctx }/wms/wareHouse_toAddPoWarehouseSalesReturn.emi','WM_PoWarehouse','gid',"${produceWarehouse['gid']}",
+		 							cond,'poWarehousegid');
 		 				});
 		 			</script>
 		 			<!-- 单据翻页end -->
@@ -658,25 +728,25 @@
 		 	<!--按钮部分 end-->
 		 	<!--表格部分-->
 		 	<div class="creattable">
-		 		<div class="tabletitle" style="margin-top:6px;">报废单</div>
+		 		<div class="tabletitle" style="margin-top:6px;">采购退货单</div>
 		 		<div>
 		 			<!--12-->
 		 			<ul class="wordul">
 		 				<li class="wordli fl">
 							<div class="wordname fl">单据编号：</div>
-							<div class="wordnameinput fl"><input type="text" value="${otherScrap['billCode']}" id="billCode" name="billCode" readonly="readonly"> </div>
+							<div class="wordnameinput fl"><input type="text" value="${produceWarehouse['billCode']}" id="billCode" name="billCode" readonly="readonly"> </div>
 							<div class="cf"></div> 
 		 				</li>
 		 				<li class="wordli fl">
 							<div class="wordname fl">单据日期：</div>
-							<div class="wordnameinput fl"><input type="text" value="${fn:substring(otherScrap['billDate'],0,10)}" id="billDate" name="billDate" readonly="readonly"> </div>
+							<div class="wordnameinput fl"><input type="text" value="${fn:substring(produceWarehouse['billDate'],0,10)}" id="billDate" name="billDate" readonly="readonly"> </div>
 							<div class="cf"></div> 
 		 				</li>
 		 				<li class="wordli fl">
 							<div class="wordname fl">部门：</div>
 							<div class="wordnameinput fl">
 							<input type="text" name="depName" id="depName" class="toDealInput" value="${department.depname}" >
-	 						<input type="hidden" id="depUid" name="depUid" value="${otherScrap['departmentUid']}">
+	 						<input type="hidden" id="depUid" name="depUid" value="${produceWarehouse['departmentUid']}">
 							</div>
 							<div class="cf"></div> 
 		 				</li>
@@ -684,72 +754,45 @@
 							<div class="wordname fl">仓库：</div>
 							<div class="wordnameinput fl">
 							<input type="text" name="whName" id="whName" class="toDealInput" value="${warehouse.whname}">
-							<input type="hidden" value="${otherScrap['warehouseUid']}" id="whUid" name="whUid">
+							<input type="hidden" value="${produceWarehouse['whUid']}" id="whUid" name="whUid"> 
 							</div>
 							<div class="cf"></div> 
 		 				</li>
 		 				<div class="cf"></div> 		 				
 		 			</ul>
-					<ul class="wordul">
-						<%--<li class="wordli fl">--%>
-							<%--<div class="wordname fl">入库标志：</div>--%>
-							<%--<div class="wordnameinput fl">--%>
-								<%--<select class="toDealSelect" id="badge" name="badge" onchange="getSelect(this)" disabled="disabled">--%>
-									<%--<option value="1" <c:if test="${otherScrap['badge'] == 1}">selected="selected"</c:if>>蓝字</option>--%>
-									<%--<option value="0" <c:if test="${otherScrap['badge'] == 0}">selected="selected"</c:if>>红字</option>--%>
-								<%--</select>--%>
-							<%--</div>--%>
-							<%--<div class="cf"></div>--%>
-						<%--</li>--%>
-						<li class="wordli fl">
+		 			<ul class="wordul">
+		 			
+		 			<li class="wordli fl">
+						<div class="wordname fl">供应商：</div>
+						<div class="wordnameinput fl">
+							<%--<input type="text" id="providerName" name="providerName" class="toDealInput" value="${customer.pcname}" >--%>
+							<input type="text" name="providerName" id="providerName" class="toDealInput" value="${customer.pcname}" onclick="selectproviderName();" >
+	 						<input type="hidden" id="providerUid" name="providerUid" value="${produceWarehouse['providerUid']}" >
+						</div>
+						<div class="cf"></div>
+					  </li>
+		 			
+					<li class="wordli fl">
+						<div class="wordname fl">入库标志：</div>
+						<div class="wordnameinput fl">
+							<select class="toDealSelect" id="badge" name="badge" onchange="getSelect(this)" disabled="disabled">
+								<%--<option value="1" <c:if test="${produceWarehouse['badge'] == 1}">selected="selected"</c:if>>蓝字</option>--%>
+								<option value="0" <c:if test="${produceWarehouse['badge'] == 0}">selected="selected"</c:if>>红字</option>
+							</select>
+						</div>
+						<div class="cf"></div>
+					  </li>
+		 				<li class="wordli fl">
 							<div class="wordname fl">备注：</div>
-							<div class="wordnameinput fl"><input type="text" value="${otherScrap['notes']}" id="notes" name="notes" class="toDealInput"> </div>
-							<div class="cf"></div>
-						</li>
-
-
-						<li class="wordli fl">
-							<div class="wordname fl">类型：</div>
-							<div class="wordnameinput fl">
-								<select class="toDealSelect" id="businessTypeUid" name="businessTypeUid"  disabled="disabled">
-									<c:forEach items="${rdstylelist}" var="rdstyle" varStatus="status">
-										<option value="${rdstyle.gid}" <c:if test="${otherScrap['businessTypeUid'] == rdstyle.gid}">selected="selected"</c:if>>${rdstyle.crdName}</option>
-									</c:forEach>
-								</select>
-							</div>
-							<div class="cf"></div>
-						</li>
-
-
-						<c:if test="${sp == 1}">
-							<li class="wordli fl">
-								<div class="wordname fl">审批状态:</div>
-								<div class="wordnameinput fl">
-									<div class="wordnameinput fl">
-										<c:if test="${otherScrap['status'] == 0}">
-											<input style="color: #0e78c9" type="text" value="未审核" id="zhuangtai" name="zhuangtai" class="" disabled>
-										</c:if>
-										<c:if test="${otherScrap['status'] == 1}">
-											<input style="color: #0E2D5F" type="text" value="审核中(${followInfoMoving.userName})" id="zhuangtai" name="zhuangtai" class="" disabled>
-										</c:if>
-										<c:if test="${otherScrap['status'] == 2}">
-											<input style="color: #00B83F" type="text" value="已通过(${followInfoMoving.userName})" id="zhuangtai" name="zhuangtai" class="" disabled>
-										</c:if>
-										<c:if test="${otherScrap['status'] == 3}">
-											<input style="color: red" type="text" value="被驳回(${followInfoMoving.userName})" id="zhuangtai" name="zhuangtai" class="" disabled>
-										</c:if>
-
-
-									</div>
-								</div>
-								<div class="cf"></div>
-							</li>
-						</c:if>
-
-
-
-
-					</ul>
+							<div class="wordnameinput fl"><input type="text" value="${produceWarehouse['notes']}" id="notes" name="notes" class="toDealInput"> </div>
+							<div class="cf"></div> 
+		 				</li>
+		 				<div class="cf"></div> 
+		 			</ul>
+		 			<!-- <ul class="wordul">
+		 				
+		 				<div class="cf"></div> 
+		 			</ul> -->
 		 			<div style="height: 30px;"></div>
 		 			<!--end-->
 		 			<div style="max-height:300px;overflow:auto;">
@@ -766,43 +809,51 @@
 				 					<%--<th>辅数量</th>--%>
 				 					<th>货位号</th>
 				 					<th>批次</th>
+				 					<th>单价</th>
+				 					<th>金额</th>
 				 					<%--<th style="width: 12%">条形码</th>--%>
-				 					<%--<th>备注</th>--%>
+				 					<th>备注</th>
                                     <%--<th>工序</th>--%>
 				 					<%--<th>最小包装量</th>--%>
+				 					<%--<th>打印份数</th>--%>
 				 				</tr>
-				 			<c:forEach var="type" items="${othersScrapC}" varStatus="stat">
+				 			<c:forEach var="type" items="${produceWarehouseC}" varStatus="stat">
 				 		    <tr class="serialTr">
-				 		    <td><div class="delrow" name = "deleteButton"  style="margin-left:15px;float: left;display: none" title="删除" gid="${type.gid}"></div>
-				 		    </td>
+				 		    <td><div class="delrow" name = "deleteButton"  style="margin-left:15px;float: left;display: none" title="删除" gid="${type.gid}"></div> </td>
 				 		     <td class="gid" style="display:none"><input type="hidden" id="" name="gid" class="listword" value="${type.gid}" /></td>
 				 		
-				 		    <td class="goodsUid" style="display:none"><input type="text" id="" name="goodsUid" class="listword" value="${type.goodsUid}"></td>
+				 		    <td class="goodsUid" style="display:none"><input type="text" id="" name="goodsUid" class="listword" value="${type.materialUid}"></td>
 			                <td class="goodsCode"><input type="text" id="" name="goodsCode" class="listword" value="${type.good.goodscode}" readonly="readonly" ></td>
 			                <td class="goodsName"><input type="text" id="" name="goodsName" class="listword" value="${type.good.goodsname}" readonly="readonly"></td>
 			                <td class="goodsstandard"><input type="text" id="" name="goodsstandard" class="listword" value="${type.good.goodsstandard}" readonly="readonly"></td>
 			             
 			                <td class="mainUnit" ><input type="text" id="" name="mainUnit" class="listword" value="${type.good.unitName}" readonly="readonly"></td>
-			                <td class="mainNumber"><input type="text" id="" name="mainNumber" class="listword toDealInput numric" value="<fmt:formatNumber type="number" value="${type.number}" minFractionDigits="2" groupingUsed="false" />" onchange="changeFlag(this)"></td>		             
-			                <%--<td class="assistUnit"><input type="text" id="" name="assistUnit" class="listword" value="${type.good.cassComUnitName}" readonly="readonly"></td>--%>
-			               <%--<c:if test="${not empty type.good.cstcomunitcode}">--%>
-			          <%----%>
+			                <td class="mainNumber"><input type="text" id="" name="mainNumber" class="listword toDealInput numric" value="<fmt:formatNumber type="number" value="${type.quantity}" minFractionDigits="2" groupingUsed="false"/>" onchange="changeFlag(this);getAmount(this)"></td>
+			                <%--<td class="assistUnit"><input type="text" id="" name="assistUnit" class="listword" value="${type.good.cstComUnitName}" readonly="readonly" ></td>--%>
+			               <%--  <td class="assistUnitcode" style="display:none"><input type="text" id="" name="assistUnitcode" class="listword jnumric" value="${type.good.cstcomunitcode}" readonly="readonly"></td>
+			                <td class="assistNumber"><input type="text" id="" name="assistNumber" class="listword jjnumric" value="<fmt:formatNumber type="number" value="${type.assistNumber}" minFractionDigits="2"/>" readonly="readonly"></td> --%>
+			               <%--<c:if test="${not empty type.good.cstcomunitcode}">			          --%>
 							<%--<td class="assistUnitcode" style="display:none"><input type="text" id="" name="assistUnitcode" class="listword jnumric" value="${type.good.cstcomunitcode}" readonly="readonly"></td>--%>
-							<%--<td class="assistNumber"><input type="text" id="" name="assistNumber" class="listword jjnumric" value="<fmt:formatNumber type="number" value="${type.assistNumber}" minFractionDigits="2"/>" onchange="changeFlag(this)"></td>--%>
+							<%--<td class="assistNumber"><input type="text" id="" name="assistNumber" class="listword jjnumric" value="<fmt:formatNumber type="number" value="${type.assistquantity}" minFractionDigits="2"/>" onchange="changeFlag(this)"></td>--%>
 							<%--</c:if>--%>
 						    <%--<c:if test="${empty type.good.cstcomunitcode}">--%>
 							<%--<td class="assistUnitcode" style="display:none"><input type="text" id="" name="assistUnitcode" class="listword" value="${type.good.cstcomunitcode}" readonly="readonly"></td>--%>
-							<%--<td class="assistNumber"><input type="text" id="" name="assistNumber" class="listword" value="" readonly="readonly" onchange="changeFlag(this)"></td>--%>
+							<%--<td class="assistNumber"><input type="text" id="" name="assistNumber" class="listword" value="" readonly="readonly"></td>--%>
 							<%--</c:if>--%>
-
-			                <td class="goodsAllocationName"><input type="text" id="" name="goodsAllocationName" class="listword  jjjnumric" value="${type.goodsAllocationName}" readonly="readonly"></td>
+			                
+			                <td class="goodsAllocationName"><input type="text" id="" name="goodsAllocationName" class="listword  jjjnumric" value="${type.goodsAllocationName}" readonly="readonly" ></td>
 			                <td class="goodsAllocationUid" style="display:none"><input type="text" id="" name="goodsAllocationUid" class="listword toDealInput" value="${type.goodsAllocationUid}" readonly="readonly"></td>
-			             	 <td class="batch"><input type="text" id="" name="batch" class="listword " value="${type.batch}" readonly="readonly"></td>
-			                <%--<td class="barCode" title="${type.barCode}"><input type="text" id="" name="barCode" class="listword" value="${type.barCode}" readonly="readonly"></td>--%>
-			                <%--<td class="note"><input type="text" id="" name="note" class="listword toDealInput" value="${type.notes}" readonly="readonly"></td>--%>
+			             	<td class="batch"><input type="text" id="" name="batch" class="listword " value="${type.batchCode}" readonly="readonly"></td>
+			             	 
+			             	 <td class="price"><input type="text" id="" name="price" class="listword " value="<fmt:formatNumber type="number" value="${type.price}" minFractionDigits="2" groupingUsed="false"/> " onchange="getAmount(this);"></td>
+			             	 <td class="amount"><input type="text" id="" name="amount" class="listword " value="${type.amount}" readonly="readonly"></td>
+			                
+			                <%--<td class="barCode"><input type="text" id="" name="barCode" class="listword " value="${type.barCode}" readonly="readonly"></td>--%>
+			                <td class="note"><input type="text" id="" name="note" class="listword toDealInput" value="${type.notes}" readonly="readonly"></td>
 			                <%--<td class="cfree"><input type="text" id="" name="cfree" class="listword" value="${type.cfree1}" readonly="readonly"></td>--%>
 			                <%--<td class="smallamount"><input type="text" id="" name="smallamount" class="listword" value="<fmt:formatNumber type="number" value="${type.number}" minFractionDigits="2"/>"></td>--%>
-			                <%--<input type="hidden" id="" name="process" class="listword" value="${type.code}">--%>
+			                <%--<td class="printamount"><input type="text" id="" name="printamount" class="listword" value="1"></td>--%>
+			                <input type="hidden" id="" name="process" class="listword" value="${type.code}">
 				 		    </tr>
 				 	        </c:forEach>
 				 			</tbody>
@@ -818,14 +869,14 @@
  				<li class=" fl">
 					<div class="wordname fl">录入人：</div>
 					<div class="wordnameinput fl">
-					<input type="text" value="${otherScrap['recordpersonName']}" id="recordPersonName" name="recordPersonName" readonly="readonly">
-					<input type="hidden" id="recordPersonUid" name="recordPersonUid" value="${otherScrap['recordPersonUid']}">
+					<input type="text" value="${produceWarehouse['recordpersonName']}" id="recordPersonName" name="recordPersonName" readonly="readonly">
+					<input type="hidden" id="recordPersonUid" name="recordPersonUid" value="${produceWarehouse['recordPersonId']}">
 					</div>
 					<div class="cf"></div> 
  				</li>
  				<li class=" fl">
 					<div class="wordname fl wordfoot">录入日期：</div>
-					<div class="wordnameinput fl"><input type="text" value="${fn:substring(otherScrap['recordDate'],0,10)}" id="recordDate" name="recordDate" readonly="readonly"> </div>
+					<div class="wordnameinput fl"><input type="text" value="${fn:substring(produceWarehouse['recordDate'],0,10)}" id="recordDate" name="recordDate" readonly="readonly"> </div>
 					<div class="cf"></div> 
  				</li>
  				<%-- <li class="wordli fl">
@@ -847,53 +898,3 @@
 		</form>
 	</body>
 </html>
-<script>
-    function tongyi(owhGid,followmovinggid) {
-        if (confirm("是否确定通过?")) {
-            $.ajax({
-                data: {"followmovinggid":followmovinggid,"owhGid":owhGid,"type":1,"billtype":"othersscrap"},
-                type: 'POST',
-                async: false,
-                url: '${ctx}/wms/wareHouse_updateFollowMovingStatus.emi',
-                success: function(req){
-                    var jsonO =  eval('(' + req + ')');
-                    if(jsonO.success=='1'){
-
-                        window.location.href = "${ctx}/wms/wareHouse_gtasksMyothersOutList.emi";
-
-                    }else{
-                        $.dialog.alert_w("系统异常，请刷新界面");
-                    }
-
-                }
-            });
-        }
-
-    }
-
-
-    //驳回
-    function bohui(owhGid,followmovinggid) {
-        if (confirm("是否确定驳回?")) {
-            $.ajax({
-                data: {"followmovinggid":followmovinggid,"owhGid":owhGid,"type":2,"billtype":"othersscrap"},
-                type: 'POST',
-                async: false,
-                url: '${ctx}/wms/wareHouse_updateFollowMovingStatus.emi',
-                success: function(req){
-                    var jsonO =  eval('(' + req + ')');
-                    if(jsonO.success=='1'){
-                        window.location.href = "${ctx}/wms/wareHouse_gtasksMyothersOutList.emi";
-
-                    }else{
-                        $.dialog.alert_w("系统异常，请刷新界面");
-                    }
-
-                }
-            });
-        }
-
-    }
-
-
-</script>
