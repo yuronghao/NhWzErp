@@ -6486,4 +6486,10 @@ public class WareHouseService extends EmiPluginService {
 
 
     }
+
+    public Map findPoWarehouseSales(String poWarehousegid, String orgId, String sobId) {
+        return wareHouseDao.findPoWarehouseSales(poWarehousegid, orgId, sobId);
+
+
+    }
 }

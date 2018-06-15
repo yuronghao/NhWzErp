@@ -602,7 +602,7 @@ $(".changeimg").click(function(){
                         html+=" <a href=\"javaScript:void(0)\" onclick=\"CreateDiv('erp_04_01_04','/erp/wms/wareHouse_gtasksMyothersOutList.emi','报废单列表',true)\" >您有"+d+"个报废单待处理</a><br> ";
                     }
                     $.dialog.notice({
-                        title: '缴费提醒',
+                        title: '消息提醒',
                         width: 220,
                         max: false,
                         content: ''+html+'',

@@ -222,8 +222,11 @@ public class WareHouseAction extends BaseAction{
 				}
 			}
 
-			FollowInfoMoving followInfoMoving = wareHouseService.getFollowMovingNowByBillid(otherScrap.get("gid").toString());
-			setRequstAttribute("followInfoMoving", followInfoMoving);
+			if(otherScrap!= null){
+				FollowInfoMoving followInfoMoving = wareHouseService.getFollowMovingNowByBillid(otherScrap.get("gid").toString());
+				setRequstAttribute("followInfoMoving", followInfoMoving);
+			}
+
 
 
 			String time = DateUtil.dateToString(new Date(), "yyMMdd");
@@ -1581,7 +1584,7 @@ public class WareHouseAction extends BaseAction{
 			String poWarehousegid = getParameter("poWarehousegid");
 			String orgId=getSession().get("OrgId").toString();
 			String sobId=getSession().get("SobId").toString();
-			Map poWarehouseWarehouse = wareHouseService.findPoWarehouse(poWarehousegid,orgId,sobId);
+			Map poWarehouseWarehouse = wareHouseService.findPoWarehouseSales(poWarehousegid,orgId,sobId);
 			if(!CommonUtil.isNullObject(poWarehouseWarehouse)){
 				if(!CommonUtil.isNullObject(poWarehouseWarehouse.get("departmentUid"))){
 					AaDepartment department = cacheCtrlService.getDepartment(poWarehouseWarehouse.get("departmentUid").toString());
@@ -2127,8 +2130,11 @@ public class WareHouseAction extends BaseAction{
 				}
 			}
 
-			FollowInfoMoving followInfoMoving = wareHouseService.getFollowMovingNowByBillid(call.get("gid").toString());
-			setRequstAttribute("followInfoMoving", followInfoMoving);
+			if(call != null){
+				FollowInfoMoving followInfoMoving = wareHouseService.getFollowMovingNowByBillid(call.get("gid").toString());
+				setRequstAttribute("followInfoMoving", followInfoMoving);
+			}
+
 
 
 			String time = DateUtil.dateToString(new Date(), "yyMMdd");
@@ -2501,16 +2507,22 @@ public class WareHouseAction extends BaseAction{
 				List<YmRdStyle> result=wareHouseService.getRdstyleEntity(condition, Constants.TASKTYPE_CLCK);//材料出库类型
 				setRequstAttribute("rdstylelist", result);
 
-				//判断是否有审批
-				List<FollowInfoMoving> followInfoMovingList = wareHouseService.getFollowMovingListByBillid(saleOutWarehouse.get("gid").toString());
-				if(followInfoMovingList != null && followInfoMovingList.size()>0){
-					//存在审批
-					setRequstAttribute("sp", 1);
+				if(saleOutWarehouse != null){
+					//判断是否有审批
+					List<FollowInfoMoving> followInfoMovingList = wareHouseService.getFollowMovingListByBillid(saleOutWarehouse.get("gid").toString());
+					if(followInfoMovingList != null && followInfoMovingList.size()>0){
+						//存在审批
+						setRequstAttribute("sp", 1);
+					}else{
+						setRequstAttribute("sp", 0);
+					}
+
+					FollowInfoMoving followInfoMoving = wareHouseService.getFollowMovingNowByBillid(saleOutWarehouse.get("gid").toString());
+					setRequstAttribute("followInfoMoving", followInfoMoving);
 				}else{
 					setRequstAttribute("sp", 0);
 				}
-				FollowInfoMoving followInfoMoving = wareHouseService.getFollowMovingNowByBillid(saleOutWarehouse.get("gid").toString());
-				setRequstAttribute("followInfoMoving", followInfoMoving);
+
 
 				String time = DateUtil.dateToString(new Date(), "yyMMdd");
 				setRequstAttribute("time", time);
@@ -2591,8 +2603,11 @@ public class WareHouseAction extends BaseAction{
 				}
 			}
 
-			FollowInfoMoving followInfoMoving = wareHouseService.getFollowMovingNowByBillid(saleApplyWarehouse.get("gid").toString());
-			setRequstAttribute("followInfoMoving", followInfoMoving);
+			if(saleApplyWarehouse != null){
+				FollowInfoMoving followInfoMoving = wareHouseService.getFollowMovingNowByBillid(saleApplyWarehouse.get("gid").toString());
+				setRequstAttribute("followInfoMoving", followInfoMoving);
+			}
+
 
 			//类型
 			String condition=" ";
@@ -4513,7 +4528,10 @@ public class WareHouseAction extends BaseAction{
 						AaGoods good = cacheCtrlService.getGoods(((WmMaterialapplyC)materialApplyC.get(i)).getGoodsuid().toString());
 						((WmMaterialapplyC)materialApplyC.get(i)).setGood(good);
 						AaGoodsallocation alocation=cacheCtrlService.getGoodsAllocation(((WmMaterialapplyC)materialApplyC.get(i)).getGoodsallocationuid().toString());
-						((WmMaterialapplyC)materialApplyC.get(i)).setAlocation(alocation.getName());
+						if(alocation != null){
+                            ((WmMaterialapplyC)materialApplyC.get(i)).setAlocation(alocation.getName());
+                        }
+
 						if (!CommonUtil.isNullObject(((WmMaterialapplyC)materialApplyC.get(i)).getGoodName())) {
 							AaGoods goods = cacheCtrlService.getGoods(((WmMaterialapplyC)materialApplyC.get(i)).getGoodName().toString());
 							((WmMaterialapplyC)materialApplyC.get(i)).setGoodName(goods.getGoodsname());
@@ -4703,6 +4721,9 @@ public class WareHouseAction extends BaseAction{
 			List<YmRdStyle> result=wareHouseService.getRdstyleEntity(condition, Constants.TASKTYPE_DBD);//材料出库类型
 			setRequstAttribute("rdstylelist", result);
 
+
+
+
 			if(call != null && call.get("gid")!= null){
 				//判断是否有审批
 				List<FollowInfoMoving> followInfoMovingList = wareHouseService.getFollowMovingListByBillid(call.get("gid").toString());
@@ -4713,8 +4734,11 @@ public class WareHouseAction extends BaseAction{
 					setRequstAttribute("sp", 0);
 				}
 			}
-			FollowInfoMoving followInfoMoving = wareHouseService.getFollowMovingNowByBillid(call.get("gid").toString());
-			setRequstAttribute("followInfoMoving", followInfoMoving);
+			if(call != null){
+				FollowInfoMoving followInfoMoving = wareHouseService.getFollowMovingNowByBillid(call.get("gid").toString());
+				setRequstAttribute("followInfoMoving", followInfoMoving);
+			}
+
 
 			String time = DateUtil.dateToString(new Date(), "yyMMdd");
 			setRequstAttribute("time", time);
@@ -4796,8 +4820,11 @@ public class WareHouseAction extends BaseAction{
 				}
 			}
 
-			FollowInfoMoving followInfoMoving = wareHouseService.getFollowMovingNowByBillid(otherScrap.get("gid").toString());
-			setRequstAttribute("followInfoMoving", followInfoMoving);
+			if(otherScrap != null){
+				FollowInfoMoving followInfoMoving = wareHouseService.getFollowMovingNowByBillid(otherScrap.get("gid").toString());
+				setRequstAttribute("followInfoMoving", followInfoMoving);
+			}
+
 
 
 			String time = DateUtil.dateToString(new Date(), "yyMMdd");

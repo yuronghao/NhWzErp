@@ -743,7 +743,7 @@
 								<div class="wordnameinput fl">
 									<div class="wordnameinput fl">
 										<c:if test="${otherScrap['status'] == 0}">
-											<input style="color: #0e78c9" type="text" value="未审核" id="zhuangtai" name="zhuangtai" class="" disabled>
+											<input style="color: #0e78c9" type="text" value="未审核(${followInfoMoving.userName})" id="zhuangtai" name="zhuangtai" class="" disabled>
 										</c:if>
 										<c:if test="${otherScrap['status'] == 1}">
 											<input style="color: #0E2D5F" type="text" value="审核中(${followInfoMoving.userName})" id="zhuangtai" name="zhuangtai" class="" disabled>

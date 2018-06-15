@@ -863,9 +863,9 @@ public class WareHouseDao extends BaseDao {
 		public Map findPoWarehouse(String gid,String orgId,String sobId) {
 			String sql="";
 			if(CommonUtil.isNullString(gid)){
-				sql="SELECT TOP 1 wowh.gid,wowh.billCode,wowh.billDate,wowh.badge,wowh.departmentUid,wowh.whUid,wowh.notes ,wowh.recordDate,wowh.providerUid, ymuser.userName recordpersonName,wowh.recordPersonId FROM	WM_PoWarehouse wowh LEFT JOIN YM_User ymuser ON ymuser.gid = wowh.recordPersonId WHERE	1 = 1  AND wowh.sobGid = '" + sobId + "' AND wowh.orgGid = '" + orgId + "' ORDER BY	wowh.pk DESC ";
+				sql="SELECT TOP 1 wowh.gid,wowh.billCode,wowh.billDate,wowh.badge,wowh.departmentUid,wowh.whUid,wowh.notes ,wowh.recordDate,wowh.providerUid, ymuser.userName recordpersonName,wowh.recordPersonId FROM	WM_PoWarehouse wowh LEFT JOIN YM_User ymuser ON ymuser.gid = wowh.recordPersonId WHERE	1 = 1  AND wowh.sobGid = '" + sobId + "' AND wowh.orgGid = '" + orgId + "'  and wowh.badge = 1 ORDER BY	wowh.pk DESC ";
 			}else{
-				sql="SELECT  wowh.gid,wowh.billCode,wowh.billDate,wowh.badge,wowh.departmentUid,wowh.whUid,wowh.notes ,wowh.recordDate,wowh.providerUid,ymuser.userName recordpersonName,wowh.recordPersonId FROM	WM_PoWarehouse wowh LEFT JOIN YM_User ymuser ON ymuser.gid = wowh.recordPersonId WHERE	1 = 1 AND wowh.gid='"+gid+"' AND wowh.sobGid = '" + sobId + "' AND wowh.orgGid = '" + orgId + "' ORDER BY	wowh.pk DESC ";
+				sql="SELECT  wowh.gid,wowh.billCode,wowh.billDate,wowh.badge,wowh.departmentUid,wowh.whUid,wowh.notes ,wowh.recordDate,wowh.providerUid,ymuser.userName recordpersonName,wowh.recordPersonId FROM	WM_PoWarehouse wowh LEFT JOIN YM_User ymuser ON ymuser.gid = wowh.recordPersonId WHERE	1 = 1 AND wowh.gid='"+gid+"' AND wowh.sobGid = '" + sobId + "' AND wowh.orgGid = '" + orgId + "'   and wowh.badge = 1  ORDER BY	wowh.pk DESC ";
 			}
 			
 			return  this.queryForMap(sql);
@@ -2081,5 +2081,16 @@ public class WareHouseDao extends BaseDao {
 				" AND owh.orgGid = '"+orgId+"' " +
 				" )aa " ;
 		return this.queryForMap(sql);
+	}
+
+	public Map findPoWarehouseSales(String gid, String orgId, String sobId) {
+		String sql="";
+		if(CommonUtil.isNullString(gid)){
+			sql="SELECT TOP 1 wowh.gid,wowh.billCode,wowh.billDate,wowh.badge,wowh.departmentUid,wowh.whUid,wowh.notes ,wowh.recordDate,wowh.providerUid, ymuser.userName recordpersonName,wowh.recordPersonId FROM	WM_PoWarehouse wowh LEFT JOIN YM_User ymuser ON ymuser.gid = wowh.recordPersonId WHERE	1 = 1  AND wowh.sobGid = '" + sobId + "' AND wowh.orgGid = '" + orgId + "'  and wowh.badge = 0 ORDER BY	wowh.pk DESC ";
+		}else{
+			sql="SELECT  wowh.gid,wowh.billCode,wowh.billDate,wowh.badge,wowh.departmentUid,wowh.whUid,wowh.notes ,wowh.recordDate,wowh.providerUid,ymuser.userName recordpersonName,wowh.recordPersonId FROM	WM_PoWarehouse wowh LEFT JOIN YM_User ymuser ON ymuser.gid = wowh.recordPersonId WHERE	1 = 1 AND wowh.gid='"+gid+"' AND wowh.sobGid = '" + sobId + "' AND wowh.orgGid = '" + orgId + "'  and wowh.badge = 0  ORDER BY	wowh.pk DESC ";
+		}
+
+		return  this.queryForMap(sql);
 	}
 }
