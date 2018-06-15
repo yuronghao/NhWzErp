@@ -675,4 +675,10 @@ public class BasicSettingDao extends BaseDao {
 
 
     }
+
+	public AaGoodsallocation getGoodsAllocationForGolBal(String condition) {
+		String sql = "select TOP 1 "+CommonUtil.colsFromBean(AaGoodsallocation.class,"gs")+" FROM AA_GoodsAllocation gs "
+				+ "  where 1=1 and (gs.isDel=0 or gs.isDel is null) "+condition +" ORDER BY gs.pk ASC ";
+		return (AaGoodsallocation) this.emiQuery(sql,AaGoodsallocation.class);
+	}
 }

@@ -286,11 +286,11 @@
 //							strs+='<td class="assistUnitcode" style="display:none"><input type="text" id="" name="assistUnitcode" class="listword" value="'+chek.eq(i).attr("cstcomunitcode")+'" readonly="readonly"></td>'+
 //							'<td class="assistNumber"><input type="text" id="" name="assistNumber" class="listword" value="" readonly="readonly"></td>';
 //							}
-					strs+='<td class="outgoodsAllocationName"><input type="text" id="" name="outgoodsAllocationName" class="listword outjjjnumric"  readonly="readonly" onclick="clickFlagout(this)"></td>'+
-						'<td class="outgoodsAllocationUid" style="display:none"><input type="text" id="" name="outgoodsAllocationUid" class="listword "  readonly="readonly" onclick="clickFlagout(this)"></td>'+
+					strs+='<td class="outgoodsAllocationName"><input type="text" id="" name="outgoodsAllocationName" class="listword outjjjnumric"  value="'+golbalalloctionnameout+'" readonly="readonly" onclick="clickFlagout(this)"></td>'+
+						'<td class="outgoodsAllocationUid" style="display:none"><input type="text" id="" name="outgoodsAllocationUid" class="listword "  value="'+golbalalloctionidout+'" readonly="readonly" onclick="clickFlagout(this)"></td>'+
 
-                        '<td class="ingoodsAllocationName"><input type="text" id="" name="ingoodsAllocationName" class="listword injjjnumric"  readonly="readonly" onclick="clickFlagin(this)"></td>'+
-                        '<td class="ingoodsAllocationUid" style="display:none"><input type="text" id="" name="ingoodsAllocationUid" class="listword "  readonly="readonly" onclick="clickFlagin(this)"></td>'+
+                        '<td class="ingoodsAllocationName"><input type="text" id="" name="ingoodsAllocationName" class="listword injjjnumric"  value="'+golbalalloctionnamein+'"  readonly="readonly" onclick="clickFlagin(this)"></td>'+
+                        '<td class="ingoodsAllocationUid" style="display:none"><input type="text" id="" name="ingoodsAllocationUid" class="listword "  value="'+golbalalloctionidin+'" readonly="readonly" onclick="clickFlagin(this)"></td>'+
 						
 						'<td class="batch"><input type="text" id="" name="batch" class="listword batchInput" value="" isbatch="'+binvbach+'"></td>'+
 						
@@ -561,6 +561,10 @@
 				cancel:true
 			});
 	 	}
+
+        var golbalalloctionnameout; //定义全局的默认货位名称
+        var golbalalloctionidout; //定义全局的默认货位名称
+
 		function selectmanagerout(){
 			var pwdWin = $.dialog({ 
 				drag: true,
@@ -586,7 +590,29 @@
 						 temp[i].value='';
 						 temps[i].value='';
 						 }
-				},
+
+
+                    //ajax传值
+                    $.ajax({
+                        data: {"whuid":usercheck[0].gid},
+                        type: 'POST',
+                        async: false,
+                        url: '${ctx}/wms/wareHouse_getGolBalDefualtAllocation.emi',
+                        success: function(req){
+                            var jsonO =  eval('(' + req + ')');
+                            if(jsonO.success=='1'){
+                                // alert(jsonO.data.name);
+                                // alert(jsonO.data.whuid);
+                                golbalalloctionnameout =jsonO.data.name;
+                                golbalalloctionidout =jsonO.data.whuid;
+                            }else{
+                                alert("系统异常");
+                            }
+
+                        }
+                    });
+
+                },
 				cancelVal:"关闭",
 				cancel:true
 			});	
@@ -594,7 +620,8 @@
 
 
 
-
+        var golbalalloctionnamein;
+		var golbalalloctionidin;
         function selectmanagerin(){
             var pwdWin = $.dialog({
                 drag: true,
@@ -620,6 +647,27 @@
                         temp[i].value='';
                         temps[i].value='';
                     }
+
+
+                    //ajax传值
+                    $.ajax({
+                        data: {"whuid":usercheck[0].gid},
+                        type: 'POST',
+                        async: false,
+                        url: '${ctx}/wms/wareHouse_getGolBalDefualtAllocation.emi',
+                        success: function(req){
+                            var jsonO =  eval('(' + req + ')');
+                            if(jsonO.success=='1'){
+                                // alert(jsonO.data.name);
+                                // alert(jsonO.data.whuid);
+                                golbalalloctionnamein =jsonO.data.name;
+                                golbalalloctionidin =jsonO.data.whuid;
+                            }else{
+                                alert("系统异常");
+                            }
+
+                        }
+                    });
                 },
                 cancelVal:"关闭",
                 cancel:true

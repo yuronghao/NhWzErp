@@ -1004,5 +1004,10 @@ public class BasicSettingService {
 			allocation.add(map);
 		}
 		return allocation;
-	}	
+	}
+
+	public AaGoodsallocation getGoodsAllocationForGolBal(String condition) {
+			return basicSettingDao.getGoodsAllocationForGolBal(condition);
+
+	}
 }

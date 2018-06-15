@@ -271,8 +271,8 @@
 						// 	strs+='<td class="assistUnitcode" style="display:none"><input type="text" id="" name="assistUnitcode" class="listword" value="'+chek.eq(i).attr("cstcomunitcode")+'" readonly="readonly"></td>'+
 						// 	'<td class="assistNumber"><input type="text" id="" name="assistNumber" class="listword" value="" readonly="readonly"></td>';
 						// 	}
-					strs+='<td class="goodsAllocationName"><input type="text" id="" name="goodsAllocationName" class="listword jjjnumric"  readonly="readonly" onclick="clickFlag(this)"></td>'+
-						'<td class="goodsAllocationUid" style="display:none"><input type="text" id="" name="goodsAllocationUid" class="listword "  readonly="readonly" ></td>';
+					strs+='<td class="goodsAllocationName"><input type="text" id="" name="goodsAllocationName" class="listword jjjnumric" value="'+golbalalloctionname+'"  readonly="readonly" onclick="clickFlag(this)"></td>'+
+						'<td class="goodsAllocationUid" style="display:none"><input type="text" id="" name="goodsAllocationUid" class="listword " value="'+golbalalloctionid+'"  readonly="readonly" ></td>';
 
 							if(chek.eq(i).attr("binvbach")=='0'){
                                 strs+= '<td class="batch" ><input type="text" id="" name="batch" class="listword batchInput" value="" readonly="readonly"></td>';
@@ -461,7 +461,10 @@
 				cancel:true
 			});	
 		}
-		
+
+
+		var golbalalloctionname; //定义全局的默认货位名称
+        var golbalalloctionid; //定义全局的默认货位名称
 		function selectmanager(){
 			var pwdWin = $.dialog({ 
 				drag: true,
@@ -479,10 +482,31 @@
 					
 					document.getElementById('whName').value=usercheck[0].whname;
 					document.getElementById('whUid').value=usercheck[0].gid;
+
+                    //ajax传值
+                    $.ajax({
+                        data: {"whuid":usercheck[0].gid},
+                        type: 'POST',
+                        async: false,
+                        url: '${ctx}/wms/wareHouse_getGolBalDefualtAllocation.emi',
+                        success: function(req){
+                            var jsonO =  eval('(' + req + ')');
+                            if(jsonO.success=='1'){
+                                // alert(jsonO.data.name);
+                                // alert(jsonO.data.whuid);
+                                golbalalloctionname =jsonO.data.name;
+                                golbalalloctionid =jsonO.data.whuid;
+                            }else{
+                                alert("系统异常");
+                            }
+
+                        }
+                    });
+
 				},
 				cancelVal:"关闭",
 				cancel:true
-			});	
+			});
 		}
 		
 		function openprintpage(){

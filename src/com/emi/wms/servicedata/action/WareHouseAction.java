@@ -5008,6 +5008,34 @@ public class WareHouseAction extends BaseAction{
 	}
 
 
+	/**
+	 * 选择仓库的时候使用默认货位
+	 */
+	public void getGolBalDefualtAllocation(){
+		try{
+			Map map = new HashMap();
+			map.put("success",1);
+			String orgId=getSession().get("OrgId").toString();
+			String sobId=getSession().get("SobId").toString();
+			String whUid = getParameter("whuid");
+			StringBuffer sbf=new StringBuffer();
+			if(!CommonUtil.isNullObject(whUid)){
+				sbf.append(" and whUid='"+whUid+"' and orgGid='"+orgId+"' and sobGid='"+sobId+"'");
+			}
+			String condition=sbf.toString();
+			String userid = CommonUtil.Obj2String(getSession().get("UserId"));//当前登陆人id
+
+			AaGoodsallocation aaGoodsallocation=basicSettingService.getGoodsAllocationForGolBal(condition);
+			map.put("data",aaGoodsallocation);
+			getResponse().getWriter().write(JSON.toJSONString(map));
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+
+
+
+
 
 
 
