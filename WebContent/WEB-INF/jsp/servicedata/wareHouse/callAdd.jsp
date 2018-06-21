@@ -604,7 +604,7 @@
                                 // alert(jsonO.data.name);
                                 // alert(jsonO.data.whuid);
                                 golbalalloctionnameout =jsonO.data.name;
-                                golbalalloctionidout =jsonO.data.whuid;
+                                golbalalloctionidout =jsonO.data.gid;
                             }else{
                                 alert("系统异常");
                             }
@@ -661,7 +661,7 @@
                                 // alert(jsonO.data.name);
                                 // alert(jsonO.data.whuid);
                                 golbalalloctionnamein =jsonO.data.name;
-                                golbalalloctionidin =jsonO.data.whuid;
+                                golbalalloctionidin =jsonO.data.gid;
                             }else{
                                 alert("系统异常");
                             }

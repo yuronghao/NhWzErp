@@ -623,7 +623,7 @@
                                 // alert(jsonO.data.name);
                                 // alert(jsonO.data.whuid);
                                 golbalalloctionname =jsonO.data.name;
-                                golbalalloctionid =jsonO.data.whuid;
+                                golbalalloctionid =jsonO.data.gid;
                             }else{
                                 alert("系统异常");
                             }

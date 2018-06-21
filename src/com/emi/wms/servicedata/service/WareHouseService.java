@@ -3749,8 +3749,7 @@ public class WareHouseService extends EmiPluginService {
             return jobj;
         }
 
-        //当前没有判断有没有审批，所以直接存入审批时间为单据日期
-        whouse.setAuditdate(whouse.getBilldate());
+
         boolean suc = wareHouseDao.emiInsert(whouse);// 插入生产入库主表
 
         for (WmPowarehouseC oc : wmohclist) {
@@ -3758,22 +3757,32 @@ public class WareHouseService extends EmiPluginService {
             oc.setBarcode(goods.getGoodscode() + getYearMonthDay() + getSerialNumber("BARCODE"));
         }
 
-        if (suc) {
-            suc = wareHouseDao.emiInsert(wmohclist);// 插入生产入库子表
-            if (suc) {
-//				List<WmAllocationstock> newAsList = getNewCurrentStockList(asList);
-                suc = updateStocksEntity(newAsList);// 修改货位现存量
-                if (suc) {
-                    // 增加批次
-                    if (wmBatchs.size() > 0) {
-                        wareHouseDao.addWmBatch(wmBatchs);
-                    }
-                }
+
+        wareHouseDao.emiInsert(wmohclist);// 插入生产入库子表
+
+
+
+        List<WmPowarehouseAudit> wmPowarehouseAuditList = this.getAuditListALL();
+        if(wmPowarehouseAuditList ==null){
+            //当前没有判断有没有审批，所以直接存入审批时间为单据日期
+            whouse.setAuditdate(whouse.getBilldate());
+            updateStocksEntity(newAsList);// 修改货位现存量
+            // 增加批次
+            if (wmBatchs.size() > 0) {
+                wareHouseDao.addWmBatch(wmBatchs);
             }
         }
+
+
+
+
         jobj.put("success", 1);
         jobj.put("failInfor", "");
         return jobj;
+    }
+
+    private List<WmPowarehouseAudit> getAuditListALL() {
+        return wareHouseDao.getAuditListALL();
     }
 
 
@@ -5356,6 +5365,7 @@ public class WareHouseService extends EmiPluginService {
         // 其他出主表
         String wmoouid = UUID.randomUUID().toString();
         WmOthersout wmoo = new WmOthersout();
+        wmoo.setGid(wmoouid);
         wmoo.setDocumentTypeUid("34B17996-5285-48EE-864B-FB3DEB218036");
         wmoo.setWarehouseUid(wmc.getOutWhUid());
         wmoo.setBillCode(this.getBillId(Constants.TASKTYPE_QTCK));
@@ -5371,6 +5381,7 @@ public class WareHouseService extends EmiPluginService {
         // 其他入主表
         String wmohuid = UUID.randomUUID().toString();
         WmOtherwarehouse wmoh = new WmOtherwarehouse();
+        wmoh.setGid(wmohuid);
         wmoh.setDocumentTypeId("24AD0F1F-6D94-4EE1-8728-896472A3E0C6");
         wmoh.setWhUid(wmc.getInWhUid());
         wmoh.setBillCode(this.getBillId(Constants.TASKTYPE_QTRK));
@@ -6491,5 +6502,143 @@ public class WareHouseService extends EmiPluginService {
         return wareHouseDao.findPoWarehouseSales(poWarehousegid, orgId, sobId);
 
 
+    }
+
+    public List<WmPowarehouseAudit> getAuditList(String userid) {
+        return wareHouseDao.getAuditList(userid);
+    }
+
+    public JSONObject powarehouseauditok(String gid, String userid) {
+        List<WmAllocationstock> asList=new ArrayList<WmAllocationstock>();
+        List<WmBatch> wmBatchs=new ArrayList<WmBatch>();                                          //批次记录表
+        List<WmPowarehouseC> wmPowarehouseCList = wareHouseDao.getPoWarehouseClistForObject(gid);
+        WmPowarehouse wmPowarehouse =wareHouseDao.getWmPowarehouseForObject(gid);
+        for(int i=0;i<wmPowarehouseCList.size();i++){
+            WmPowarehouseC wm = wmPowarehouseCList.get(i);
+            WmAllocationstock wmcat=new WmAllocationstock();////货位现存量入
+            wmcat.setBatch(CommonUtil.Obj2String(wm.getBatchcode()));
+            AaGoodsallocation gaIn=cacheCtrlService.getGoodsAllocation(wm.getGoodsallocationuid());
+            if(gaIn != null){
+                wmcat.setGoodsallocationcode(gaIn.getCode());
+                wmcat.setGoodsallocationuid(gaIn.getGid());
+                wmcat.setWhCode(gaIn.getWhcode());
+            }
+            wmcat.setGoodsuid(wm.getMaterialuid());
+            AaGoods aaGoods = cacheCtrlService.getGoods(wm.getMaterialuid());
+            wmcat.setGoodscode(aaGoods.getGoodscode());
+            wmcat.setNumber(wm.getQuantity());
+            if(!CommonUtil.isNullObject(CommonUtil.Obj2String(wm.getBatchcode()))){
+                wmcat.setBatch(wm.getBatchcode());
+            }
+            wmcat.setOrggid(wmPowarehouse.getOrggid());
+            wmcat.setSobgid(wmPowarehouse.getSobgid());
+            if(!CommonUtil.isNullObject(CommonUtil.Obj2String(wm.getBatchcode()))){                //判断是否有批次，有则添加到批次表
+                WmBatch wmb=new WmBatch();
+                wmb.setGid(UUID.randomUUID().toString());
+                wmb.setGoodsUid(wm.getMaterialuid());
+                wmb.setGoodsAllocationUid(wm.getGoodsallocationuid());
+                wmb.setBatch(CommonUtil.Obj2String(wm.getBatchcode()));
+                wmb.setNumber(wm.getQuantity());
+                wmb.setRedBlueFlag(wmPowarehouse.getBadge());//1、蓝字单据，0、红字单据
+                wmb.setRecordDate(new Timestamp(new Date().getTime()));
+                wmBatchs.add(wmb);
+            }
+            asList.add(wmcat);
+        }
+
+        //出库时判断库存是否满足
+        List<WmAllocationstock> newAsList = getNewCurrentStockList(asList);//去重
+        boolean isEnough = isEnoughStock(newAsList);
+
+        JSONObject jobj = new JSONObject();
+
+        if (!isEnough) {
+            jobj.put("success", 0);
+            jobj.put("failInfor", "存在库存不满足的记录");
+            return jobj;
+        }
+
+
+        // 增加批次
+        if (wmBatchs.size() > 0) {
+            wareHouseDao.addWmBatch(wmBatchs);
+        }
+        updateStocksEntity(newAsList);// 修改货位现存量
+
+         wareHouseDao.powarehouseauditok(gid,userid);
+        jobj.put("success", 1);
+        return jobj;
+    }
+
+
+
+
+
+    public JSONObject powarehouseauditpass(String gid, String userid) {
+        List<WmAllocationstock> asList=new ArrayList<WmAllocationstock>();
+        List<WmBatch> wmBatchs=new ArrayList<WmBatch>();                                          //批次记录表
+        WmPowarehouse wmPowarehouse =wareHouseDao.getWmPowarehouseForObject(gid);
+        List poWarehouseC = wareHouseDao.getPoWarehouseClist(gid);
+
+        for (int i = 0; i < poWarehouseC.size(); i++) {
+            AaGoods good = cacheCtrlService.getGoods(((Map) poWarehouseC.get(i)).get("materialUid").toString());
+            ((Map) poWarehouseC.get(i)).put("good", good);
+            WmAllocationstock wmcat = new WmAllocationstock();// //货位现存量入
+            wmcat.setBatch(CommonUtil.isNullObject(((Map) poWarehouseC.get(i)).get("batchCode")) ? null : ((Map) poWarehouseC.get(i)).get("batchCode").toString());
+            AaGoodsallocation gaIn = cacheCtrlService.getGoodsAllocation(((Map) poWarehouseC.get(i)).get("goodsAllocationUid").toString());
+            wmcat.setGoodsallocationcode(gaIn.getCode());
+            wmcat.setGoodsallocationuid(gaIn.getGid());
+            wmcat.setWhCode(gaIn.getWhcode());
+            wmcat.setGoodsuid(good.getGid());
+            wmcat.setGoodscode(good.getGoodscode());
+            wmcat.setNumber(new BigDecimal(0).subtract(new BigDecimal(((Map) poWarehouseC.get(i)).get("quantity").toString())));
+
+            if (!CommonUtil.isNullObject(((Map) poWarehouseC.get(i)).get("assistquantity"))) {
+                wmcat.setAssistnum(new BigDecimal(0).subtract(new BigDecimal(((Map) poWarehouseC.get(i)).get("assistquantity").toString())));
+            }
+            wmcat.setOrggid(wmPowarehouse.getOrggid());
+            wmcat.setSobgid(wmPowarehouse.getSobgid());
+            if (!CommonUtil.isNullObject(((Map) poWarehouseC.get(i)).get("batchCode"))) { // 判断是否有批次，有则添加到批次表
+                WmBatch wmb = new WmBatch();
+                wmb.setGid(UUID.randomUUID().toString());
+                wmb.setGoodsUid(good.getGid());
+                wmb.setGoodsAllocationUid(gaIn.getGid());
+                wmb.setBatch(CommonUtil.Obj2String(((Map) poWarehouseC.get(i)).get("batchCode").toString()));
+                wmb.setNumber(new BigDecimal(0).subtract(new BigDecimal(((Map) poWarehouseC.get(i)).get("quantity").toString())));
+                if (!CommonUtil.isNullObject(((Map) poWarehouseC.get(i)).get("assistquantity"))) {
+                    wmb.setAssistNum(new BigDecimal(0).subtract(new BigDecimal(((Map) poWarehouseC.get(i)).get("assistquantity").toString())));
+                }
+                if ((new BigDecimal(0).subtract(new BigDecimal(((Map) poWarehouseC.get(i)).get("quantity").toString()))).compareTo(new BigDecimal(0)) >= 0) {//1、蓝字单据，0、红字单据
+                    wmb.setRedBlueFlag(1);
+                } else {
+                    wmb.setRedBlueFlag(0);
+                }
+                wmb.setRecordDate(new Timestamp(new Date().getTime()));
+                wmBatchs.add(wmb);
+            }
+
+            asList.add(wmcat);
+        }
+
+        //出库时判断库存是否满足
+        List<WmAllocationstock> newAsList = getNewCurrentStockList(asList);//去重
+        boolean isEnough = isEnoughStock(newAsList);
+
+        JSONObject jobj = new JSONObject();
+
+        if (!isEnough) {
+            jobj.put("success", 0);
+            jobj.put("failInfor", "存在库存不满足的记录");
+            return jobj;
+        }
+        // 增加批次
+        if (wmBatchs.size() > 0) {
+            wareHouseDao.addWmBatch(wmBatchs);
+        }
+        updateStocksEntity(newAsList);// 修改货位现存量
+
+        wareHouseDao.powarehouseauditpass(gid,userid);
+        jobj.put("success", 1);
+        return jobj;
     }
 }

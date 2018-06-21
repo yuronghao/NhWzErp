@@ -549,7 +549,7 @@
 			});	
 		}
         var golbalalloctionname; //定义全局的默认货位名称
-        var golbalalloctionid; //定义全局的默认货位名称
+        var golbalalloctionid; //定义全局的默认货位id
 		function selectmanager(){
 			var pwdWin = $.dialog({ 
 				drag: true,
@@ -587,7 +587,7 @@
                                 // alert(jsonO.data.name);
                                 // alert(jsonO.data.whuid);
                                 golbalalloctionname =jsonO.data.name;
-                                golbalalloctionid =jsonO.data.whuid;
+                                golbalalloctionid =jsonO.data.gid;//这边应该是货位gid
                             }else{
                                 alert("系统异常");
                             }
@@ -700,6 +700,55 @@
 				cancel:true
 			});
 	 	}
+
+
+	 	function auditok(gid){
+            //ajax传值
+            if(confirm("是否确认审核？")){
+                $.ajax({
+                    data: {"gid":gid},
+                    type: 'POST',
+                    async: false,
+                    url: '${ctx}/wms/wareHouse_powarehouseauditok.emi',
+                    success: function(req){
+                        var jsonO =  eval('(' + req + ')');
+                        if(jsonO.success=='1'){
+                            alert("操作成功");
+                            window.location.href = "${ctx}/wms/wareHouse_toAddPoWarehouse.emi"
+                        }else{
+                            alert("系统异常");
+                        }
+
+                    }
+                });
+            }
+
+
+        }
+
+        function auditpass(gid){
+//ajax传值
+            if(confirm("是否确认审核？")){
+                $.ajax({
+                    data: {"gid":gid},
+                    type: 'POST',
+                    async: false,
+                    url: '${ctx}/wms/wareHouse_powarehouseauditpass.emi',
+                    success: function(req){
+                        var jsonO =  eval('(' + req + ')');
+                        if(jsonO.success=='1'){
+                            alert("操作成功");
+                            window.location.href = "${ctx}/wms/wareHouse_toAddPoWarehouse.emi"
+                        }else{
+                            alert("系统异常");
+                        }
+
+                    }
+                });
+            }
+
+
+        }
 		
 		
 	</script>
@@ -719,8 +768,13 @@
 		 			<li class="fl"><input type="button" class="btns" value="删除" id="delBtn" onclick="deletesob('${produceWarehouse['gid']}')"> </li>
 		 			<li class="fl"><input type="button" class="btns" value="保存" id="saveBtn"> </li>
 		 			<li class="fl"><input type="button" class="btns" value="放弃" id="giveUpBtn" onclick="giveup()"> </li>
-		 			<li class="fl" style="display:none"><input type="button" class="btns" value="审核"> </li>
-			 		<li class="fl" style="display:none"><input type="button" class="btns" value="弃审"> </li>
+                    <c:if test="${showflag1 == 1}">
+                        <li class="fl" ><input type="button" class="btns" onclick="auditok('${produceWarehouse['gid']}')" value="审核" style="background-color: deepskyblue;"> </li>
+                    </c:if>
+                    <c:if test="${showflag2 == 1}">
+                        <li class="fl" ><input type="button" class="btns" onclick="auditpass('${produceWarehouse['gid']}')" value="弃审" style="background-color: red;"> </li>
+                    </c:if>
+
 		 			<li class="fl"><input type="button" class="btns" value="列表" id="tableBtn" onclick="getprocurearrivallist()"></li>
 		 			<li class="fl">
 	 				<!-- 单据翻页begin -->
@@ -813,6 +867,7 @@
 		 				</li>
 		 				<div class="cf"></div> 
 		 			</ul>
+
 		 			<!-- <ul class="wordul">
 		 				
 		 				<div class="cf"></div> 
@@ -903,18 +958,18 @@
 					<div class="wordnameinput fl"><input type="text" value="${fn:substring(produceWarehouse['recordDate'],0,10)}" id="recordDate" name="recordDate" readonly="readonly"> </div>
 					<div class="cf"></div> 
  				</li>
- 				<%-- <li class="wordli fl">
+ 				<li class="wordli fl">
 					<div class="wordname fl">审核人：</div>
 					<div class="wordnameinput fl">
-					<input type="text" value="${produceOrder['auditpersonName']}" id="auditpersonName" name="auditpersonName" readonly="readonly"> </div>
-					<input type="hidden" id="auditPersonUid" name="auditPersonUid" value="${produceOrder['auditPersonUid']}">
-					<div class="cf"></div> 
+					<input type="text" value="${produceWarehouse['auditpersonName']}" id="auditpersonName" name="auditpersonName" readonly="readonly"> </div>
+					<input type="hidden" id="auditPersonUid" name="auditPersonUid" value="${produceWarehouse['auditPersonID']}">
+					<div class="cf"></div>
  				</li>
- 				<li class="wordli fl">
-					<div class="wordname fl">审核日期：</div>
-					<div class="wordnameinput fl"><input type="text" <c:if test="${produceOrder['auditDate']!=null}">value="${fn:substring(produceOrder['auditDate'],0,10)}"</c:if> id="auditDate" name="auditDate" readonly="readonly"> </div>
-					<div class="cf"></div> 
- 				</li> --%>
+ 				<%--<li class="wordli fl">--%>
+					<%--<div class="wordname fl">审核日期：</div>--%>
+					<%--<div class="wordnameinput fl"><input type="text" <c:if test="${produceWarehouse['auditDate']!=null}">value="${fn:substring(produceWarehouse['auditDate'],0,10)}"</c:if> id="auditDate" name="auditDate" readonly="readonly"> </div>--%>
+					<%--<div class="cf"></div>--%>
+ 				<%--</li>--%>
  				<div class="cf"></div> 
  			</ul>
 		 	<div class="cf"></div> 

@@ -654,7 +654,7 @@
 							<div class="wordnameinput fl">
 								<select class="toDealSelect" id="rdstylegid" name="rdstylegid"  disabled="disabled">
 									<c:forEach items="${rdstylelist}" var="rdstyle" varStatus="status">
-										<option value="${rdstyle.gid}" <c:if test="${saleApplyWarehouse['rdstylegid'] == rdstyle.gid}">selected="selected"</c:if>>${rdstyle.crdName}</option>
+										<option value="${rdstyle.gid}" <c:if test="${saleApplyWarehouse['businessTypeUid'] == rdstyle.gid}">selected="selected"</c:if>>${rdstyle.crdName}</option>
 									</c:forEach>
 								</select>
 

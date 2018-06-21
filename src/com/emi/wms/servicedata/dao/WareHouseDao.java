@@ -863,9 +863,9 @@ public class WareHouseDao extends BaseDao {
 		public Map findPoWarehouse(String gid,String orgId,String sobId) {
 			String sql="";
 			if(CommonUtil.isNullString(gid)){
-				sql="SELECT TOP 1 wowh.gid,wowh.billCode,wowh.billDate,wowh.badge,wowh.departmentUid,wowh.whUid,wowh.notes ,wowh.recordDate,wowh.providerUid, ymuser.userName recordpersonName,wowh.recordPersonId FROM	WM_PoWarehouse wowh LEFT JOIN YM_User ymuser ON ymuser.gid = wowh.recordPersonId WHERE	1 = 1  AND wowh.sobGid = '" + sobId + "' AND wowh.orgGid = '" + orgId + "'  and wowh.badge = 1 ORDER BY	wowh.pk DESC ";
+				sql="SELECT TOP 1 wowh.gid,wowh.billCode,wowh.billState,wowh.billDate,wowh.badge,wowh.departmentUid,wowh.whUid,wowh.notes ,wowh.recordDate,wowh.providerUid, ymuser.userName recordpersonName,wowh.recordPersonId,wowh.auditPersonID,wowh.auditDate,ymuser2.userName auditpersonName FROM	WM_PoWarehouse wowh LEFT JOIN YM_User ymuser ON ymuser.gid = wowh.recordPersonId LEFT JOIN YM_User ymuser2 ON ymuser2.gid = wowh.auditPersonID WHERE	1 = 1  AND wowh.sobGid = '" + sobId + "' AND wowh.orgGid = '" + orgId + "'  and wowh.badge = 1 ORDER BY	wowh.pk DESC ";
 			}else{
-				sql="SELECT  wowh.gid,wowh.billCode,wowh.billDate,wowh.badge,wowh.departmentUid,wowh.whUid,wowh.notes ,wowh.recordDate,wowh.providerUid,ymuser.userName recordpersonName,wowh.recordPersonId FROM	WM_PoWarehouse wowh LEFT JOIN YM_User ymuser ON ymuser.gid = wowh.recordPersonId WHERE	1 = 1 AND wowh.gid='"+gid+"' AND wowh.sobGid = '" + sobId + "' AND wowh.orgGid = '" + orgId + "'   and wowh.badge = 1  ORDER BY	wowh.pk DESC ";
+				sql="SELECT  wowh.gid,wowh.billCode,wowh.billState,wowh.billDate,wowh.badge,wowh.departmentUid,wowh.whUid,wowh.notes ,wowh.recordDate,wowh.providerUid,ymuser.userName recordpersonName,wowh.recordPersonId,wowh.auditPersonID,wowh.auditDate,ymuser2.userName auditpersonName FROM	WM_PoWarehouse wowh LEFT JOIN YM_User ymuser ON ymuser.gid = wowh.recordPersonId LEFT JOIN YM_User ymuser2 ON ymuser2.gid = wowh.auditPersonID WHERE	1 = 1 AND wowh.gid='"+gid+"' AND wowh.sobGid = '" + sobId + "' AND wowh.orgGid = '" + orgId + "'   and wowh.badge = 1  ORDER BY	wowh.pk DESC ";
 			}
 			
 			return  this.queryForMap(sql);
@@ -885,7 +885,11 @@ public class WareHouseDao extends BaseDao {
 					String sql = "SELECT wowhc.* FROM	WM_PoWarehouse_C wowhc  WHERE wowhc.poWhUid = '"+gid+"'  ";
 					return this.queryForList(sql);
 			}
-			
+
+	public List<WmPowarehouseC> getPoWarehouseClistForObject(String gid) {
+		String sql = "SELECT wowhc.* FROM	WM_PoWarehouse_C wowhc  WHERE wowhc.poWhUid = '"+gid+"'  ";
+		return this.emiQueryList(sql,WmPowarehouseC.class);
+	}
 			/**
 			 * 根据采购入库主Gid 删除其下的所有子类
 			 * @category
@@ -1440,12 +1444,12 @@ public class WareHouseDao extends BaseDao {
 		sql+="			from ( ";
 		sql+="					select * from FollowInfoMoving fm ";
 		sql+="						WHERE ";
-		sql+="						fm.approvaluser = '"+userid+"'  AND fm.isused = 0 ";
+		sql+="						1=1  AND fm.isused = 0 ";
 		sql+="					AND fm.status = 0 ";
 		sql+="			)x ";
 		sql+="	) as AuctionRecords ";
-		sql+="		where rowId=1 ";
-		sql+=" )y on y.billsgid = owh.gid ";
+		sql+="		where 1=1  ";
+		sql+=" )y on y.billsgid = owh.gid and y.rowId = 1 and y.approvaluser = '"+userid+"' ";
 		sql+="LEFT JOIN	WM_MaterialApply_C wmc ON wmc.materialApplyUid=owh.gid ";
 		sql+="LEFT JOIN MES_WM_ProduceProcessRouteCGoods mwprcg ON wmc.processRouteCGoodsUid = mwprcg.gid ";
 		sql+="LEFT JOIN MES_WM_ProduceProcessRouteC prcgc ON mwprcg.produceRouteCGid = prcgc.gid ";
@@ -1522,12 +1526,12 @@ public class WareHouseDao extends BaseDao {
 		sql+="			from ( ";
 		sql+="					select * from FollowInfoMoving fm ";
 		sql+="						WHERE ";
-		sql+="						fm.approvaluser = '"+userid+"'  AND fm.isused = 0 ";
+		sql+="						1=1  AND fm.isused = 0 ";
 		sql+="					AND fm.status = 0 ";
 		sql+="			)x ";
 		sql+="	) as AuctionRecords ";
-		sql+="		where rowId=1 ";
-		sql+=" )y on y.billsgid = owh.gid ";
+		sql+="		where 1=1 ";
+		sql+=" )y on y.billsgid = owh.gid and y.rowId=1 and y.approvaluser = '"+userid+"'";
 
 		sql+="LEFT JOIN	WM_MaterialOut_C wmc ON wmc.materialOutUid=owh.gid ";
 		sql+="LEFT JOIN MES_WM_ProduceProcessRouteCGoods mwprcg ON wmc.processRouteCGoodsUid = mwprcg.gid ";
@@ -1698,14 +1702,14 @@ public class WareHouseDao extends BaseDao {
 				" 					FROM " +
 				" 						FollowInfoMoving fm " +
 				" 					WHERE " +
-				" 						fm.approvaluser = '"+userid+"' " +
+				" 						1=1 " +
 				" 					AND fm.isused = 0 " +
 				" 					AND fm.status = 0 " +
 				" 				) x " +
 				" 		) AS AuctionRecords " +
 				" 	WHERE " +
-				" 		rowId = 1 " +
-				" ) y ON y.billsgid = wmcall.gid " +
+				" 		1=1  " +
+				" ) y ON y.billsgid = wmcall.gid and y.rowId = 1 and y.approvaluser = '"+userid+"' " +
 				" left join WM_Call_C wmcallc on wmcallc.callUid = wmcall.gid where 1=1 ";
 		if(!CommonUtil.isNullString(condition)){
 			sql += condition;
@@ -1789,14 +1793,14 @@ public class WareHouseDao extends BaseDao {
 				" 					FROM " +
 				" 						FollowInfoMoving fm " +
 				" 					WHERE " +
-				" 						fm.approvaluser = '"+userid+"' " +
+				" 						1=1 " +
 				" 					AND fm.isused = 0 " +
 				" 					AND fm.status = 0 " +
 				" 				) x " +
 				" 		) AS AuctionRecords " +
 				" 	WHERE " +
-				" 		rowId = 1 " +
-				" ) y ON y.billsgid = owh.gid " +
+				" 		1=1 " +
+				" ) y ON y.billsgid = owh.gid and y.rowId=1 and y.approvaluser = '"+userid+"' " +
 				"LEFT JOIN WM_OthersScrap_C wowc  ON wowc.othersScrapUid=owh.gid  where 1=1";
 		if(!CommonUtil.isNullString(condition)){
 			sql += condition;
@@ -1884,8 +1888,8 @@ public class WareHouseDao extends BaseDao {
 		match.put("userName", "userName");
 		String sql = " select top 1 fm.*,yu.userName from FollowInfoMoving fm  " +
 				"left JOIN YM_User yu on yu.gid = fm.approvaluser " +
-				"where fm.isused = 0 and fm.billsgid  = '"+gid+"'  " +
-				"ORDER BY fm.currentnodeindex DESC ";
+				"where fm.isused = 0 and fm.billsgid  = '"+gid+"' and fm.status =0  " +
+				"ORDER BY fm.currentnodeindex asc ";
 		return (FollowInfoMoving) this.emiQuery(sql,FollowInfoMoving.class,match);
 
 	}
@@ -1920,14 +1924,14 @@ public class WareHouseDao extends BaseDao {
 				" 					FROM " +
 				" 						FollowInfoMoving fm " +
 				" 					WHERE " +
-				" 						fm.approvaluser = '"+userid+"' " +
+				" 						1=1 " +
 				" 					AND fm.isused = 0 " +
 				" 					AND fm.status = 0 " +
 				" 				) x " +
 				" 		) AS AuctionRecords " +
 				" 	WHERE " +
-				" 		rowId = 1 " +
-				" ) y ON y.billsgid = owh.gid " +
+				" 		1=1 " +
+				" ) y ON y.billsgid = owh.gid and y.rowId=1 and y.approvaluser = '"+userid+"' " +
 				" WHERE " +
 				" 	1 = 1 " +
 				" AND owh.sobGid = '"+sobId+"' " +
@@ -1967,14 +1971,14 @@ public class WareHouseDao extends BaseDao {
 				" 					FROM " +
 				" 						FollowInfoMoving fm " +
 				" 					WHERE " +
-				" 						fm.approvaluser = '"+userid+"' " +
+				" 						1=1 " +
 				" 					AND fm.isused = 0 " +
 				" 					AND fm.status = 0 " +
 				" 				) x " +
 				" 		) AS AuctionRecords " +
 				" 	WHERE " +
-				" 		rowId = 1 " +
-				" ) y ON y.billsgid = owh.gid " +
+				" 		1=1 " +
+				" ) y ON y.billsgid = owh.gid and y.rowId=1 and y.approvaluser = '"+userid+"' " +
 				" WHERE " +
 				" 	1 = 1 " +
 				" AND owh.sobGid = '"+sobId+"' " +
@@ -2021,14 +2025,14 @@ public class WareHouseDao extends BaseDao {
 				" 					FROM " +
 				" 						FollowInfoMoving fm " +
 				" 					WHERE " +
-				" 						fm.approvaluser = '"+userid+"' " +
+				" 						1=1 " +
 				" 					AND fm.isused = 0 " +
 				" 					AND fm.status = 0 " +
 				" 				) x " +
 				" 		) AS AuctionRecords " +
 				" 	WHERE " +
-				" 		rowId = 1 " +
-				" ) y ON y.billsgid = wmcall.gid " +
+				" 		1=1 " +
+				" ) y ON y.billsgid = wmcall.gid and y.rowId=1 and y.approvaluser = '"+userid+"' " +
 				" LEFT JOIN WM_Call_C wmcallc ON wmcallc.callUid = wmcall.gid " +
 				" WHERE " +
 				" 	1 = 1 " +
@@ -2066,14 +2070,14 @@ public class WareHouseDao extends BaseDao {
 				" 					FROM " +
 				" 						FollowInfoMoving fm " +
 				" 					WHERE " +
-				" 						fm.approvaluser = '"+userid+"' " +
+				" 						1=1 " +
 				" 					AND fm.isused = 0 " +
 				" 					AND fm.status = 0 " +
 				" 				) x " +
 				" 		) AS AuctionRecords " +
 				" 	WHERE " +
-				" 		rowId = 1 " +
-				" ) y ON y.billsgid = owh.gid " +
+				" 		1=1 " +
+				" ) y ON y.billsgid = owh.gid and y.rowId=1 and y.approvaluser = '"+userid+"' " +
 				" LEFT JOIN WM_OthersScrap_C wowc ON wowc.othersScrapUid = owh.gid " +
 				" WHERE " +
 				" 	1 = 1 " +
@@ -2092,5 +2096,30 @@ public class WareHouseDao extends BaseDao {
 		}
 
 		return  this.queryForMap(sql);
+	}
+
+    public List<WmPowarehouseAudit> getAuditList(String uid) {
+		String sql = " select * from WM_PoWarehouse_Audit pa where pa.userid = '"+uid+"' ";
+		return this.emiQueryList(sql,WmPowarehouseAudit.class);
+    }
+
+	public void powarehouseauditok(String gid, String userid1) {
+		String sql = " update WM_PoWarehouse set billState = '1' ,auditPersonID = '"+userid1+"',auditDate = GETDATE()  where gid = '"+gid+"' ";
+		this.execute(sql);
+	}
+
+	public void powarehouseauditpass(String gid, String userid) {
+		String sql = " update WM_PoWarehouse set billState = '0' ,auditPersonID = '"+userid+"',auditDate = null  where gid = '"+gid+"' ";
+		this.execute(sql);
+	}
+
+	public WmPowarehouse getWmPowarehouseForObject(String gid) {
+		String sql = " select * from WM_PoWarehouse where gid = '"+gid+"' ";
+		return (WmPowarehouse) this.emiQuery(sql,WmPowarehouse.class);
+	}
+
+	public List<WmPowarehouseAudit> getAuditListALL() {
+		String sql = " select * from WM_PoWarehouse_Audit ";
+		return this.emiQueryList(sql,WmPowarehouseAudit.class);
 	}
 }
